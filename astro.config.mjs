@@ -1,13 +1,13 @@
+// astro.config.mjs
 import { defineConfig } from 'astro/config';
-import sitemap from "@astrojs/sitemap";
-import mdx from "@astrojs/mdx";
-import icon from "astro-icon";
-import lit from "@astrojs/lit";
+import mdx from '@astrojs/mdx';
+import lit from '@astrojs/lit';
+import sitemap from '@astrojs/sitemap';
+import icon from 'astro-icon';
 
-// https://astro.build/config
+// --- DEV SETTINGS (easier):
+// While developing locally, DO NOT set `base` so fonts/assets work at "/"
 export default defineConfig({
-  site: 'https://iancolliard.github.io', // Your public domain, e.g.: https://my-site.dev/. Used to generate sitemaps and canonical URLs.
-  base:" '/Research.github.io'
-  sitemap: true, // Generate sitemap (set to "false" to disable)
-  integrations: [sitemap(), mdx(), lit(), icon()], // Add renderers to the config
+  site: 'https://iancolliard.github.io',   // keep as your main domain
+  integrations: [sitemap(), mdx(), lit(), icon()],
 });
