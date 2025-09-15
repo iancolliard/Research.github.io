@@ -1,12 +1,9 @@
 ---
 import Layout from '../../layouts/Page.astro';
 import { TextSection } from '@components/odyssey-theme';
-import { IMG_1010 } from 'astro:assets'
-import IMG_1010 from '../../assets/IMG_1010.png'
 
-const base = import.meta.env.BASE_URL; // "/" locally, "/Research.github.io/" on GH Pages
 const seo = { title: 'Journal Covers', description: 'PNG covers with PDF & DOI links' };
----
+--- 
 
 <Layout {seo}>
   <TextSection>
@@ -15,43 +12,73 @@ const seo = { title: 'Journal Covers', description: 'PNG covers with PDF & DOI l
       <p class="opacity-80">Simple images with text and links.</p>
 
       <!-- COVER 1 -->
-<img
-  src="Research,github.io/src/assets/IMG_1010.png"
-  width="1600"
-  height="900"
-  decoding="async"
-  loading="lazy"
-  alt="Cover: JACS 2024"
-/>
-      <p><strong>Polyoxometalate ligands reveal different coordination chemistries among lanthanides and heavy actinides</strong></p>
-      <p>
-        <a href={base + 'files/paper18.pdf'} target="_blank" rel="noopener">[PDF]</a> ·
-        <a href="https://doi.org/10.xxxx/your-doi-here" target="_blank" rel="noopener">[DOI]</a>
+      <picture>
+        <img
+          src="/Research.github.io/images/IMG_1010.png"
+          alt="Cover: JACS 2024"
+          loading="lazy"
+          decoding="async"
+          width="600"
+          style="display:block;margin-inline:auto;height:auto"
+        />
+      </picture>
+      <p style="text-align:center;margin-top:.5rem">
+        <strong>Polyoxometalate ligands reveal different coordination chemistries among lanthanides and heavy actinides</strong><br/>
+        <a href="/Research.github.io/files/paper18.pdf" target="_blank" rel="noopener">PDF</a> ·
+        <a href="https://doi.org/10.xxxx/your-doi-here" target="_blank" rel="noopener">DOI</a>
       </p>
 
       <!-- COVER 2 -->
-      <img src={base + 'images/IMG_0371.png'} alt="Cover: ChemComm 2024" class="my-4" />
-      <p><strong>Isolation and characterization of a Peacock–Weakley polyoxometalate containing a transplutonium element: curium bis-pentatungstate [Cm(W5O18)2]9-</strong></p>
-      <p>
-        <a href={base + 'files/paper19.pdf'} target="_blank" rel="noopener">[PDF]</a> ·
-        <a href="https://doi.org/10.xxxx/another-doi" target="_blank" rel="noopener">[DOI]</a>
+      <picture>
+        <img
+          src="/Research.github.io/images/IMG_0371.png"
+          alt="Cover: ChemComm 2024"
+          loading="lazy"
+          decoding="async"
+          width="600"
+          style="display:block;margin-inline:auto;height:auto"
+        />
+      </picture>
+      <p style="text-align:center;margin-top:.5rem">
+        <strong>Isolation and characterization of a Peacock–Weakley polyoxometalate containing a transplutonium element: curium bis-pentatungstate [Cm(W5O18)2]9-</strong><br/>
+        <a href="/Research.github.io/files/paper19.pdf" target="_blank" rel="noopener">PDF</a> ·
+        <a href="https://doi.org/10.xxxx/another-doi" target="_blank" rel="noopener">DOI</a>
       </p>
 
       <!-- COVER 3 -->
-      <img src={base + 'images/IMG_1010.png'} alt="Cover: Inorganic Chemistry 2023" class="my-4" />
-      <p><strong>Contrasting Trivalent Lanthanide and Actinide Complexation by Polyoxometalates via solution-state NMR</strong></p>
-      <p>
-        <a href={base + 'files/paper17.pdf'} target="_blank" rel="noopener">[PDF]</a> ·
-        <a href="https://doi.org/10.xxxx/some-doi" target="_blank" rel="noopener">[DOI]</a>
+      <picture>
+        <img
+          src="/Research.github.io/images/IMG_1010.png"
+          alt="Cover: Inorganic Chemistry 2023"
+          loading="lazy"
+          decoding="async"
+          width="600"
+          style="display:block;margin-inline:auto;height:auto"
+        />
+      </picture>
+      <p style="text-align:center;margin-top:.5rem">
+        <strong>Contrasting Trivalent Lanthanide and Actinide Complexation by Polyoxometalates via solution-state NMR</strong><br/>
+        <a href="/Research.github.io/files/paper17.pdf" target="_blank" rel="noopener">PDF</a> ·
+        <a href="https://doi.org/10.xxxx/some-doi" target="_blank" rel="noopener">DOI</a>
       </p>
 
       <!-- COVER 4 -->
-      <img src={base + 'images/IMG_0372.png'} alt="Cover: Nature Chemistry 2022" class="my-4" />
-      <p><strong>Polyoxometalates as ligands to synthesize, isolate, and characterize compounds of rare isotopes on the microgram scale</strong></p>
-      <p>
-        <a href={base + 'files/paper15.pdf'} target="_blank" rel="noopener">[PDF]</a> ·
-        <a href="https://doi.org/10.xxxx/another-one" target="_blank" rel="noopener">[DOI]</a>
+      <picture>
+        <img
+          src="/Research.github.io/images/IMG_0372.png"
+          alt="Cover: Nature Chemistry 2022"
+          loading="lazy"
+          decoding="async"
+          width="600"
+          style="display:block;margin-inline:auto;height:auto"
+        />
+      </picture>
+      <p style="text-align:center;margin-top:.5rem">
+        <strong>Polyoxometalates as ligands to synthesize, isolate, and characterize compounds of rare isotopes on the microgram scale</strong><br/>
+        <a href="/Research.github.io/files/paper15.pdf" target="_blank" rel="noopener">PDF</a> ·
+        <a href="https://doi.org/10.xxxx/another-one" target="_blank" rel="noopener">DOI</a>
       </p>
+
     </div>
   </TextSection>
 </Layout>
