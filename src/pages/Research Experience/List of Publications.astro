@@ -1,47 +1,393 @@
 ---
-import { TextSection } from '@components/odyssey-theme';
 import Layout from '../../layouts/Page.astro';
-import HeroSection from '../../components/sections/heros/HeroSection.astro';
+import { TextSection } from '@components/odyssey-theme';
+
+// Base path so links work locally and on GitHub Pages (/Research.github.io)
+const base = import.meta.env.BASE_URL;
 
 const seo = {
-	title: 'About | Astro Odyssey Theme',
-	description: 'About Page',
+  title: 'List of Publications',
+  description: 'Grouped by Year',
 };
+
+// Helper: quick function to build PDF paths
+const pdf = (name: string) => `${base}/assets/pdfs/${name}`;
 ---
 
 <Layout {seo}>
-	<HeroSection>
-		<div slot="text-container">
-			<h1>About Odyssey</h1>
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, nisi
-				recusandae? Quidem dignissimos nobis, dicta unde, aperiam voluptate
-				autem iste reprehenderit, aliquam ducimus illo ea ipsum qui animi sequi.
-				Numquam.
-			</p>
-		</div>
-    <picture slot="image-container">
-      <img
-        src="/assets/images/home/classic-hero.jpg"
-        alt="Astro Odyssee"
-        id="home-hero-image"
-      />
-    </picture>
-	</HeroSection>
-  <TextSection narrow>
-    <p>
-      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Explicabo asperiores alias illo accusamus voluptatem ea cum nemo odit! Consequatur quidem quo iusto quam ea neque nisi dolorum quod, recusandae id!
-      Repudiandae, fugit labore voluptatum beatae modi omnis adipisci corrupti aut aliquid cumque inventore iure possimus doloremque iste incidunt nulla architecto. Nobis iusto sunt voluptatem necessitatibus laborum, earum doloremque fugit rerum!
-    </p>
-    <p>Fugit asperiores harum consectetur sapiente deleniti. Optio enim tenetur impedit reprehenderit labore, illo eius in, consequatur odio dolore iste assumenda explicabo, nisi similique qui obcaecati possimus delectus reiciendis quod modi.</p>
-    
-    <p>
-      Vel tempore rem omnis esse officiis optio, explicabo, quod deleniti adipisci ullam cum necessitatibus eius minus vero saepe ad, dicta rerum praesentium deserunt illo itaque odio corrupti voluptatum quibusdam. Pariatur.
-      Porro neque tempore, illum eligendi deleniti iure dolorem amet magnam at dolores veniam nemo cumque aut alias repellat est dicta sit repellendus facilis officia? Minima dolorum quo ducimus adipisci perferendis.
-    </p>
-    <p>
-      Quis distinctio tempora sequi sit repudiandae cumque nostrum deserunt, voluptatibus rem eum fuga modi beatae cum ullam delectus dicta atque eius nam quos corporis. Animi praesentium quae nobis. Odit, mollitia. Voluptatum, hic explicabo. Ex accusamus ipsa ea dolor commodi quas esse ipsum alias et adipisci error necessitatibus atque facere rerum ratione consequatur aspernatur repudiandae minima consectetur fuga, doloremque dolorum pariatur.
-      Ipsam error eaque velit possimus porro eum quod illo iusto officia magnam magni, beatae nisi voluptate praesentium? Saepe distinctio adipisci quas hic quae facilis? Sequi eum hic aperiam impedit minus?
-    </p>
+  <TextSection>
+    <div class="prose mx-auto">
+      <h1>Publications</h1>
+      <p class="opacity-80">
+        Grouped by year. Numbered newest → oldest; earliest is paper 1.
+      </p>
+      <p class="text-sm opacity-70">
+        Place PDFs in <code>public/assets/pdfs/</code> and update filenames below as needed.
+      </p>
+    </div>
+  </TextSection>
+
+  <TextSection>
+    <div class="prose mx-auto">
+
+      <!-- 2025 -->
+      <h2>2025</h2>
+      <ol start="27" reversed class="space-y-6">
+        <li>
+          <div class="font-medium">
+            Breaking the Neptunyl Barrier: Direct Access to Neptunium(IV) in Aqueous Solution via Polyoxometalate-Mediated Reduction and Stabilization
+          </div>
+          <div class="opacity-80">2025-09-05</div>
+          <div>
+            <a href={pdf('2025-neptunyl-barrier.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acs.inorgchem.5c01958" target="_blank" rel="noopener">
+              Pertechnetate/Perrhenate-Linked Frameworks of UIV , UIV 6-Hexamer and Uranyl (VI) Building Units
+            </a>
+          </div>
+          <div class="opacity-80">2025-07-15</div>
+          <div>
+            <a href={pdf('2025-pertechnetate-perrhenate-frameworks.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1039/D5CC03481G" target="_blank" rel="noopener">
+              Isolation of a New Polyoxometalate Complex of Plutonium
+            </a>
+          </div>
+          <div class="opacity-80">2025-07-03</div>
+          <div>
+            <a href={pdf('2025-plutonium-pom-complex.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/jacs.5c00861" target="_blank" rel="noopener">
+              Similar but different: structural and spectroscopic characterization of a series of europium and curium coordination complexes
+            </a>
+          </div>
+          <div class="opacity-80">2025-04-15</div>
+          <div>
+            <a href={pdf('2025-similar-but-different-eu-cm.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+      </ol>
+
+      <!-- 2024 -->
+      <h2 class="mt-10">2024</h2>
+      <ol start="23" reversed class="space-y-6">
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1039/D4CC05558F" target="_blank" rel="noopener">
+              Isolation and characterization of a new polyoxometalate ligand, H3SbW14O5010-
+            </a>
+          </div>
+          <div class="opacity-80">2024-12-10</div>
+          <div>
+            <a href={pdf('2024-new-pom-ligand-h3sbw14o50.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acs.inorgchem.4c02254" target="_blank" rel="noopener">
+              From +I to +IV, alkalis to actinides: Capturing cations across the periodic table with Keggin polyoxometalate ligands
+            </a>
+          </div>
+          <div class="opacity-80">2024-08-22</div>
+          <div>
+            <a href={pdf('2024-capturing-cations-keggin-ligands.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1107/S2056989024005565" target="_blank" rel="noopener">
+              Crystal structure of hexachlorothallate within a caesium chloride phosphotungstate lattice Cs9(TlCl6)(PW12O40)2·9CsCl
+            </a>
+          </div>
+          <div class="opacity-80">2024-07-15</div>
+          <div>
+            <a href={pdf('2024-hexachlorothallate-in-pw12o40-lattice.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1107/S2056989024004778" target="_blank" rel="noopener">
+              Hydrated sodium caesium tetracosatungstate(VI), Na5Cs19[W24O84]·21H2O
+            </a>
+          </div>
+          <div class="opacity-80">2024-06-15</div>
+          <div>
+            <a href={pdf('2024-na5cs19-w24o84-structure.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1039/D4CC01381F" target="_blank" rel="noopener">
+              Curium bis-pentatungstate [Cm(W5O18)2]9-: a Peacock–Weakley POM containing a transplutonium element
+            </a>
+          </div>
+          <div class="opacity-80">2024-05-09</div>
+          <div>
+            <a href={pdf('2024-curium-bis-pentatungstate.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/jacsau.4c00245" target="_blank" rel="noopener">
+              Polyoxometalate ligands reveal different coordination chemistries among lanthanides and heavy actinides
+            </a>
+          </div>
+          <div class="opacity-80">2024-05-09</div>
+          <div>
+            <a href={pdf('2024-pom-ligands-ln-vs-an-coordination.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+      </ol>
+
+      <!-- 2023 -->
+      <h2 class="mt-10">2023</h2>
+      <ol start="17" reversed class="space-y-6">
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acs.inorgchem.2c04014" target="_blank" rel="noopener">
+              Contrasting Trivalent Lanthanide and Actinide Complexation by Polyoxometalates via solution-state NMR
+            </a>
+          </div>
+          <div class="opacity-80">2023-12-29</div>
+          <div>
+            <a href={pdf('2023-contrast-ln-an-complexation-poms-nmr.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acs.accounts.3c00583" target="_blank" rel="noopener">
+              Decaniobate: the fruitfly of niobium polyoxometalate chemistry
+            </a>
+          </div>
+          <div class="opacity-80">2023-11-28</div>
+          <div>
+            <a href={pdf('2023-decaniobate-niobium-pom-chemistry.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+      </ol>
+
+      <!-- 2022 -->
+      <h2 class="mt-10">2022</h2>
+      <ol start="15" reversed class="space-y-6">
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acs.inorgchem.2c04014" target="_blank" rel="noopener">
+              Polyoxometalates as ligands to synthesis, isolate and characterize compounds of rare isotopes on the microgram scale
+            </a>
+          </div>
+          <div class="opacity-80">2022-07-14</div>
+          <div>
+            <a href={pdf('2022-poms-as-ligands-rare-isotopes-microgram-scale.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acsami.2c05937" target="_blank" rel="noopener">
+              Interfacial Unit-Dependent Catalytic Activity for CO Oxidation over Cerium Oxysulfate Cluster Assemblies
+            </a>
+          </div>
+          <div class="opacity-80">2022-07-04</div>
+          <div>
+            <a href={pdf('2022-co-oxidation-cerium-oxysulfate-assemblies.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acs.inorgchem.2c01309" target="_blank" rel="noopener">
+              Metal-Oxo Cluster Formation Using Ammonium and Sulfate to Differentiate MIV (Th, U, Ce) Chemistries
+            </a>
+          </div>
+          <div class="opacity-80">2022-05-10</div>
+          <div>
+            <a href={pdf('2022-metal-oxo-cluster-formation-ammonium-sulfate.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/jacs.1c10584" target="_blank" rel="noopener">
+              Effective Storage of Electrons in Water by the Formation of Highly Reduced Polyoxometalate Clusters
+            </a>
+          </div>
+          <div class="opacity-80">2022-03-21</div>
+          <div>
+            <a href={pdf('2022-storage-of-electrons-reduced-pom-clusters.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+      </ol>
+
+      <!-- 2021 -->
+      <h2 class="mt-10">2021</h2>
+      <ol start="11" reversed class="space-y-6">
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acs.cgd.1c01385" target="_blank" rel="noopener">
+              Silver Cytosine Polyoxometalate Assemblies: Assessing the Role of Polyoxometalates in Constructing Ag-DNA Suprastructures
+            </a>
+          </div>
+          <div class="opacity-80">2021-12-07</div>
+          <div>
+            <a href={pdf('2021-ag-dna-pom-suprastructures.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/jacs.1c11208" target="_blank" rel="noopener">
+              Heterometallic CeIV/VV Oxo Clusters with Adjustable Catalytic Reactivities
+            </a>
+          </div>
+          <div class="opacity-80">2021-06-21</div>
+          <div>
+            <a href={pdf('2021-heterometallic-ce-oxo-clusters.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/jacs.1c04095" target="_blank" rel="noopener">
+              Snapshots of Ce70 Toroid Assembly from Solids and Solution
+            </a>
+          </div>
+          <div class="opacity-80">2021-06-17</div>
+          <div>
+            <a href={pdf('2021-ce70-toroid-assembly-snapshots.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acsami.1c03269" target="_blank" rel="noopener">
+              Hybrid Polyoxometalate Salt Adhesion by Butyltin Functionalization
+            </a>
+          </div>
+          <div class="opacity-80">2021-04-15</div>
+          <div>
+            <a href={pdf('2021-hybrid-pom-salt-adhesion-butyltin.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1002/anie.202016522" target="_blank" rel="noopener">
+              CeIV70 Oxosulfate Rings, Frameworks, Supramolecular Assembly, and Redox Activity
+            </a>
+          </div>
+          <div class="opacity-80">2021-01-07</div>
+          <div>
+            <a href={pdf('2021-ceiv70-oxosulfate-rings-frameworks.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+      </ol>
+
+      <!-- 2020 -->
+      <h2 class="mt-10">2020</h2>
+      <ol start="6" reversed class="space-y-6">
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acs.inorgchem.0c02267" target="_blank" rel="noopener">
+              Bridging the Transuranics with Uranium(IV) Sulfate Aqueous Species and Solid Phases
+            </a>
+          </div>
+          <div class="opacity-80">2020-11-19</div>
+          <div>
+            <a href={pdf('2020-bridging-transuranics-uiv-sulfate.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1002/chem.202002403" target="_blank" rel="noopener">
+              Building [UIV70(OH)36(O)64]4- Oxocluster Frameworks with Sulfate, Transition Metals, and U(V)
+            </a>
+          </div>
+          <div class="opacity-80">2020-07-01</div>
+          <div>
+            <a href={pdf('2020-uiv70-oxocluster-frameworks.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/jacs.0c03041" target="_blank" rel="noopener">
+              Supramolecular Assembly of U(IV) Clusters and Superatoms with Unconventional Countercations
+            </a>
+          </div>
+          <div class="opacity-80">2020-04-22</div>
+          <div>
+            <a href={pdf('2020-uiv-clusters-superatoms-countercations.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+      </ol>
+
+      <!-- 2019 -->
+      <h2 class="mt-10">2019</h2>
+      <ol start="3" reversed class="space-y-6">
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acs.inorgchem.9b01238" target="_blank" rel="noopener">
+              Monomeric and Trimeric Thorium Chlorides Isolated from Acidic Aqueous Solution
+            </a>
+          </div>
+          <div class="opacity-80">2019-07-29</div>
+          <div>
+            <a href={pdf('2019-monomeric-trimeric-thorium-chlorides.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+      </ol>
+
+      <!-- 2018 -->
+      <h2 class="mt-10">2018</h2>
+      <ol start="2" reversed class="space-y-6">
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1021/acs.inorgchem.8b00919" target="_blank" rel="noopener">
+              Solution and Solid State Structural Chemistry of Th(IV) and U(IV) 4-Hydroxybenzoates
+            </a>
+          </div>
+          <div class="opacity-80">2018-06-19</div>
+          <div>
+            <a href={pdf('2018-th-u-4-hydroxybenzoates.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+      </ol>
+
+      <!-- 2017 -->
+      <h2 class="mt-10">2017</h2>
+      <ol start="1" reversed class="space-y-6">
+        <li>
+          <div class="font-medium">
+            <a href="https://doi.org/10.1016/B978-0-12-811112-3.00004-2" target="_blank" rel="noopener">
+              One-Dimensional Nanostructures for PEM Fuel Cell Applications
+            </a>
+          </div>
+          <div class="opacity-80">2017-06-06</div>
+          <div>
+            <a href={pdf('2017-1d-nanostructures-pem-fuel-cells.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+      </ol>
+
+    </div>
   </TextSection>
 </Layout>
