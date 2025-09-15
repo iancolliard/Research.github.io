@@ -1,84 +1,36 @@
 ---
 import Layout from '../../layouts/Page.astro';
-import { TextSection } from '@components/odyssey-theme';
+import { TextSection, Container, FeatureCard } from '@components/odyssey-theme';
+
+import HomeHeroSection from '../../components/sections/heros/HomeHeroSection.astro';
 
 const seo = { title: 'Journal Covers', description: 'PNG covers with PDF & DOI links' };
 --- 
+<Layout>
+	<HomeHeroSection />
+	<Container>
+		<section class="feature-card__section">
+			<div class="feature-card__grid">
+				<FeatureCard href="/Research.github.io/public/paper18.pdf" title="JACS 2024" imgSrc="Research.github.io/assets/images/IMG_0373.png">
+				</FeatureCard>
+			</div>
+		</section>
 
-<Layout {seo}>
-  <TextSection>
-    <div class="prose mx-auto">
-      <h1>Journal Covers</h1>
-      <p class="opacity-80">Simple images with text and links.</p>
-
-      <!-- COVER 1 -->
-      <picture>
-        <img
-          src="/Research.github.io/images/IMG_1010.png"
-          alt="Cover: JACS 2024"
-          loading="lazy"
-          decoding="async"
-          width="600"
-          style="display:block;margin-inline:auto;height:auto"
-        />
-      </picture>
-      <p style="text-align:center;margin-top:.5rem">
-        <strong>Polyoxometalate ligands reveal different coordination chemistries among lanthanides and heavy actinides</strong><br/>
-        <a href="/Research.github.io/files/paper18.pdf" target="_blank" rel="noopener">PDF</a> ·
-        <a href="https://doi.org/10.xxxx/your-doi-here" target="_blank" rel="noopener">DOI</a>
-      </p>
-
-      <!-- COVER 2 -->
-      <picture>
-        <img
-          src="/Research.github.io/images/IMG_0371.png"
-          alt="Cover: ChemComm 2024"
-          loading="lazy"
-          decoding="async"
-          width="600"
-          style="display:block;margin-inline:auto;height:auto"
-        />
-      </picture>
-      <p style="text-align:center;margin-top:.5rem">
-        <strong>Isolation and characterization of a Peacock–Weakley polyoxometalate containing a transplutonium element: curium bis-pentatungstate [Cm(W5O18)2]9-</strong><br/>
-        <a href="/Research.github.io/files/paper19.pdf" target="_blank" rel="noopener">PDF</a> ·
-        <a href="https://doi.org/10.xxxx/another-doi" target="_blank" rel="noopener">DOI</a>
-      </p>
-
-      <!-- COVER 3 -->
-      <picture>
-        <img
-          src="/Research.github.io/images/IMG_1010.png"
-          alt="Cover: Inorganic Chemistry 2023"
-          loading="lazy"
-          decoding="async"
-          width="600"
-          style="display:block;margin-inline:auto;height:auto"
-        />
-      </picture>
-      <p style="text-align:center;margin-top:.5rem">
-        <strong>Contrasting Trivalent Lanthanide and Actinide Complexation by Polyoxometalates via solution-state NMR</strong><br/>
-        <a href="/Research.github.io/files/paper17.pdf" target="_blank" rel="noopener">PDF</a> ·
-        <a href="https://doi.org/10.xxxx/some-doi" target="_blank" rel="noopener">DOI</a>
-      </p>
-
-      <!-- COVER 4 -->
-      <picture>
-        <img
-          src="/Research.github.io/images/IMG_0372.png"
-          alt="Cover: Nature Chemistry 2022"
-          loading="lazy"
-          decoding="async"
-          width="600"
-          style="display:block;margin-inline:auto;height:auto"
-        />
-      </picture>
-      <p style="text-align:center;margin-top:.5rem">
-        <strong>Polyoxometalates as ligands to synthesize, isolate, and characterize compounds of rare isotopes on the microgram scale</strong><br/>
-        <a href="/Research.github.io/files/paper15.pdf" target="_blank" rel="noopener">PDF</a> ·
-        <a href="https://doi.org/10.xxxx/another-one" target="_blank" rel="noopener">DOI</a>
-      </p>
-
-    </div>
-  </TextSection>
+	</Container>
 </Layout>
+
+<style>
+	.feature-card__section {
+		margin: var(--section-margin) auto;
+	}
+	.feature-card__grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: var(--theme-grid-gap);
+	}
+	@media (max-width: 768px) {
+		.feature-card__grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style
