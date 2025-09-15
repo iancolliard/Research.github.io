@@ -5,14 +5,14 @@ export const nav = [
 	},
 	{
 		title: 'About Me',
-		slug: '/about',
+		slug: '/Research.github.io/About Me/About Me',
 	},
 	{
 		title: 'Research',
-		slug: '/research',
+		slug: '/Research.github.io/Research Experience',
 	},
 	{
 		title: 'Crystallography',
-		slug: '/crystallography',
+		slug: '/Research.github.io/Crystallography',
 	},
 ];
