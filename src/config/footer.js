@@ -26,12 +26,12 @@ export const footerLists = [
 		title: 'Landing Pages',
 		items: [
 			{
-				title: 'Landing Page 1',
-				slug: '/landing-pages/landing-1',
+				title: 'About Me',
+				slug: '/Research.github.io/About Me/About Me',
 			},
 			{
-				title: 'Landing Page 2',
-				slug: '/landing-pages/landing-2',
+				title: 'C.V.',
+				slug: '/Research.github.io/About Me/CV',
 			},
       // {
 			// 	title: 'Landing Page 3',
@@ -40,24 +40,29 @@ export const footerLists = [
 		],
 	},
 	{
-		title: 'Company',
+		title: 'Research Experience',
 		items: [
 			{
-				title: 'About',
-				slug: '/company/about',
+				title: 'List of Publications',
+				slug: '/Research.github.io/Research Experience/about',
 			},
 			{
-				title: 'Blog',
-				slug: '/blog',
+				title: 'Journal Covers',
+				slug: '/Research.github.io/Research Experience/Journal Covers',
 			},
 			{
-				title: 'Contact',
-				slug: '/company/contact',
+				title: 'Teaching & Outreach',
+				slug: '/Research.github.io/Research Experience/Teaching & Outreach',
 			},
+			{
+				title: 'Gallery',
+				slug: '/Research.github.io/Research Experience/Gallery',
+			},
+
 		],
 	},
 	{
-		title: 'Theme',
+		title: 'Crystallography',
 		items: [
 			{
 				title: 'Get Started',

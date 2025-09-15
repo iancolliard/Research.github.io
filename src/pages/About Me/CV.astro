@@ -1,91 +1,115 @@
 ---
-import Layout from '../../layouts/Base.astro';
-import LandingContactForm from '../../components/forms/LandingContactForm.astro';
-import Logo from '../../components/Logo.astro';
+import { Icon } from 'astro-icon/components';
+import {
+  AnnouncementBar,
+  Button,
+  CustomerQuoteSection,
+  ThreeColumnTextSection,
+  YouTubeEmbedSection,
+  StickyTextImageSection,
+  TextSection,
+  CtaCardSection,
+} from '@components/odyssey-theme';
+import Layout from '../../layouts/Page.astro';
+import TextAndImageHero from '../../components/sections/heros/TextAndImageHero.astro';
+
+const base = import.meta.env.BASE_URL;
 
 const seo = {
-	title: 'Curiculum Vitae',
-	description: 'Landing Page #2 | Astro Odyssey Theme',
+  title: 'C.V',
+  description: 'Curriculum Vitae',
 };
 ---
+<Layout {seo}>
+  <TextSection>
+    <div class="flex items-center justify-between flex-wrap gap-4">
+      <h1 class="text-3xl font-bold">Curriculum Vitae</h1>
+      <a
+        class="inline-flex items-center px-4 py-2 rounded-lg border border-current hover:opacity-80"
+        href={`${base}assets/docs/cv.pdf`}
+        target="_blank" rel="noopener"
+      >
+        Download PDF
+      </a>
+    </div>
+    <p class="mt-2 opacity-70">
+      Livermore, CA · collaird1@llnl.gov · LinkedIn · Google Scholar
+    </p>
+  </TextSection>
 
-<Layout seo={seo}>
-  <div class="full-page-split__wrapper">
-    <section class="full-page-split__image-section">
-      <div class="full-page-split__logo">
-        <a href="/">
-          <Logo />
-        </a>
-      </div>
-      <picture>
-        <img
-          src="/assets/images/home/classic-hero.jpg"
-          alt="Astro Odyssey"
-          class="full-page-split__image"
-        />
-      </picture>
-    </section>
-    <section class="full-page-split__content-section">
-      <div class="full-page-split__content-container">  
-        <h1>Contact Us For a Free Consultation</h1>
-        <p>Fill out the form below to schedule a free consultation on your business' website needs.</p>
-        <LandingContactForm/>
-      </div>
-    </section>
-  </div>
+  <TextSection>
+    <h2>Education</h2>
+    <ul class="list-disc pl-6">
+      <li>
+        <strong>Ph.D., Materials Chemistry</strong>, Oregon State University
+        (2017–2022) — Advisor: Dr. May Nyman
+      </li>
+      <li><strong>B.S., Chemistry</strong>, Fordham University (2014–2017)</li>
+    </ul>
+  </TextSection>
+
+  <TextSection>
+    <h2>Research Experience</h2>
+    <h3>LLNL — Postdoctoral Researcher & XRD Facility Manager (2022–Present)</h3>
+    <ul class="list-disc pl-6">
+      <li>Pioneered micro-scale synthesis of lanthanide and actinide POM complexes.</li>
+      <li>Developed strategies to modulate optical properties of f-element complexes.</li>
+      <li>Managed XRD facility and trained >20 research groups annually.</li>
+    </ul>
+    <h3>LLNL — DOE SCGSR & GEM Fellow (2021)</h3>
+    <p>Designed synthetic methods for transplutonium–POM complexes.</p>
+    <h3>Oregon State University — Graduate Research Assistant (2018–2022)</h3>
+    <p>Expanded aqueous actinide chemistry; contributed to 10+ publications.</p>
+    <h3>Fordham University — Undergraduate Research Assistant (2016–2017)</h3>
+    <p>Investigated bi-metallic nanowires for electrochemical sensing.</p>
+  </TextSection>
+
+  <TextSection>
+    <h2>Skills</h2>
+    <ul class="list-disc pl-6">
+      <li>Synthesis & Handling: Ln/An complexes, metallic aerogels, POMs.</li>
+      <li>Characterization: SCXRD, PXRD, Raman, luminescence, NMR.</li>
+      <li>Instrumentation: Rigaku & Bruker diffractometers, facility management.</li>
+      <li>Software: OLEX2, JANA, Origin, Python, CorelDraw.</li>
+    </ul>
+  </TextSection>
+
+  <TextSection>
+    <h2>Fellowships & Awards</h2>
+    <ul class="list-disc pl-6">
+      <li>Lindau Nobel Laureate Fellowship — 2025</li>
+      <li>LLNL Directorate Awards — 2023, 2024</li>
+      <li>GEM Fellowship — 2019</li>
+      <li>DOE SCGSR Fellowship — 2019</li>
+      <li>NSF GRFP Honorable Mention — 2018</li>
+    </ul>
+  </TextSection>
+
+  <TextSection>
+    <h2>Teaching & Outreach</h2>
+    <ul class="list-disc pl-6">
+      <li>Graduate School Ambassador, OSU — 2018–2022</li>
+      <li>Mentor (undergrad & grad), OSU — 2018–2022</li>
+      <li>SACNAS Volunteer & Symposium Organizer — 2019</li>
+      <li>Teaching Assistant, OSU — 2017</li>
+      <li>Tutor, Fordham — 2016–2017</li>
+    </ul>
+  </TextSection>
+
+  <TextSection>
+    <h2>Publications</h2>
+    <p>
+      See the <a href={`${base}/Research Experience/List of Publications`}>Publications</a> page for the full list.
+    </p>
+  </TextSection>
+
+  <TextSection>
+    <h2>Professional Associations</h2>
+    <ul class="list-disc pl-6">
+      <li>American Chemical Society</li>
+      <li>IUCr Crystallographer</li>
+      <li>SACNAS</li>
+      <li>Sigma Xi</li>
+    </ul>
+  </TextSection>
 </Layout>
-
-<style>
-.full-page-split__wrapper {
-  display: grid;
-  grid-template-columns: 6fr 4fr;
-  grid-auto-columns: 1fr;
-  min-height: 100vh;
-}
-.full-page-split__image-section {
-  position: relative;
-}
-.full-page-split__image-section :global(img) {
- width: 100%;
-  height: 100vh;
-  object-fit: cover;
-}
-.full-page-split__logo {
-  background-color: var(--theme-surface-1);
-  color: (--theme-on-surface-1);
-  padding: 0.5rem 1rem;
-  border-radius: var(--theme-shape-radius);
-  top: 1rem;
-  left: 1rem;
-  position: absolute;
-  z-index: 1;
-}
-.full-page-split__logo a {
-  text-decoration: none;
-}
-.full-page-split__content-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.full-page-split__content-container {
-  margin: 1rem;
-  padding: 2rem;
-  background-color: var(--theme-surface-1);
-  color: var(--theme-on-surface-1);
-  border-radius: var(--theme-shape-radius);
-}
-.full-page-split__content-container h1 {
-  font-size: var(--font-size-xl);
-}
-@media(max-width: 768px) {
-  .full-page-split__wrapper {
-    grid-template-columns: 1fr;
-    grid-template-rows: 30vh auto;
-  }
-  .full-page-split__image-section :global(img) {
-    max-height: 30vh;
-  }
-}
-</style>
-
