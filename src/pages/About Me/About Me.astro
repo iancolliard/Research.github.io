@@ -7,14 +7,15 @@ import {
 	ThreeColumnTextSection,
 	YouTubeEmbedSection,
 	StickyTextImageSection,
+	TextSection,
 	CtaCardSection,
 } from '@components/odyssey-theme';
 import Layout from '../../layouts/Page.astro';
 import TextAndImageHero from '../../components/sections/heros/TextAndImageHero.astro';
 
 const seo = {
-	title: 'Landing Page #1 | Astro Odyssey Theme',
-	description: 'Landing Page #1 | Astro Odyssey Theme',
+	title: 'About Me',
+	description: 'Lanthanide and Actinide Chemist, and Crystallographer',
 };
 ---
 
@@ -24,115 +25,51 @@ const seo = {
 	slot="announcement-bar"
 />
 <Layout {seo}>
-	<TextAndImageHero reversed>
-		<div slot="text-container">
-			<h1>Don't Reinvent the Wheel</h1>
-			<p>Use Odyssey Theme to jumpstart your company's marketing website.</p>
-		</div>
-		<div slot="btns-container">
-			<Button href="/theme/get-started" customIcon
-				>Get Started <Fragment slot="icon">
-					<Icon name="ic:baseline-chevron-right" />
-				</Fragment></Button
-			>
-		</div>
-		<picture slot="image-container">
-			<img
-				src="/assets/images/landing-1/landing-hero-1.jpg"
-				alt="Astro Odyssee"
-				id="home-hero-image"
-			/>
-		</picture>
-	</TextAndImageHero>
+		<TextSection>
+		<div class="text-center">
+			<h1>About Me</h1>
+				<p class="max-w-2xl mx-auto mt-4">
+					I’m Ian Colliard, Ph.D., a postdoctoral researcher at Lawrence Livermore National Laboratory, where I study the chemistry of polyoxometalate (POM) complexes of lanthanides 					and actinides. My research integrates crystallography, spectroscopy, and data-driven analysis to uncover how structure controls luminescence and photophysical behavior, 					with the broader goal of advancing new materials for photonics and quantum technologies.
+				</p>
+				<p>
+					My path in science began early, I developed a fascination with chemistry at the age of ten, graduated from high school in Florida, and moved to New York City at sixteen to 					begin my bachelor’s degree. By nineteen I had completed my undergraduate studies, and by twenty-three I had earned my Ph.D. in inorganic chemistry. This accelerated 						academic trajectory reflects both my dedication to research and my ability to thrive in challenging, fast-paced environments.
+				</p>
+				<p>
+					Since then, I have published over 170 crystal structures and multiple high-impact papers, building a portfolio that connects fundamental chemistry with cutting-edge 						applications. I am equally passionate about mentoring students, fostering inclusive scientific communities, and creating bridges between disciplines. Beyond the lab, I 					enjoy projects that blend science and creativity, from 3D-printing molecular models to designing research-inspired artwork.
+				</p>
 
-	<CustomerQuoteSection
-		quoteText="Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum, vero nobis? Voluptas assumenda, voluptatibus commodi qui ducimus delectus praesentium maiores, impedit iure labore ratione, ea facilis numquam doloremque aperiam aspernatur."
-		customerName="Happy Customer"
-	/>
-
+    <div class="flex flex-wrap gap-4 mt-6 justify-center">
+      <img src="/Research.github.io/images/portrait1.jpg"
+           alt="Portrait of Ian"
+           class="rounded-lg w-60 shadow" />
+      <img src="/Research.github.io/images/portrait2.jpg"
+           alt="Another portrait"
+           class="rounded-lg w-60 shadow" />
+    </div>
+  </div>
+</TextSection>
 	<ThreeColumnTextSection>
 		<div slot="column-1-body">
-			<h2>Why?</h2>
+			<h2>Curiosity Dirven Exploration</h2>
 			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
+				I approach science as a form of exploration, each unexpected peak or anomaly is an opportunity to uncover new knowledge. My research is guided by curiosity, driving me to ask 					questions at the frontiers of chemistry and to see every result as a doorway to discovery.
 			</p>
 		</div>
 		<Button slot="column-1-cta">Learn More</Button>
 		<div slot="column-2-body">
-			<h2>How?</h2>
+			<h2>Precision and Rigor</h2>
 			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
+				I believe that impactful science rests on careful and reproducible methods. I strive for rigor and transparency so that my work is not only accurate but also useful and accessible 				to the broader scientific community.
 			</p>
 		</div>
 		<Button slot="column-2-cta" outlined>Learn More</Button>
 		<div slot="column-3-body">
-			<h2>What?</h2>
+			<h2>Mentorship and Accessibility</h2>
 			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
+				Research is not complete until it is shared and taught. I am committed to mentoring students and creating pathways for others to engage with complex science, making it 					approachable through outreach, collaboration, and open communication.
 			</p>
 		</div>
 		<Button slot="column-3-cta">Learn More</Button>
 	</ThreeColumnTextSection>
 
-	<YouTubeEmbedSection url="https://www.youtube.com/watch?v=cbYr75_R15M" rounded
-	/>
-
-	<StickyTextImageSection>
-		<div slot="text-container">
-			<h2>Features</h2>
-			<h3>SEO</h3>
-			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
-			</p>
-			<h3>Responsive</h3>
-			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
-			</p>
-			<h3>Themeable</h3>
-			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Est dolorem
-				tempore odio! Nemo consectetur ipsa aperiam similique maxime maiores
-				consequatur explicabo ut quibusdam fugiat corporis, dignissimos tenetur,
-				mollitia cumque. Velit.
-			</p>
-		</div>
-		<picture slot="image-container">
-			<img
-				src="/assets/images/landing-1/landing-sticky.jpg"
-				alt="Astro Odyssey"
-				loading="lazy"
-			/>
-		</picture>
-	</StickyTextImageSection>
-
-	<CtaCardSection
-		background="var(--theme-surface-2)"
-		color="var(--theme-on-surface-2)"
-	>
-		<h2>Start Your Website Today</h2>
-		<p>
-			It only takes a couple clicks to have a new, modern website for your
-			business or startup.
-		</p>
-		<Button href="/theme/get-started" customIcon
-			>Get Started <Fragment slot="icon">
-				<Icon name="ic:baseline-chevron-right" />
-			</Fragment></Button
-		>
-	</CtaCardSection>
-</Layout>
+	</Layout>
