@@ -1,166 +1,160 @@
 ---
-import { Icon } from 'astro-icon/components';
 import {
-	TextCardSection,
-	Container,
-	Button,
-	FormInput,
-	FormSelect,
-	FormTextarea,
+  AnnouncementBar,
+  Button,
+  CustomerQuoteSection,
+  ThreeColumnTextSection,
+  YouTubeEmbedSection,
+  StickyTextImageSection,
+  TextSection,
+  CtaCardSection,
 } from '@components/odyssey-theme';
 import Layout from '../../layouts/Page.astro';
 
-const seo = {
-	title: 'Astro Odyssey Theme Style Guide',
-	description: 'Get started on how to setup and use this Astro theme.',
-};
-
-const selectOptions = ['Option 1', 'Option 2', 'Option 3'];
+/** UPDATE these paths/titles/blurbs as needed. Use files in /public for zero-config img handling. */
+const favorites = [
+  {
+    title: 'Cluster of Clusters',
+    href: '/crystallography/na-cmw10/',
+    blurb: 'My first structure with U(IV), a cluster made of 14 clusters linked together. The U84 structure can then act a ‘super-atom,’ mimicking the atom-like behavior in lattice formation.',
+    images: [
+      '/Research.github.io/assets/images/cluster1',
+      '/Research.github.io/assets/images/cluster2',
+      '/Research.github.io/assets/images/cluster3',
+    ],
+  },
+  {
+    title: 'Donuts',
+    href: '/crystallography/luu-u84/',
+    blurb: 'The next step structure in my research, and the largest U(IV)-oxo structure to date.',
+    images: [
+      "/assets/crystal/favorites/luu-u84/01.jpg",
+      '/assets/crystal/favorites/luu-u84/02.jpg',
+      '/assets/crystal/favorites/luu-u84/03.jpg',
+    ],
+  },
+  {
+    title: 'Donut Sandwich',
+    href: '/crystallography/nh4-u84-rhomb/',
+    blurb: 'A lucky yet frustrating surprise, the U70 sandwiches two hexamers that are disordered over five positions.',
+    images: [
+      '/assets/crystal/favorites/nh4-u84-rhomb/01.jpg',
+      '/assets/crystal/favorites/nh4-u84-rhomb/02.jpg',
+      '/assets/crystal/favorites/nh4-u84-rhomb/03.jpg',
+    ],
+  },
+  {
+    title: 'PacMan',
+    href: '/crystallography/ba-euw5/',
+    blurb: 'Same structural motif, but Ce(IV) gave us more fragements to work with. The PacMan structure features the most fragements and the most unique arrangement. From monomners, to dimers, to 13-mers, to the Ce70 rings.',
+    images: [
+      '/assets/crystal/favorites/ba-euw5/01.jpg',
+      '/assets/crystal/favorites/ba-euw5/02.jpg',
+      '/assets/crystal/favorites/ba-euw5/03.jpg',
+    ],
+  },
+  {
+    title: 'Interlocking-ish Rings',
+    href: '/crystallography/yb-u84/',
+    blurb: 'Ce(IV) strikes again and self-assembles into these almost interlocking rings.',
+    images: [
+      '/assets/crystal/favorites/yb-u84/01.jpg',
+      '/assets/crystal/favorites/yb-u84/02.jpg',
+      '/assets/crystal/favorites/yb-u84/03.jpg',
+    ],
+  },
+  {
+    title: 'The Rad One',
+    href: '/crystallography/ni-pacman/',
+    blurb: 'This structure was obtained with only 6 nanograms of 248Cm, representing on of the most luminescent and radioactive crystals to date.',
+    images: [
+      '/assets/crystal/favorites/ni-pacman/01.jpg',
+      '/assets/crystal/favorites/ni-pacman/02.jpg',
+      '/assets/crystal/favorites/ni-pacman/03.jpg',
+    ],
+  },
+];
 ---
 
-<Layout {seo}>
-	<Container>
-		<TextCardSection>
-			<h1>Style Guide</h1>
-			<p>
-				This is the style guide for the <a
-					href="https://github.com/treefarmstudio/odyssey-theme"
-					target="_blank"
-					rel="noopener noreferrer">Odyssey Theme</a
-				>. Everything you'll find in the theme's starter repo is either a
-				component from the <a
-					href="https://www.npmjs.com/package/@components/odyssey-theme"
-					target="_blank"
-					rel="noopener noreferrer">Odyssey Components Package</a
-				> or built using a component. Not only does this allow for a fully modular
-				setup that receives updates and improvements over time but also allows you
-				to use bits and pieces as needed to create your own unique website with Odyssey
-				as the foundation.
-			</p>
-		</TextCardSection>
-		<section class="style-guide__section">
-			<div class="style-guide__title-container">
-				<h2>Colors</h2>
-			</div>
-			<div>
-				<div class="style-guide-color__card">
-					<h3>Primary</h3>
-				</div>
-				<div class="style-guide-color__card style-guide-color__card--surface-1">
-					<h3>Surface 1</h3>
-				</div>
-				<div class="style-guide-color__card style-guide-color__card--surface-2">
-					<h3>Surface 2</h3>
-				</div>
-			</div>
-		</section>
-		<section class="style-guide__section">
-			<div class="style-guide__title-container">
-				<h2>Typography</h2>
-			</div>
-			<div>
-				<h1>Heading 1</h1>
-				<h2>Heading 2</h2>
-				<h3>Heading 3</h3>
-				<h4>Heading 4</h4>
-				<h5>Heading 5</h5>
-				<h6>Heading 6</h6>
-				<p>Body Text</p>
-				<blockquote>
-					“Don’t settle for what life gives you; make life better and build
-					something.” — Ashton Kutcher
-				</blockquote>
-			</div>
-		</section>
-		<section class="style-guide__section">
-			<div class="style-guide__title-container">
-				<h2>Buttons</h2>
-			</div>
-			<div>
-				<p>Button</p>
-				<p>
-					<Button>Button 1</Button>
-				</p>
-				<p>Unelevated Button</p>
-				<p>
-					<Button unelevated>Button 2</Button>
-				</p>
-				<p>Outlined Button</p>
-				<p>
-					<Button outlined>Button 3</Button>
-				</p>
-				<p>Button With Custom Icon</p>
-				<Button customIcon
-					>Launch Page
-					<Fragment slot="icon">
-						<Icon name="ic:baseline-launch" />
-					</Fragment>
-				</Button>
-			</div>
-		</section>
-		<section class="style-guide__section">
-			<div class="style-guide__title-container">
-				<h2>Forms</h2>
-			</div>
-			<div class="style-guide-forms__container">
-				<div>
-					<h3>Input With Label</h3>
-					<FormInput type="text" label="Name" name="Name" placeholder="John Doe"
-					/>
-				</div>
-				<div>
-					<h3>Input Without Label</h3>
-					<FormInput type="text" name="Name" placeholder="John Doe" />
-				</div>
-				<div>
-					<h3>Select Dropdown</h3>
-					<FormSelect options={selectOptions} />
-				</div>
-				<div>
-					<h3>Textarea</h3>
-					<FormTextarea name="Message" placeholder="Your message here..." />
-				</div>
-			</div>
-		</section>
-	</Container>
+<Layout>    
+    <TextSection>
+      <h2>Favorite Structures</h2>
+    </TextSection>
+
+  <CtaCardSection
+    background="var(--theme-surface-1); --container-max-width-narrow: var(--container-max-width)"
+    color="var(--theme-on-surface-1)"
+  >
+
+
+    <div class="cards">
+      {favorites.map((f) => (
+        <article class="card">
+          <header class="head">
+            <h3 class="title"><a href={f.href}>{f.title}</a></h3>
+            <p class="blurb">{f.blurb}</p>
+          </header>
+
+          <!-- exactly 3 images per structure -->
+          <div class="thumbs">
+            {f.images.slice(0, 3).map((src, i) => (
+              <a class="thumb" href={src} target="_blank" rel="noopener noreferrer">
+                <img src={src} alt={`${f.title} — image ${i + 1}`} loading="lazy" decoding="async" />
+              </a>
+            ))}
+          </div>
+
+          <footer class="foot">
+            <a class="link" href={f.href}>View record →</a>
+          </footer>
+        </article>
+      ))}
+    </div>
+  </CtaCardSection>
 </Layout>
 
 <style>
-	.style-guide__section {
-		margin: var(--section-margin) auto;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-	}
-	.style-guide__title-container h2 {
-		position: sticky;
-		top: 0;
-	}
-	.style-guide-forms__container {
-		display: grid;
-		gap: 1rem;
-	}
-	.style-guide-forms__container h3 {
-		margin-bottom: 0.5rem;
-	}
-	.style-guide-color__card {
-		margin-bottom: 1rem;
-		background-color: var(--theme-primary);
-		color: var(--theme-on-primary);
-		padding: 1rem;
-		border-radius: var(--theme-shape-radius);
-	}
-	.style-guide-color__card--surface-1 {
-		background-color: var(--theme-surface-1);
-		color: var(--theme-on-surface-1);
-	}
-	.style-guide-color__card--surface-2 {
-		background-color: var(--theme-surface-2);
-		color: var(--theme-on-surface-2);
-	}
-	@media (max-width: 768px) {
-		.style-guide__section {
-			grid-template-columns: 1fr;
-			gap: 2rem;
-		}
-	}
+/* responsive grid of 6 cards */
+.cards {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+@media (max-width: 1100px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 680px)  { .cards { grid-template-columns: 1fr; } }
+
+/* individual card styling (with safe fallbacks) */
+.card {
+  border: 1px solid color-mix(in oklab, currentColor 10%, transparent);
+  border-radius: var(--theme-shape-radius, 14px);
+  background: var(--theme-surface-1, #fff);
+  padding: 1rem;
+  text-align: left;
+  box-shadow: 0 1px 12px color-mix(in oklab, black 6%, transparent);
+}
+.head { margin-bottom: .5rem; }
+.title { margin: 0 0 .25rem; font-size: 1.05rem; line-height: 1.2; }
+.title a { text-decoration: none; }
+.blurb { margin: 0; opacity: .85; }
+
+/* 3 thumbnails per card (single row) */
+.thumbs {
+  display: grid;
+  gap: .5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: .5rem;
+}
+@media (max-width: 540px) { .thumbs { grid-template-columns: 1fr 1fr 1fr; } }
+
+.thumb { display: block; border-radius: 10px; overflow: hidden; }
+.thumb img {
+  width: 100%; height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.foot { margin-top: .5rem; }
+.link { text-decoration: none; font-weight: 600; }
 </style>
