@@ -9,7 +9,7 @@ export const nav = [
 	},
 	{
 		title: 'C.V.',
-		slug: '/Research.github.io/About Me/cv',
+		slug: '/Research.github.io/About Me/CV',
 	},
 	{
 		title: 'List of Publications',
