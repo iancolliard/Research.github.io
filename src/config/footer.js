@@ -1,17 +1,17 @@
 export const footerSocials = [
   {
     name: 'Email',
-    url: 'https://twitter.com/jaydanurwin',
+    url: 'ian.colliard1@gmail.com',
     icon: "mdi:email",
   },
   {
     name: 'LinkedIn',
-    url: 'https://youtube.com/@jaydanurwin',
+    url: 'https://www.linkedin.com/in/ian-colliard-b6b2a1177',
     icon: "mdi:linkedin",
   },
   {
     name: 'GoogleScholar',
-    url: 'https://github.com/jaydanurwin',
+    url: 'https://scholar.google.com/citations?user=zmcgy_8AAAAJ&hl=en',
     icon: "simple-icons:googlescholar",
   },
 ]
