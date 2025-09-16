@@ -35,6 +35,9 @@ export const nav = [
 		title: 'Crystal Structures',
 		slug: '/Research.github.io/Crystallography/Crystal Structures',
 	},
-
+	{
+		title: 'CIF Directory',
+		slug: '/Research.github.io/Crystallography/CIFs',
+	},
 
 ];
