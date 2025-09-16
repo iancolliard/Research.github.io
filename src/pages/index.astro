@@ -1,80 +1,12 @@
 ---
-import { Container, FeatureCard } from '@components/odyssey-theme';
+import { Container, FeatureCard, TextSection } from '@components/odyssey-theme';
 
 import Layout from '../layouts/Page.astro';
 import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
 ---
-
 <Layout>
 	<HomeHeroSection />
-	<Container>
-		<section class="feature-card__section">
-			<h2>About Me</h2>
-			<p>
-				Small biography and Curiculum Vitae.
-			</p>
-			<div class="feature-card__grid">
-				<FeatureCard href="/Research.github.io/About Me/About Me" title="About Me" imgSrc="iancolliard.github.io/Research.github.io/assets/images/profile.webp">
-				</FeatureCard>
-				<FeatureCard href="/Research.github.io/About Me/CV" title="C.V." imgSrc="Research.github.io/assets/images/profile">
-				</FeatureCard>
-			</div>
-		</section>
-	</Container>
+		<TextSection>
 
-	<Container>
-		<section class="feature-card__section">
-			<h2>Research Experience</h2>
-			<p>
-				Learn more about my research experience, publications, journal covers, teaching and outreach.
-			</p>
-			<div class="feature-card__grid">
-				<FeatureCard href="/Research.github.io/Research Experience/List of Publications" title="List of Publications" imgSrc="Research.github.io/assets/images/TOC">
-				</FeatureCard>
-				<FeatureCard href="/Research.github.io/Research Experience/Journal Covers" title="Journal Covers" imgSrc="Research.github.io/assets/images/IMG_0372">
-				</FeatureCard>
-				<FeatureCard href="/Research.github.io/Research Experience/Teaching & Outreach" title="Teaching & Outreach" imgSrc="/assets/images/home/screenshots/blog">
-				</FeatureCard>
-				<FeatureCard href="/Research.github.io/Research Experience/Gallery" title="Gallery" imgSrc="/assets/images/home/screenshots/blog-post"
-				</FeatureCard>
-			</div>
-		</section>
-	</Container>
-
-	<Container>
-		<section class="feature-card__section">
-			<h2>Crystallography</h2>
-			<p>My favorite topic! Learn more about crystallography and my structures.</p>
-			<div class="feature-card__grid">
-				<FeatureCard
-					href="/theme/get-started"
-					imgSrc="/assets/images/home/screenshots/get-started"
-					title="Get Started"
-				>
-				</FeatureCard>
-				<FeatureCard
-					href="/theme/style-guide"
-					imgSrc="/assets/images/home/screenshots/style-guide"
-					title="Style Guide"
-				>
-				</FeatureCard>
-			</div>
-		</section>
-	</Container>
+  		</TextSection>
 </Layout>
-
-<style>
-	.feature-card__section {
-		margin: var(--section-margin) auto;
-	}
-	.feature-card__grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: var(--theme-grid-gap);
-	}
-	@media (max-width: 768px) {
-		.feature-card__grid {
-			grid-template-columns: 1fr;
-		}
-	}
-</style>
