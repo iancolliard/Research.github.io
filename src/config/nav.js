@@ -8,11 +8,33 @@ export const nav = [
 		slug: '/Research.github.io/About Me/About Me',
 	},
 	{
-		title: 'Research',
-		slug: '/Research.github.io/Research Experience',
+		title: 'C.V',
+		slug: '/Research.github.io/About Me/cv',
+	},
+	{
+		title: 'List of Publications',
+		slug: '/Research.github.io/Research Experience/List of Publications',
+	},
+	{
+		title: 'Journal Covers',
+		slug: '/Research.github.io/Research Experience/Journal Covers',
+	},
+	{
+		title: 'Teaching & Outreach',
+		slug: '/Research.github.io/Research Experience/Teaching & Outreach',
+	},
+	{
+		title: 'Gallery',
+		slug: '/Research.github.io/Research Experience/Gallery',
 	},
 	{
 		title: 'Crystallography',
-		slug: '/Research.github.io/Crystallography',
+		slug: '/Research.github.io/Crystallography/Crystallography',
 	},
+	{
+		title: 'Crystal Strcutres',
+		slug: '/Research.github.io/Crystallography/Crystal Structures',
+	},
+
+
 ];
