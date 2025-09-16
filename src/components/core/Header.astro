@@ -79,6 +79,15 @@ const { navData, rightMenu } = Astro.props;
     justify-content: space-between;
     align-items: center;
   }
+#odysseyNavHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--theme-bg, #fff);
+  -webkit-backdrop-filter: saturate(150%) blur(8px);
+  backdrop-filter: saturate(150%) blur(8px);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
   header.header--right {
     display: grid;
     grid-template-columns: 1fr auto auto;
