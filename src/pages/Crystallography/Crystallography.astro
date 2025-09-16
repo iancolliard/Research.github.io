@@ -15,70 +15,79 @@ import Layout from '../../layouts/Page.astro';
 const favorites = [
   {
     title: 'Cluster of Clusters',
-    href: '/crystallography/na-cmw10/',
+    href: '/Research.github.io/assets/pdfs/paper4.pdf',
     blurb: 'My first structure with U(IV), a cluster made of 14 clusters linked together. The U84 structure can then act a ‘super-atom,’ mimicking the atom-like behavior in lattice formation.',
     images: [
-      '/Research.github.io/assets/images/cluster1',
-      '/Research.github.io/assets/images/cluster2',
-      '/Research.github.io/assets/images/cluster3',
+      '/Research.github.io/assets/images/clusters1.webp',
+      '/Research.github.io/assets/images/clusters2.webp',
+      '/Research.github.io/assets/images/clusters3.webp',
     ],
   },
   {
     title: 'Donuts',
-    href: '/crystallography/luu-u84/',
+    href: '/Research.github.io/assets/pdfs/paper4.pdf',
     blurb: 'The next step structure in my research, and the largest U(IV)-oxo structure to date.',
     images: [
-      "/assets/crystal/favorites/luu-u84/01.jpg",
-      '/assets/crystal/favorites/luu-u84/02.jpg',
-      '/assets/crystal/favorites/luu-u84/03.jpg',
+      '/Research.github.io/assets/images/onering.webp',
+      '/Research.github.io/assets/images/onering1.webp',
+      '/Research.github.io/assets/images/TM-U70.gif',
     ],
   },
   {
     title: 'Donut Sandwich',
-    href: '/crystallography/nh4-u84-rhomb/',
+    href: '/Research.github.io/assets/pdfs/paper4.pdf',
     blurb: 'A lucky yet frustrating surprise, the U70 sandwiches two hexamers that are disordered over five positions.',
     images: [
-      '/assets/crystal/favorites/nh4-u84-rhomb/01.jpg',
-      '/assets/crystal/favorites/nh4-u84-rhomb/02.jpg',
-      '/assets/crystal/favorites/nh4-u84-rhomb/03.jpg',
+      '/Research.github.io/assets/images/sandwich1.webp',
+      '/Research.github.io/assets/images/sandwich2.webp',
+      '/Research.github.io/assets/images/sandwich3.webp',
     ],
   },
   {
     title: 'PacMan',
-    href: '/crystallography/ba-euw5/',
+    href: '/Research.github.io/assets/pdfs/paper9.pdf',
     blurb: 'Same structural motif, but Ce(IV) gave us more fragements to work with. The PacMan structure features the most fragements and the most unique arrangement. From monomners, to dimers, to 13-mers, to the Ce70 rings.',
     images: [
-      '/assets/crystal/favorites/ba-euw5/01.jpg',
-      '/assets/crystal/favorites/ba-euw5/02.jpg',
-      '/assets/crystal/favorites/ba-euw5/03.jpg',
+      '/Research.github.io/assets/images/pacman1.webp',
+      '/Research.github.io/assets/images/pacman2.webp',
+      '/Research.github.io/assets/images/pacman3.webp',
     ],
   },
   {
     title: 'Interlocking-ish Rings',
-    href: '/crystallography/yb-u84/',
+    href: '/Research.github.io/assets/pdfs/paper9.pdf',
     blurb: 'Ce(IV) strikes again and self-assembles into these almost interlocking rings.',
     images: [
-      '/assets/crystal/favorites/yb-u84/01.jpg',
-      '/assets/crystal/favorites/yb-u84/02.jpg',
-      '/assets/crystal/favorites/yb-u84/03.jpg',
+      '/Research.github.io/assets/images/rings1.webp',
+      '/Research.github.io/assets/images/rings2.webp',
+      '/Research.github.io/assets/images/rings3.webp',
     ],
   },
   {
     title: 'The Rad One',
-    href: '/crystallography/ni-pacman/',
+    href: '/Research.github.io/assets/pdfs/paper19.pdf',
     blurb: 'This structure was obtained with only 6 nanograms of 248Cm, representing on of the most luminescent and radioactive crystals to date.',
     images: [
-      '/assets/crystal/favorites/ni-pacman/01.jpg',
-      '/assets/crystal/favorites/ni-pacman/02.jpg',
-      '/assets/crystal/favorites/ni-pacman/03.jpg',
+      '/Research.github.io/assets/images/rad1.webp',
+      '/Research.github.io/assets/images/rad2.webp',
+      '/Research.github.io/assets/images/rad3.webp',
     ],
   },
 ];
 ---
 
 <Layout>    
+<TextSection>
+<h2>What is Single-Crystal X-ray Crystallography?</h2>
+
+Single-crystal X-ray crystallography is one of the most powerful techniques in chemistry for revealing the three-dimensional arrangement of atoms in a material. By directing a beam of X-rays through a single crystal, scientists can measure how the X-rays scatter and diffract. From these patterns, it is possible to reconstruct an electron density map and determine the precise positions of atoms, bond lengths, and angles.
+
+This method provides an unparalleled level of structural detail, allowing researchers to understand not only what a compound is but also how its geometry influences its physical and chemical properties. For chemists, crystallography is the gold standard for confirming new molecular structures, unraveling complex bonding environments, and connecting structure to function in materials, catalysts, and bioinorganic systems.
+	</TextSection>
     <TextSection>
-      <h2>Favorite Structures</h2>
+      <h2>Why it is my favorite & some of the best structures!</h2>
+<p>
+</p>
     </TextSection>
 
   <CtaCardSection
@@ -104,10 +113,7 @@ const favorites = [
             ))}
           </div>
 
-          <footer class="foot">
-            <a class="link" href={f.href}>View record →</a>
-          </footer>
-        </article>
+                  </article>
       ))}
     </div>
   </CtaCardSection>
