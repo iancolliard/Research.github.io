@@ -10,21 +10,37 @@ import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
 		<div class="hero-section__text">
 				<h1>Welcome!</h1>
 				<p>
-					To a place dedicated to my research and crystal structures.
+					To a place dedicated to my research and crystal structures. Click on the Diffractogram to learn more about my work →
 				</p>
-				
-            <Fragment slot="icon">
-              <Icon name="ic:baseline-chevron-right"/>
-            </Fragment>
-                    		</div>
-		<div class="hero-section__image">
+				<p>
+					Or click ↓ below to learn more about me.
+				</p>
+				<a href="/Research.github.io/About Me/About Me" target="_blank" rel="noopener">
 				<picture>
 					<img
 						src="/Research.github.io/assets/images/profile.webp"
 						alt="Profile"
 						id="Profile"
+    						width="300"
+   						class="oval-image"
 					/>
 				</picture>
+				</a>
+
+            <Fragment slot="icon">
+              <Icon name="ic:baseline-chevron-right"/>
+            </Fragment>
+                    		</div>
+		<div class="hero-section__image">
+				<a href="/Research.github.io/Crystallography/Crystallography" target="_blank" rel="noopener">
+				<picture>
+					<img
+						src="/Research.github.io/assets/images/Cover.webp"
+						alt="Diffractogram"
+						id="Diffractogram"
+					/>
+				</picture>
+				</a>
 		</div>
 	</section>
 </Container>
@@ -41,6 +57,7 @@ import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
 	.hero-section__text {
 		justify-self: center;
 		max-width: 25rem;
+		text-align: center;
 	}
 	.hero-btns__container {
 		display: flex;
@@ -59,6 +76,14 @@ import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
 		max-height: 80vh;
 		object-fit: cover;
 		border-radius: var(--theme-shape-radius);
+	}
+		.oval-image {
+ 		border-radius: var(--theme-shape-radius); /* matches cover image */
+ 		object-fit: cover;
+		margin-left: auto;           /* push right edge in */
+		margin-right: auto;          /* push left edge in */
+	}
+
 	}
 	@media (max-width: 768px) {
 		.hero-section__section {
