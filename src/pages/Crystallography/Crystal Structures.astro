@@ -1,157 +1,218 @@
 ---
-import { Icon } from 'astro-icon/components';
-import {
-  AnnouncementBar,
-  Button,
-  CustomerQuoteSection,
-  ThreeColumnTextSection,
-  YouTubeEmbedSection,
-  StickyTextImageSection,
-  TextSection,
-  CtaCardSection,
-} from '@components/odyssey-theme';
 import Layout from '../../layouts/Page.astro';
-import TextAndImageHero from '../../components/sections/heros/TextAndImageHero.astro';
+import { TextSection } from '@components/odyssey-theme';
 
 const base = import.meta.env.BASE_URL;
+const withBase = (p) => `${base}${p.replace(/^\/+/, '')}`;
 
 const seo = {
   title: 'Crystal Structures',
   description: 'Records & Milestones',
 };
-
 ---
-<Layout>
-	<TextSection>
 
+<Layout title={seo.title} description={seo.description}>
+  <!-- Jump menu -->
+  <nav class="jump" aria-label="On this page">
+    <strong>^:</strong>
+    <ul>
+      <li><a href="#record-holders">Largest Cell</a></li>
+      <li><a href="#lowest-r1">Lowest R1</a></li>
+      <li><a href="#longest-params">Largest lattice parameters</a></li>
+      <li><a href="#common-space-groups">Most common space groups</a></li>
+      <li><a href="#by-system">By crystal system</a></li>
+      <li><a href="#by-year">By year</a></li>
+      <li><a href="#by-element">By element</a></li>
+    </ul>
+  </nav>
 
-<h1>Record Holders & Milestones</h1>
+  <TextSection>
+    <h1>Record Holders &amp; Milestones</h1>
 
-<h3>Largest Unit Cell (Top 10 by volume)</h3>
-<p>1. [LuU-U84](/crystallography/luu-u84/) — **V = 137813.0 Å³**, Z = 1.0, space group R -3 c</p>
-<p>2. [NH4(Ce62)2-alpha](/crystallography/nh4-ce62-2-alpha/) — **V = 120929.6 Å³**, Z = 4.0, space group P 1 21/n 1
-<p>3. [ErU6-(U84)2](/crystallography/eru6-u84-2/) — **V = 84891.0 Å³**, Z = 1.00008, space group P n -3
-<p>4. [NH4(Ce5)2Ce70](/crystallography/nh4-ce5-2ce70/) — **V = 74657.1 Å³**, Z = 4.0, space group I 1 2/a 1
-<p>5. [nh4cece622](/crystallography/nh4cece622/) — **V = 59403.8 Å³**, Z = 2.0, space group P -1
-<p>6. [NH4(Ce62)2-beta](/crystallography/nh4-ce62-2-beta/) — **V = 58252.4 Å³**, Z = 2.0, space group P -1
-<p>7. [NH4-U84-rhomb](/crystallography/nh4-u84-rhomb/) — **V = 57471.3 Å³**, Z = 1.96875, space group R -3
-<p>8. [2291414](/crystallography/2291414/) — **V = 53076.1 Å³**, Z = 6.0, space group P 63/m m c
-<p>9. [Ni-PacMan](/crystallography/ni-pacman/) — **V = 51009.7 Å³**, Z = 1.0, space group P -1
-<p>10. [Yb-U84](/crystallography/yb-u84/) — **V = 40488.1 Å³**, Z = 2.0, space group I 1 2/m 1
+    <section id="record-holders">
+      <h3>Largest Unit Cell (Top 10 by volume)</h3>
+      <ol>
+        <li><a href={withBase('crystallography/luu-u84/')}>LuU-U84</a> — <strong>V = 137813.0 Å³</strong>, Z = 1.0, space group R -3 c</li>
+        <li><a href={withBase('crystallography/nh4-ce62-2-alpha/')}>NH4(Ce62)2-alpha</a> — <strong>V = 120929.6 Å³</strong>, Z = 4.0, space group P 1 21/n 1</li>
+        <li><a href={withBase('crystallography/eru6-u84-2/')}>ErU6-(U84)2</a> — <strong>V = 84891.0 Å³</strong>, Z = 1.00008, space group P n -3</li>
+        <li><a href={withBase('crystallography/nh4-ce5-2ce70/')}>NH4(Ce5)2Ce70</a> — <strong>V = 74657.1 Å³</strong>, Z = 4.0, space group I 1 2/a 1</li>
+        <li><a href={withBase('crystallography/nh4cece622/')}>nh4cece622</a> — <strong>V = 59403.8 Å³</strong>, Z = 2.0, space group P -1</li>
+        <li><a href={withBase('crystallography/nh4-ce62-2-beta/')}>NH4(Ce62)2-beta</a> — <strong>V = 58252.4 Å³</strong>, Z = 2.0, space group P -1</li>
+        <li><a href={withBase('crystallography/nh4-u84-rhomb/')}>NH4-U84-rhomb</a> — <strong>V = 57471.3 Å³</strong>, Z = 1.96875, space group R -3</li>
+        <li><a href={withBase('crystallography/2291414/')}>2291414</a> — <strong>V = 53076.1 Å³</strong>, Z = 6.0, space group P 63/m m c</li>
+        <li><a href={withBase('crystallography/ni-pacman/')}>Ni-PacMan</a> — <strong>V = 51009.7 Å³</strong>, Z = 1.0, space group P -1</li>
+        <li><a href={withBase('crystallography/yb-u84/')}>Yb-U84</a> — <strong>V = 40488.1 Å³</strong>, Z = 2.0, space group I 1 2/m 1</li>
+      </ol>
+    </section>
 
-<h3>Lowest R1 (Top 10)</h3>
-<p>1. [4003024](/crystallography/4003024/) — **R1 = 0.0162**, space group P m -3 m
-<p>2. [2013551](/crystallography/2013551/) — **R1 = 0.0208**, space group P -3 m 1
-<p>3. [Ba-EuW5](/crystallography/ba-euw5/) — **R1 = 0.0262**, space group I 1 2/a 1
-<p>4. [BaEuW5](/crystallography/baeuw5/) — **R1 = 0.0262**, space group I 1 2/a 1
-<p>5. [NH4-U6](/crystallography/nh4-u6/) — **R1 = 0.0289**, space group P 4/m n c
-<p>6. [Pr-U6](/crystallography/pr-u6/) — **R1 = 0.0337**, space group P n n m
-<p>7. [La-U6](/crystallography/la-u6/) — **R1 = 0.0349**, space group P 1 21/a 1
-<p>8. [2102482](/crystallography/2102482/) — **R1 = 0.0363**, space group P 1 21/c 1
-<p>9. [Na-CmW10](/crystallography/na-cmw10/) — **R1 = 0.0377**, space group I m m 2
-<p>10. [NH4-U84-rhomb](/crystallography/nh4-u84-rhomb/) — **R1 = 0.0378**, space group R -3
+    <section id="lowest-r1">
+      <h3>Lowest R1 (Top 10)</h3>
+      <ol>
+        <li><a href={withBase('crystallography/4003024/')}>4003024</a> — <strong>R1 = 0.0162</strong>, space group P m -3 m</li>
+        <li><a href={withBase('crystallography/2013551/')}>2013551</a> — <strong>R1 = 0.0208</strong>, space group P -3 m 1</li>
+        <li><a href={withBase('crystallography/ba-euw5/')}>Ba-EuW5</a> — <strong>R1 = 0.0262</strong>, space group I 1 2/a 1</li>
+        <li><a href={withBase('crystallography/baeuw5/')}>BaEuW5</a> — <strong>R1 = 0.0262</strong>, space group I 1 2/a 1</li>
+        <li><a href={withBase('crystallography/nh4-u6/')}>NH4-U6</a> — <strong>R1 = 0.0289</strong>, space group P 4/m n c</li>
+        <li><a href={withBase('crystallography/pr-u6/')}>Pr-U6</a> — <strong>R1 = 0.0337</strong>, space group P n n m</li>
+        <li><a href={withBase('crystallography/la-u6/')}>La-U6</a> — <strong>R1 = 0.0349</strong>, space group P 1 21/a 1</li>
+        <li><a href={withBase('crystallography/2102482/')}>2102482</a> — <strong>R1 = 0.0363</strong>, space group P 1 21/c 1</li>
+        <li><a href={withBase('crystallography/na-cmw10/')}>Na-CmW10</a> — <strong>R1 = 0.0377</strong>, space group I m m 2</li>
+        <li><a href={withBase('crystallography/nh4-u84-rhomb/')}>NH4-U84-rhomb</a> — <strong>R1 = 0.0378</strong>, space group R -3</li>
+      </ol>
+    </section>
 
-<h3>Longest Lattice Parameters</h3>
-<h4>a-axis (Top 5)</h4>  
-<p>1. [LuU-U84](/crystallography/luu-u84/) (48.84142 Å), 
-<p>2. [ErU6-(U84)2](/crystallography/eru6-u84-2/) (43.9495 Å), 
-<p>3. [NH4(Ce5)2Ce70](/crystallography/nh4-ce5-2ce70/) (43.5822 Å), 
-<p>4. [NH4(Ce62)2-beta](/crystallography/nh4-ce62-2-beta/) (37.36377 Å), 
-<p>5. [2291414](/crystallography/2291414/) (37.2746 Å)
+    <section id="longest-params">
+      <h3>Longest Lattice Parameters</h3>
 
-<h4>b-axis (Top 5)</h4>  
-<p>1. [NH4(Ce62)2-alpha](/crystallography/nh4-ce62-2-alpha/) (87.7015 Å), 
-<p>2. [NH4(Ce70)-ortho](/crystallography/nh4-ce70-ortho/) (59.5377 Å), 
-<p>3. [CoCe70-Propeller](/crystallography/coce70-propeller/) (58.0387 Å), 
-<p>4. [LuU-U84](/crystallography/luu-u84/) (48.84142 Å), 
-<p>5. [Lu-U84](/crystallography/lu-u84/) (44.0196 Å)
+      <h4>a-axis (Top 5)</h4>
+      <ol>
+        <li><a href={withBase('crystallography/luu-u84/')}>LuU-U84</a> (48.84142 Å)</li>
+        <li><a href={withBase('crystallography/eru6-u84-2/')}>ErU6-(U84)2</a> (43.9495 Å)</li>
+        <li><a href={withBase('crystallography/nh4-ce5-2ce70/')}>NH4(Ce5)2Ce70</a> (43.5822 Å)</li>
+        <li><a href={withBase('crystallography/nh4-ce62-2-beta/')}>NH4(Ce62)2-beta</a> (37.36377 Å)</li>
+        <li><a href={withBase('crystallography/2291414/')}>2291414</a> (37.2746 Å)</li>
+      </ol>
 
-<h4>c-axis (Top 5)</h4>  
-<p>1. [NH4-U84-rhomb](/crystallography/nh4-u84-rhomb/) (72.9926 Å), 
-<p>2. [LuU-U84](/crystallography/luu-u84/) (66.7088 Å), 
-<p>3. [W24-Cs-2](/crystallography/w24-cs-2/) (62.9142 Å), 
-<p>4. [ZnCe70-Propeller](/crystallography/znce70-propeller/) (59.3231 Å), 
-<p>5. [NH4Ce70-mono](/crystallography/nh4ce70-mono/) (58.6339 Å)
+      <h4>b-axis (Top 5)</h4>
+      <ol>
+        <li><a href={withBase('crystallography/nh4-ce62-2-alpha/')}>NH4(Ce62)2-alpha</a> (87.7015 Å)</li>
+        <li><a href={withBase('crystallography/nh4-ce70-ortho/')}>NH4(Ce70)-ortho</a> (59.5377 Å)</li>
+        <li><a href={withBase('crystallography/coce70-propeller/')}>CoCe70-Propeller</a> (58.0387 Å)</li>
+        <li><a href={withBase('crystallography/luu-u84/')}>LuU-U84</a> (48.84142 Å)</li>
+        <li><a href={withBase('crystallography/lu-u84/')}>Lu-U84</a> (44.0196 Å)</li>
+      </ol>
 
-<h3>Most Common Space Groups (Top 12)</h3>
-<p>P -1** — 61 structure(s)
-<p>P 1 21/n 1** — 51 structure(s)
-<p>P 1 21/c 1** — 10 structure(s)
-<p>C 1 2/c 1** — 5 structure(s)
-<p>F m -3 m** — 5 structure(s)
-<p>P 21 21 2** — 4 structure(s)
-<p>I 1 2/m 1** — 3 structure(s)
-<p>P n m a** — 3 structure(s)
-<p>I 1 2/a 1** — 3 structure(s)
-<p>I 4/m** — 3 structure(s)
-<p>I m m m** — 2 structure(s)
-<p>P n n m** — 2 structure(s)
+      <h4>c-axis (Top 5)</h4>
+      <ol>
+        <li><a href={withBase('crystallography/nh4-u84-rhomb/')}>NH4-U84-rhomb</a> (72.9926 Å)</li>
+        <li><a href={withBase('crystallography/luu-u84/')}>LuU-U84</a> (66.7088 Å)</li>
+        <li><a href={withBase('crystallography/w24-cs-2/')}>W24-Cs-2</a> (62.9142 Å)</li>
+        <li><a href={withBase('crystallography/znce70-propeller/')}>ZnCe70-Propeller</a> (59.3231 Å)</li>
+        <li><a href={withBase('crystallography/nh4ce70-mono/')}>NH4Ce70-mono</a> (58.6339 Å)</li>
+      </ol>
+    </section>
 
-<h3>Overview of space groups observed in my dataset, grouped by crystal system.
+    <section id="common-space-groups">
+      <h3>Most Common Space Groups (Top 12)</h3>
+      <ul>
+        <li><strong>P -1</strong> — 61 structure(s)</li>
+        <li><strong>P 1 21/n 1</strong> — 51 structure(s)</li>
+        <li><strong>P 1 21/c 1</strong> — 10 structure(s)</li>
+        <li><strong>C 1 2/c 1</strong> — 5 structure(s)</li>
+        <li><strong>F m -3 m</strong> — 5 structure(s)</li>
+        <li><strong>P 21 21 2</strong> — 4 structure(s)</li>
+        <li><strong>I 1 2/m 1</strong> — 3 structure(s)</li>
+        <li><strong>P n m a</strong> — 3 structure(s)</li>
+        <li><strong>I 1 2/a 1</strong> — 3 structure(s)</li>
+        <li><strong>I 4/m</strong> — 3 structure(s)</li>
+        <li><strong>I m m m</strong> — 2 structure(s)</li>
+        <li><strong>P n n m</strong> — 2 structure(s)</li>
+      </ul>
+    </section>
 
-<h4>Triclinic</h4>
-<p>P-1** — 62 structure(s)
+    <section id="by-system">
+      <h3>Overview by Crystal System</h3>
 
-<h4>Monoclinic</h4>
-<p>I2/m 1** — 3 structure(s)
-<p>C2/c** — 5 structure(s)
-<p>Cc** — 1 structure(s)
-<p>I2/a** — 3 structure(s)
-<p>P2<sub>1</sub>/a** — 1 structure(s)
-<p>P2<sub>1</sub>/c** — 10 structure(s)
-<p>P2<sub>1</sub>/m** — 1 structure(s)
-<p>P2<sub>1</sub>/n** — 57 structure(s)
+      <h4>Triclinic</h4>
+      <ul>
+        <li><strong>P -1</strong> — 62 structure(s)</li>
+      </ul>
 
-<h4>Orthorhombic</h4>
-<p>I4/mmm** — 1 structure(s)
-<p>Immm** — 2 structure(s)
-<p>Pnnm** — 2 structure(s)
-<p>Imm2** — 1 structure(s)
-<p>P2<sub>1</sub>2<sub>1</sub>2<sub>1</sub>** — 1 structure(s)
-<p>P2<sub>1</sub>2<sub>1</sub>2** — 4 structure(s)
-<p>P n m a — 3 structure(s)
-<p>P b c n — 1 structure(s)
+      <h4>Monoclinic</h4>
+      <ul>
+        <li><strong>I 1 2/m 1</strong> — 3 structure(s)</li>
+        <li><strong>C 1 2/c 1</strong> — 5 structure(s)</li>
+        <li><strong>C c</strong> — 1 structure(s)</li>
+        <li><strong>I 1 2/a 1</strong> — 3 structure(s)</li>
+        <li><strong>P 1 21/a 1</strong> — 1 structure(s)</li>
+        <li><strong>P 1 21/c 1</strong> — 10 structure(s)</li>
+        <li><strong>P 1 21/m 1</strong> — 1 structure(s)</li>
+        <li><strong>P 1 21/n 1</strong> — 57 structure(s)</li>
+      </ul>
 
-<h4>Tetragonal</h4>
-<p>I4/m** — 3 structure(s)
-<p>P4/mnc** — 1 structure(s)
-<p>P4/m** — 1 structure(s)
-<p>I-42d** — 1 structure(s)
+      <h4>Orthorhombic</h4>
+      <ul>
+        <li><strong>I 4/mmm</strong> — 1 structure(s)</li>
+        <li><strong>I m m m</strong> — 2 structure(s)</li>
+        <li><strong>P n n m</strong> — 2 structure(s)</li>
+        <li><strong>I m m 2</strong> — 1 structure(s)</li>
+        <li><strong>P 21 21 21</strong> — 1 structure(s)</li>
+        <li><strong>P 21 21 2</strong> — 4 structure(s)</li>
+        <li><strong>P n m a</strong> — 3 structure(s)</li>
+        <li><strong>P b c n</strong> — 1 structure(s)</li>
+      </ul>
 
-<h4>Trigonal</h4>
-<p>P-3** — 1 structure(s)
-<p>R-3c** — 1 structure(s)
-<p>R-3** — 2 structure(s)
+      <h4>Tetragonal</h4>
+      <ul>
+        <li><strong>I 4/m</strong> — 3 structure(s)</li>
+        <li><strong>P 4/m n c</strong> — 1 structure(s)</li>
+        <li><strong>P 4/m</strong> — 1 structure(s)</li>
+        <li><strong>I -4 2 d</strong> — 1 structure(s)</li>
+      </ul>
 
-<h4>Hexagonal</h4>
-<p>P 63/m m c — 1 structure(s)
+      <h4>Trigonal</h4>
+      <ul>
+        <li><strong>P -3</strong> — 1 structure(s)</li>
+        <li><strong>R -3 c</strong> — 1 structure(s)</li>
+        <li><strong>R -3</strong> — 2 structure(s)</li>
+      </ul>
 
-<h4>Cubic</h4>
-<p>Fm-3m** — 5 structure(s)
-<p>Pn-3** — 1 structure(s)
+      <h4>Hexagonal</h4>
+      <ul>
+        <li><strong>P 63/m m c</strong> — 1 structure(s)</li>
+      </ul>
 
-<h3>Crystallography by Year</h3>
+      <h4>Cubic</h4>
+      <ul>
+        <li><strong>F m -3 m</strong> — 5 structure(s)</li>
+        <li><strong>P n -3</strong> — 1 structure(s)</li>
+      </ul>
+    </section>
 
-<p> 2025  (Total: 62)
+    <section id="by-year">
+      <h3>Crystallography by Year</h3>
+      <ul>
+        <li>2025 — <strong>Total: 62</strong></li>
+        <li>2024 — <strong>Total: 23</strong></li>
+        <li>2023 — <strong>Total: 15</strong></li>
+        <li>2022 — <strong>Total: 36</strong></li>
+        <li>2021 — <strong>Total: 13</strong></li>
+        <li>2020 — <strong>Total: 31</strong></li>
+      </ul>
+    </section>
 
-<p> 2024  (Total: 23)
+    <section id="by-element">
+      <h3>Crystallography by the Element</h3>
+      <picture>
+        <img
+          src='/Research.github.io/assets/images/periodic.webp'
+          alt="Elements crystallized"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+    </section>
+  </TextSection>
+</Layout>
 
-<p> 2023  (Total: 15)
+<style>
+/* Jump menu */
+.jump {
+  padding: .75rem 1rem;
+  border: 1px solid color-mix(in oklab, currentColor 12%, transparent);
+  border-radius: 12px;
+  background: var(--theme-surface-1, #fff);
+  color: var(--theme-on-surface-1, inherit);
+  margin: 1rem 0 1.25rem;
+}
+.jump ul {
+  margin: .5rem 0 0; padding: 0;
+  list-style: none; display: flex; gap: .75rem; flex-wrap: wrap;
+}
+.jump a { text-decoration: none; }
+.jump a:hover { text-decoration: underline; }
 
-<p> 2022  (Total: 36)
-
-<p> 2021  (Total: 13)
-
-<p> 2020  (Total: 31)</p>
-
-<h3>Crystallography by the Element</h3>
-
-          <picture>
-            <img
-              src="/Research.github.io/assets/images/periodic.webp"
-              alt="Elements Crystallized"
-              loading="lazy"
-              decoding="async"
-            />
-          </picture>
-
+/* Smooth scrolling + offset for fixed header */
+html { scroll-behavior: smooth; }
+:where(section)[id], :where(h2,h3)[id] { scroll-margin-top: var(--header-h, 72px); }
+</style>
