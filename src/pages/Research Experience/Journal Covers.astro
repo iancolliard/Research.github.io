@@ -1,11 +1,14 @@
 ---
 import Layout from '../../layouts/Page.astro';
-import { Container, FeatureCard } from '@components/odyssey-theme';
+import { Container } from '@components/odyssey-theme';
 
 const base = import.meta.env.BASE_URL;
-const hrefAbout = `${base}About Me/About Me`;
-const hrefCV    = `${base}About Me/CV`;
 
+// Encode spaces in internal links so GitHub Pages doesn’t choke on them
+const hrefAbout = encodeURI(`${base}About Me/About Me`);
+const hrefCV    = encodeURI(`${base}About Me/CV`);
+
+// Images must live in: public/assets/images/
 const coverJACS      = `${base}assets/images/IMG_3073.webp`;
 const coverChemComm  = `${base}assets/images/IMG_3071.webp`;
 const coverInorgChem = `${base}assets/images/IMG_1010.webp`;
@@ -16,29 +19,56 @@ const coverNatChem   = `${base}assets/images/IMG_3072.webp`;
   <Container>
     <h3>Journal Covers</h3>
 
-    <div class="feature-card__grid">
-      <FeatureCard href={hrefAbout} title="Cover: JACS 2024">
-        <img slot="media" src={coverJACS} alt="JACS 2024 cover" loading="lazy" />
-      </FeatureCard>
+    <div class="grid">
+      <a class="card" href={hrefAbout}>
+        <img src={coverJACS} alt="Cover: JACS 2024" loading="lazy" />
+        <h4>Cover: JACS 2024</h4>
+      </a>
 
-      <FeatureCard href={hrefCV} title="Cover: Chem Commun 2024">
-        <img slot="media" src={coverChemComm} alt="Chem Commun 2024 cover" loading="lazy" />
-      </FeatureCard>
+      <a class="card" href={hrefCV}>
+        <img src={coverChemComm} alt="Cover: Chem Commun 2024" loading="lazy" />
+        <h4>Cover: Chem Commun 2024</h4>
+      </a>
 
-      <FeatureCard href={hrefCV} title="Cover: Inorg Chem 2023">
-        <img slot="media" src={coverInorgChem} alt="Inorg Chem 2023 cover" loading="lazy" />
-      </FeatureCard>
+      <a class="card" href={hrefCV}>
+        <img src={coverInorgChem} alt="Cover: Inorg Chem 2023" loading="lazy" />
+        <h4>Cover: Inorg Chem 2023</h4>
+      </a>
 
-      <FeatureCard href={hrefCV} title="Cover: Nat Chem 2022">
-        <img slot="media" src={coverNatChem} alt="Nat Chem 2022 cover" loading="lazy" />
-      </FeatureCard>
+      <a class="card" href={hrefCV}>
+        <img src={coverNatChem} alt="Cover: Nat Chem 2022" loading="lazy" />
+        <h4>Cover: Nat Chem 2022</h4>
+      </a>
     </div>
   </Container>
 </Layout>
 
 <style>
-  .feature-card__grid { display:grid; grid-template-columns:repeat(2,1fr); gap:var(--theme-grid-gap); }
-  @media (max-width:768px){ .feature-card__grid{ grid-template-columns:1fr; } }
-  /* Make sure images are visible */
-  .feature-card__grid img { display:block; width:100%; height:auto; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--theme-grid-gap, 1rem);
+  }
+  @media (max-width: 768px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,.08);
+    overflow: hidden;
+    background: var(--theme-bg, #fff);
+  }
+  .card img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .card h4 {
+    margin: .75rem 1rem 1rem;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
 </style>
