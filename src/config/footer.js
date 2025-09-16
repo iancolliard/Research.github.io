@@ -23,7 +23,7 @@ export const footerSocials = [
 
 export const footerLists = [
 	{
-		title: 'Landing Pages',
+		title: 'Pages',
 		items: [
 			{
 				title: 'About Me',
