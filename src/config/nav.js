@@ -32,7 +32,7 @@ export const nav = [
 		slug: '/Research.github.io/Crystallography/Crystallography',
 	},
 	{
-		title: 'Crystal Strcutres',
+		title: 'Crystal Structures',
 		slug: '/Research.github.io/Crystallography/Crystal Structures',
 	},
 

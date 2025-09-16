@@ -1,50 +1,164 @@
 ---
-import { TextSection } from '@components/odyssey-theme';
 import Layout from '../../layouts/Page.astro';
+import { TextSection } from '@components/odyssey-theme';
 
-const seo = {
-  title: `Legal Page | Astro Odyssey Theme`,
-  description: `This is the legal page template. It is a great starter for your company's Terms of Service, Terms & Conditions, Privacy Policy, etc.`,
-};
+// Use Astro’s base URL to work locally AND on GitHub Pages.
+const base = import.meta.env.BASE_URL;
+
+// Define your images here (or fetch/build from frontmatter later)
+const images = [
+  { src: `${base}assets/gallery/cover-01.webp`, alt: 'JACS 2024', caption: 'JACS 2024' },
+  { src: `${base}assets/gallery/cover-02.webp`, alt: 'ChemComm 2024', caption: 'ChemComm 2024' },
+  { src: `${base}assets/gallery/cover-03.webp`, alt: 'Inorg. Chem. 2023', caption: 'Inorg. Chem. 2023' },
+  { src: `${base}assets/gallery/cover-04.webp`, alt: 'Nat. Chem. 2022', caption: 'Nature Chem. 2022' },
+  // add more…
+];
+const seo = { title: 'Gallery', description: 'Research cover art & figures' };
 ---
 
-<Layout seo={seo}>
-  <TextSection narrow>
-    <h1>Legal Page</h1>
+<Layout {seo}>
+  <TextSection>
+    <div class="prose mx-auto">
+      <h1 style="text-align:center">Gallery</h1>
 
-    <p>This is the legal page template. It is a great starter for your company's Terms of Service, Terms & Conditions,
-      Privacy Policy, etc.</p>
+      <!-- Responsive Grid -->
+      <div class="gallery-grid">
+        {images.map((img, i) => (
+          <figure class="tile" tabindex="0" data-index={i}>
+            <img
+              src={img.src}
+              alt={img.alt}
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>{img.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
 
-    <h2>Terms of Service</h2>
-
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, obcaecati. Aspernatur facilis molestias
-      vitae. Aliquid debitis eum quis repudiandae pariatur possimus provident accusantium reiciendis nemo, culpa labore
-      laborum, dolorum ea.</p>
-
-    <p>Corrupti impedit perferendis, libero in, voluptates quod ratione repudiandae veniam sapiente necessitatibus, eius
-      illo. Impedit quibusdam esse saepe placeat incidunt voluptatibus soluta dolore blanditiis ad provident animi
-      illum, est adipisci?</p>
-
-    <p>Ratione optio necessitatibus numquam dignissimos sunt molestiae ipsum fugiat quae maxime veniam aspernatur eius
-      quidem vel reprehenderit sequi, molestias perspiciatis, illo architecto perferendis nobis, in dolore! Nam
-      asperiores eaque totam.</p>
-
-    <p>Repudiandae, labore alias. Voluptatem quia itaque sequi, aperiam, reprehenderit ipsum libero quae adipisci
-      possimus eum esse corrupti sapiente harum dignissimos eligendi cum iure tempora magnam nemo, sunt provident vero.
-      Voluptatibus.</p>
-
-    <h2>Privacy Policy</h2>
-
-    <p>
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus eveniet quibusdam ipsa, veniam adipisci rerum
-      temporibus inventore! Sit quas vero laboriosam tempora alias! Fugit, saepe earum quod modi harum qui.
-      Expedita, pariatur consequuntur! Modi, maiores. Quaerat voluptatibus nostrum non harum rerum dolorem totam qui
-      repellendus, itaque dignissimos eveniet consequuntur ducimus! Non commodi magnam nemo, pariatur facilis
-      repellendus sunt fuga ipsa.
-    </p>
-
-    <p>Consequuntur similique ab ea tenetur, quo aperiam molestias sed facilis minus eaque eveniet libero quis
-      accusantium deleniti tempore? Qui vel reiciendis voluptates corporis eum repellat maiores fugit, eveniet sapiente
-      ad.</p>
+      <!-- Native Lightbox (dialog) -->
+      <dialog id="lightbox">
+        <button class="close" aria-label="Close">×</button>
+        <img id="lightbox-img" alt="" />
+        <p id="lightbox-cap"></p>
+      </dialog>
+    </div>
   </TextSection>
 </Layout>
+
+<style>
+  /* Grid: 1–4 columns responsively */
+  .gallery-grid {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    grid-template-columns: repeat(1, minmax(0,1fr));
+  }
+  @media (min-width: 520px) { .gallery-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (min-width: 900px) { .gallery-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+  @media (min-width: 1200px){ .gallery-grid { grid-template-columns: repeat(4, minmax(0,1fr)); } }
+
+  /* Tiles */
+  .tile {
+    margin: 0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: var(--theme-card, rgba(0,0,0,0.02));
+    border: 1px solid rgba(0,0,0,.08);
+    transition: transform .12s ease, box-shadow .12s ease;
+    cursor: zoom-in;
+    outline: none;
+  }
+  .tile:hover, .tile:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  }
+  .tile img {
+    display: block;
+    width: 100%;
+    height: auto;                 /* keep original ratio */
+    aspect-ratio: 4 / 5;          /* unify card heights; tweak as needed */
+    object-fit: cover;            /* crop to fit nicely */
+  }
+  .tile figcaption {
+    padding: .5rem .75rem;
+    font-size: .9rem;
+    text-align: center;
+    opacity: .85;
+  }
+
+  /* Lightbox */
+  dialog#lightbox {
+    width: min(92vw, 1100px);
+    border: none;
+    padding: 0 0 1rem;
+    background: var(--theme-bg, #fff);
+    color: inherit;
+    border-radius: 1rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  }
+  dialog#lightbox::backdrop {
+    background: rgba(0,0,0,.6);
+    backdrop-filter: blur(2px);
+  }
+  #lightbox img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid rgba(0,0,0,.12);
+    background: #0000000d;
+  }
+  #lightbox p {
+    margin: .75rem 1rem 0;
+    text-align: center;
+    opacity: .9;
+  }
+  #lightbox .close {
+    position: absolute;
+    right: .5rem;
+    top: .25rem;
+    font-size: 2rem;
+    line-height: 1;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: .25rem .5rem;
+    color: inherit;
+  }
+</style>
+
+<script>
+  const images = Astro.props?.images || undefined; // (not used; left for extensibility)
+  const dialog = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightbox-img');
+  const lbCap = document.getElementById('lightbox-cap');
+
+  function openLightbox(src, cap, alt) {
+    lbImg.src = src;
+    lbImg.alt = alt || '';
+    lbCap.textContent = cap || '';
+    dialog.showModal();
+  }
+
+  document.addEventListener('click', (e) => {
+    const tile = e.target.closest('.tile');
+    if (tile) {
+      const i = Number(tile.dataset.index);
+      const img = tile.querySelector('img');
+      const cap = tile.querySelector('figcaption')?.textContent ?? '';
+      openLightbox(img.src, cap, img.alt);
+    }
+    if (e.target.matches('#lightbox, #lightbox .close')) {
+      dialog.close();
+    }
+  });
+
+  // Keyboard close (Esc) handled by <dialog> natively; allow Enter on focused tile
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && document.activeElement?.classList.contains('tile')) {
+      const img = document.activeElement.querySelector('img');
+      const cap = document.activeElement.querySelector('figcaption')?.textContent ?? '';
+      openLightbox(img.src, cap, img.alt);
+    }
+  });
+</script>
