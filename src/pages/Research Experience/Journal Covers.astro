@@ -1,47 +1,44 @@
 ---
+import Layout from '../../layouts/Page.astro';
 import { Container, FeatureCard } from '@components/odyssey-theme';
 
-import Layout from '../../layouts/Page.astro';
-import HomeHeroSection from '../../components/sections/heros/HomeHeroSection.astro';
+const base = import.meta.env.BASE_URL;
+const hrefAbout = `${base}About Me/About Me`;
+const hrefCV    = `${base}About Me/CV`;
+
+const coverJACS      = `${base}assets/images/IMG_3073.webp`;
+const coverChemComm  = `${base}assets/images/IMG_3071.webp`;
+const coverInorgChem = `${base}assets/images/IMG_1010.webp`;
+const coverNatChem   = `${base}assets/images/IMG_3072.webp`;
 ---
-<h3>Journal Covers</h3>
+
 <Layout>
-	<Container>
-			<div class="feature-card__grid">
-				<FeatureCard href="/Research.github.io/About Me/About Me" title="Cover: JACS 2024"       <picture>
-        <img
-          src="/Research.github.io/assets/images/IMG_0373.webp"
-          alt="Cover: JACS 2024"
-          loading="lazy"
-          decoding="async"
-          width="600"
-          style="display:block;margin-inline:auto;height:auto"
-        />
-      </picture>
-/>
-				</FeatureCard>
-				<FeatureCard href="/Research.github.io/About Me/CV" title="Cover: Chem Commun 2024" imgSrc="/Research.github.io/assets/images/IMG_3071.webp">
-				</FeatureCard>
-				<FeatureCard href="/Research.github.io/About Me/CV" title="Cover: Inorg Chem 2023" imgSrc="/Research.github.io/assets/images/IMG_1010.webp">
-				</FeatureCard>
-				<FeatureCard href="/Research.github.io/About Me/CV" title="Cover: Nat Chem 2022" imgSrc="/Research.github.io/assets/images/IMG_3072.webp">
-				</FeatureCard>
-			</div>
-	</Container>
+  <Container>
+    <h3>Journal Covers</h3>
+
+    <div class="feature-card__grid">
+      <FeatureCard href={hrefAbout} title="Cover: JACS 2024">
+        <img slot="media" src={coverJACS} alt="JACS 2024 cover" loading="lazy" />
+      </FeatureCard>
+
+      <FeatureCard href={hrefCV} title="Cover: Chem Commun 2024">
+        <img slot="media" src={coverChemComm} alt="Chem Commun 2024 cover" loading="lazy" />
+      </FeatureCard>
+
+      <FeatureCard href={hrefCV} title="Cover: Inorg Chem 2023">
+        <img slot="media" src={coverInorgChem} alt="Inorg Chem 2023 cover" loading="lazy" />
+      </FeatureCard>
+
+      <FeatureCard href={hrefCV} title="Cover: Nat Chem 2022">
+        <img slot="media" src={coverNatChem} alt="Nat Chem 2022 cover" loading="lazy" />
+      </FeatureCard>
+    </div>
+  </Container>
 </Layout>
 
 <style>
-	.feature-card__section {
-		margin: var(--section-margin) auto;
-	}
-	.feature-card__grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: var(--theme-grid-gap);
-	}
-	@media (max-width: 768px) {
-		.feature-card__grid {
-			grid-template-columns: 1fr;
-		}
-	}
+  .feature-card__grid { display:grid; grid-template-columns:repeat(2,1fr); gap:var(--theme-grid-gap); }
+  @media (max-width:768px){ .feature-card__grid{ grid-template-columns:1fr; } }
+  /* Make sure images are visible */
+  .feature-card__grid img { display:block; width:100%; height:auto; }
 </style>
