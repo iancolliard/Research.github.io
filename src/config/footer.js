@@ -1,23 +1,18 @@
 export const footerSocials = [
   {
-    name: 'Twitter',
+    name: 'Email',
     url: 'https://twitter.com/jaydanurwin',
-    icon: "mdi:twitter",
+    icon: "mdi:email",
   },
   {
-    name: 'Youtube',
+    name: 'LinkedIn',
     url: 'https://youtube.com/@jaydanurwin',
-    icon: "mdi:youtube",
+    icon: "mdi:linkedin",
   },
   {
-    name: 'Github',
+    name: 'GoogleScholar',
     url: 'https://github.com/jaydanurwin',
-    icon: "mdi:github",
-  },
-  {
-    name: 'Discord',
-    url: 'https://astro.build/chat',
-    icon: "ic:baseline-discord",
+    icon: "simple-icons:googlescholar",
   },
 ]
 
@@ -65,21 +60,14 @@ export const footerLists = [
 		title: 'Crystallography',
 		items: [
 			{
-				title: 'Get Started',
-				slug: '/theme/get-started',
+				title: 'Crystallography',
+				slug: '/Research.github.io/Crystallography/Crystallography',
 			},
 			{
-				title: 'Style Guide',
-				slug: '/theme/style-guide',
+				title: 'Crystal Structures',
+				slug: '/Research.github.io/Crystallography/Crystal Structures',
 			},
-      {
-        title: 'Theme Setup',
-        slug: '/theme/theme-setup',
-      },
-      {
-        title: 'Customizing Odyssey',
-        slug: '/theme/customizing-odyssey',
-      }
+  
 		],
 	},
 ];

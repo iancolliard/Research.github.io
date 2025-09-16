@@ -25,5 +25,8 @@
 		"date-fns": "^2.28.0",
 		"lit": "^3.1.2",
 		"prettier-plugin-astro": "^0.0.12"
+	},
+	"dependencies": {
+		"@iconify-json/simple-icons": "^1.2.52"
 	}
 }

@@ -1,12 +1,67 @@
 ---
 import { Container, FeatureCard, TextSection } from '@components/odyssey-theme';
-
+import { Icon } from 'astro-icon/components';
 import Layout from '../layouts/Page.astro';
 import HomeHeroSection from '../components/sections/heros/HomeHeroSection.astro';
 ---
 <Layout>
 	<HomeHeroSection />
 		<TextSection>
+<style>
+  /* Kill any unwanted underline/baseline space */
+  .social-col a {
+    text-decoration: none !important;
+    border-bottom: 0 !important;
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem; /* space between icon and optional label */
+  }
+  .social-col svg {
+    display: block;
+  }
+</style>
 
-  		</TextSection>
+<div class="social-col flex flex-col items-center gap-4 mt-6 text-gray-500">
+  <a href="https://www.linkedin.com/in/YOURNAME" target="_blank" rel="noopener" aria-label="LinkedIn">
+    <Icon name="mdi:linkedin" width="40" height="40" class="hover:text-blue-600 transition-colors duration-200" />
+    <span class="sr-only">LinkedIn</span>
+  </a>
+  <a href="https://www.researchgate.net/profile/YOURNAME" target="_blank" rel="noopener" aria-label="ResearchGate">
+    <Icon name="simple-icons:researchgate" width="40" height="40" class="hover:text-green-600 transition-colors duration-200" />
+    <span class="sr-only">ResearchGate</span>
+  </a>
+  <a href="https://scholar.google.com/citations?user=YOURID" target="_blank" rel="noopener" aria-label="Google Scholar">
+    <Icon name="simple-icons:googlescholar" width="40" height="40" class="hover:text-gray-700 transition-colors duration-200" />
+    <span class="sr-only">Google Scholar</span>
+  </a>
+  <a href="https://orcid.org/YOURID" target="_blank" rel="noopener" aria-label="ORCID">
+    <Icon name="simple-icons:orcid" width="40" height="40" class="hover:text-green-700 transition-colors duration-200" />
+    <span class="sr-only">ORCID</span>
+  </a>
+  <a href="https://github.com/YOURUSERNAME" target="_blank" rel="noopener" aria-label="GitHub">
+    <Icon name="mdi:github" width="40" height="40" class="hover:text-black transition-colors duration-200" />
+    <span class="sr-only">GitHub</span>
+  </a>
+  <a href="https://twitter.com/YOURHANDLE" target="_blank" rel="noopener" aria-label="Twitter">
+    <Icon name="mdi:twitter" width="40" height="40" class="hover:text-sky-500 transition-colors duration-200" />
+    <span class="sr-only">Twitter</span>
+  </a>
+  <a href="https://bsky.app/profile/YOURHANDLE" target="_blank" rel="noopener" aria-label="Bluesky">
+    <Icon name="simple-icons:bluesky" width="40" height="40" class="hover:text-sky-600 transition-colors duration-200" />
+    <span class="sr-only">Bluesky</span>
+  </a>
+  <a href="mailto:YOURADDRESS@domain.com" target="_blank" rel="noopener" aria-label="Email">
+  <Icon name="mdi:email" width="40" height="40" 
+        class="hover:text-red-500 transition-colors duration-200" />
+  <span class="sr-only">Email</span>
+  </a>
+  <a href="https://www.scopus.com/authid/detail.uri?authorId=YOURSCOPUSID" 
+   target="_blank" rel="noopener" aria-label="Scopus">
+  <Icon name="simple-icons:scopus" width="40" height="40" 
+        class="hover:text-orange-600 transition-colors duration-200" />
+  <span class="sr-only">Scopus</span>
+ </a>
+</div>
+</TextSection>
 </Layout>
