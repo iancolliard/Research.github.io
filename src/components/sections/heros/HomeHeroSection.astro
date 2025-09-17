@@ -78,20 +78,19 @@ import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
 		border-radius: var(--theme-shape-radius);
 	}
 		.oval-image {
-  border-radius: var(--theme-shape-radius);
+  border-radius: 9999px;       /* force circle */
   object-fit: cover;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 300px; /* default desktop size */
+  margin-inline: auto;         /* center horizontally */
+  inline-size: clamp(140px, 18vw, 240px); /* scale with viewport */
+  block-size: auto;
 }
 
-/* === MOBILE OVERRIDE: profile image only === */
 @media (max-width: 768px) {
   .oval-image {
-    width: 100%;
-    max-width: 240px;     /* pick a mobile-friendly size */
-    aspect-ratio: 1 / 1;  /* square crop (optional) */
+    inline-size: 160px;
+    block-size: 160px;   /* keeps square */
+    border-radius: 50%;  /* perfect circle */
     object-fit: cover;
   }
 }
