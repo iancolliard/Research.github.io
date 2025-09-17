@@ -2,6 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import Container  from '../core/Container.astro';
 import Plug from './Plug.astro';
+import { footerInfo } from '../../config/footer.js';
 
 const { footerSocials, footerLists, copyrightName, background, color, showPlug: showPlug = true } =
   Astro.props;
@@ -50,9 +51,18 @@ const { footerSocials, footerLists, copyrightName, background, color, showPlug: 
       }
     </div>
     <div class="footer-copyright__container">
-      {showPlug && <Plug/>}
-      <p>Copyright &copy; {new Date().getFullYear()} {copyrightName}</p>
-    </div>
+  {showPlug && <Plug/>}
+
+  <p class="footer-meta"> 
+  <Icon name="mdi:map-marker" width={16} height={16} />Livermore, CA, USA {footerInfo.location}
+</p>
+
+<p class="footer-meta">Last updated: Sept 17th 2025 {footerInfo.lastUpdated}</p>
+
+
+  <p>Copyright &copy; {new Date().getFullYear()} {copyrightName}</p>
+</div>
+
 
   </Container>
 </footer>
@@ -122,5 +132,8 @@ const { footerSocials, footerLists, copyrightName, background, color, showPlug: 
     .footer-copyright__container {
       flex-direction: column;
     }
+.footer-meta {
+  font-size: var(--font-size-md); /* or try 1rem, 1.1rem */
+}
   }
 </style>

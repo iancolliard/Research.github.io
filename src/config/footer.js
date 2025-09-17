@@ -17,6 +17,13 @@ export const footerSocials = [
 
 ]
 
+export const footerInfo = [
+  {
+  location: "Livermore, CA",
+  lastUpdated: "September 15, 2025"  
+},
+]
+
 export const footerLists = [
 	{
 		title: 'Pages',
