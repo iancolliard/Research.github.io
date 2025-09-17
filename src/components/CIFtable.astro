@@ -1,8 +1,7 @@
 ---
 import fs from "node:fs";
-import path from "node:path";
+import path from "node:path"; // (ok to keep)
 
-// CHANGE THIS if you keep your CSV elsewhere:
 const csvFile = new URL("../data/cifs.csv", import.meta.url);
 
 // ---- Minimal CSV parser that supports quoted fields ----
@@ -22,17 +21,14 @@ function parseCSV(text) {
     if (c === '"') { inQuotes = true; i++; continue; }
     if (c === ",") { row.push(field.trim()); field = ""; i++; continue; }
     if (c === "\n" || c === "\r") {
-      // handle \r\n
       if (c === "\r" && next === "\n") i++;
       row.push(field.trim()); field = "";
-      // ignore completely empty last line
       if (!(row.length === 1 && row[0] === "")) rows.push(row);
       row = []; i++; continue;
     }
 
     field += c; i++;
   }
-  // header → objects
   if (rows.length === 0) return [];
   const header = rows[0].map(h => h.toLowerCase());
   return rows.slice(1).map(r => {
@@ -45,38 +41,52 @@ function parseCSV(text) {
 const csvText = fs.readFileSync(csvFile, "utf-8");
 const itemsRaw = parseCSV(csvText);
 
-// Normalize & build links
-function normPath(p) {
+// --- BASE-aware path builder (for GitHub Pages) ---
+const BASE = import.meta.env.BASE_URL || "/";
+
+function toBasePath(p) {
   if (!p) return "";
-  // keep absolute as-is; otherwise ensure it starts with /
   if (p.startsWith("http")) return p;
-  return p.startsWith("/") ? p : "/" + p.replace(/^\.?\//, "");
+  const clean = p.replace(/^\.?\//, "");
+  return `${BASE}${clean}`;
 }
 
-const items = itemsRaw.map((r) => {
-  const deposition = r.deposition || r["deposition #"] || r["deposition number"] || "";
-  const datablock = r.datablock || r["data block"] || r["data_block"] || "";
-  const date = r.date || r["collection date"] || "";
-  const doiOrStatus = r.doi_or_status || r.doi || r.status || "";
+// Pull first DOI-looking token (e.g. "10.XXXX/YYY")
+function pickDOI(str = "") {
+  const m = String(str).match(/10\.[^\s;,)]+/);
+  return m ? m[0] : "";
+}
 
-  // Default link rules (override if CSV provides explicit paths)
-  const cifHref = r.cif_path ? normPath(r.cif_path) : `/assets/cifs/${datablock}.cif`;
-  const pdfHref = r.pdf_path ? normPath(r.pdf_path) : `/assets/pdfs/${deposition}.pdf`;
+const items = itemsRaw
+  .map((r) => {
+    const deposition = r.deposition || r["deposition #"] || r["deposition number"] || "";
+    const datablock  = r.datablock  || r["data block"]    || r["data_block"]       || "";
+    const date       = r.date        || r["collection date"] || "";
 
-  return {
-    deposition,
-    datablock,
-    date,
-    doiOrStatus,
-    cifHref,
-    pdfHref,
-  };
-}).filter(x => x.deposition || x.datablock);
+    // status may be separate, or mixed in doi_or_status, etc.
+    const rawStatus  = r.status || r.Status || r["doi_or_status"] || r["doi/status"] || "";
+    const doiField   = r.doi || "";
+    const doi        = doiField || pickDOI(rawStatus);
+
+    // Normalize status label for display & logic
+    const lc = String(rawStatus).toLowerCase();
+    let status;
+    if (lc.includes("submit")) status = "Submitted";
+    else if (lc.includes("publish") || doi) status = "Published";
+    else status = rawStatus || "";
+
+    // Defaults (override when CSV gives explicit paths)
+    const cifHref = r.cif_path ? toBasePath(r.cif_path) : toBasePath(`//assets/cifs/${encodeURIComponent(deposition)}.cif`);
+    const pdfHref = r.pdf_path ? toBasePath(r.pdf_path) : toBasePath(`//assets/pdfs/${encodeURIComponent(deposition)}.pdf`);
+
+    return { deposition, datablock, date, status, doi, cifHref, pdfHref };
+  })
+  .filter((x) => x.deposition || x.datablock);
 ---
 
 <section class="wrapper">
   <div class="controls">
-    <input id="cif-search" type="search" placeholder="Search deposition, datablock, date, DOI/status…" />
+    <input id="cif-search" type="search" placeholder="Search" />
   </div>
 
   <div class="table-wrap">
@@ -86,7 +96,7 @@ const items = itemsRaw.map((r) => {
           <th data-key="deposition">Deposition #</th>
           <th data-key="datablock">Datablock</th>
           <th data-key="date">Date</th>
-          <th data-key="doiOrStatus">DOI / Status</th>
+          <th data-key="status">Status</th>
           <th>Downloads</th>
         </tr>
       </thead>
@@ -96,15 +106,16 @@ const items = itemsRaw.map((r) => {
             <td>{row.deposition}</td>
             <td>{row.datablock}</td>
             <td>{row.date}</td>
-            <td>
-              {row.doiOrStatus?.startsWith("10.") ? (
-                <a href={`https://doi.org/${row.doiOrStatus}`} rel="noopener" target="_blank">{row.doiOrStatus}</a>
-              ) : row.doiOrStatus}
-            </td>
+            <td>{row.status}</td>
             <td class="downloads">
-              <a href={row.cifHref} download>Download CIF</a>
-              <span class="sep">•</span>
-              <a href={row.pdfHref} download>PDF</a>
+              <a href={row.cifHref} download>CIF</a>
+              {
+                row.status === "Published" && row.doi ? (
+                  <a href={`https://doi.org/${row.doi}`} target="_blank" rel="noopener">Open DOI</a>
+                ) :
+                row.status === "Submitted" ? null :
+                (row.pdfHref ? <a href={row.pdfHref} download>PDF</a> : null)
+              }
             </td>
           </tr>
         ))}
@@ -115,39 +126,65 @@ const items = itemsRaw.map((r) => {
 </section>
 
 <style>
-  .wrapper { display: grid; gap: 1rem; }
-  .controls { display: flex; justify-content: flex-end; }
-  #cif-search {
-    width: min(420px, 100%); padding: .6rem .8rem; border: 1px solid var(--accents-2, #ddd);
-    border-radius: .6rem; background: var(--theme-bg, #fff); color: inherit;
-  }
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; }
-  thead th {
-    text-align: left; font-weight: 600; padding: .75rem .75rem; border-bottom: 1px solid var(--accents-2, #e5e7eb);
-    cursor: pointer; user-select: none;
-  }
-  tbody td { padding: .7rem .75rem; border-bottom: 1px solid var(--accents-1, #f1f5f9); vertical-align: top; }
-  tbody tr:hover { background: rgba(0,0,0,.03); }
-  .downloads a { text-decoration: none; border-bottom: 1px dashed currentColor; }
-  .sep { opacity: .5; margin: 0 .4rem; }
-  .count { opacity: .7; font-size: .9rem; margin-top: .5rem; }
-  @media (max-width: 640px) {
-    thead th:nth-child(3), tbody td:nth-child(3) { display:none; } /* hide Date on small screens (optional) */
-  }
+.wrapper { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: stretch;   /* let child fill the width */
+  gap: 1rem; 
+}
+
+.table-wrap { 
+  overflow-x: auto; 
+  width: 100%;            /* full width */
+}
+
 table {
-  width: 100%;
+  width: 100%;            /* span entire page content area */
   border-collapse: collapse;
-  table-layout: fixed; /* key: forces equal-width columns */
+  table-layout: fixed;
 }
 
 thead th,
 tbody td {
-  width: 20%;          /* 100% ÷ 5 columns = 20% each */
-  overflow: hidden;    /* prevent text spilling */
+  width: 20%; 
+  overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap; /* optional: keeps in one line */
+  white-space: nowrap;
+  text-align: center;     /* center cell text */
 }
+
+  thead th {
+    text-align: center; font-weight: 600; padding: .75rem .75rem;
+    border-bottom: 1px solid var(--accents-2, #e5e7eb);
+    cursor: pointer; user-select: none;
+  }
+  tbody td { padding: .7rem .75rem; border-bottom: 1px solid var(--accents-1, #f1f5f9); vertical-align: top; }
+  tbody tr:hover { background: rgba(0,0,0,.03); }
+
+  /* Downloads cell: equal-sized buttons */
+  .downloads {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .downloads a {
+    flex: 1;
+    text-align: center;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--accents-2, #ddd);
+    border-radius: 0.4rem;
+    text-decoration: none;
+    background: var(--theme-bg, #f9f9f9);
+    white-space: nowrap;
+  }
+
+  .count { opacity: .7; font-size: .9rem; margin-top: .5rem; }
+
+  @media (max-width: 640px) {
+    thead th:nth-child(3), tbody td:nth-child(3) { display:none; } /* hide Date on small screens (optional) */
+  }
+  @media (max-width: 520px) {
+    .downloads { flex-direction: column; } /* stack nicely on very small screens */
+  }
 </style>
 
 <script>
@@ -171,7 +208,7 @@ tbody td {
 
     // Sorting
     let sortState = { key: null, dir: 1 };
-    table.querySelectorAll('thead th[data-key]').forEach((th, idx) => {
+    table.querySelectorAll('thead th[data-key]').forEach((th) => {
       th.addEventListener('click', () => {
         const key = th.dataset.key;
         sortState.dir = sortState.key === key ? -sortState.dir : 1;
@@ -182,7 +219,7 @@ tbody td {
             deposition: 0,
             datablock: 1,
             date: 2,
-            doiOrStatus: 3
+            status: 3
           };
           return tr.children[map[key]]?.innerText.trim() || '';
         };
@@ -195,7 +232,6 @@ tbody td {
           return A.localeCompare(B, undefined, { numeric: true }) * sortState.dir;
         });
 
-        // re-append
         sorted.forEach(tr => tbody.appendChild(tr));
       });
     });
