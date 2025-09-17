@@ -78,16 +78,21 @@ import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
 		border-radius: var(--theme-shape-radius);
 	}
 		.oval-image {
- 		border-radius: var(--theme-shape-radius); /* matches cover image */
- 		object-fit: cover;
-		margin-left: auto;           /* push right edge in */
-		margin-right: auto;          /* push left edge in */
-	}
+  border-radius: var(--theme-shape-radius);
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 300px; /* default desktop size */
+}
 
-	}
-	@media (max-width: 768px) {
-		.hero-section__section {
-			grid-template-columns: 1fr;
-		}
-	}
+/* === MOBILE OVERRIDE: profile image only === */
+@media (max-width: 768px) {
+  .oval-image {
+    width: 100%;
+    max-width: 240px;     /* pick a mobile-friendly size */
+    aspect-ratio: 1 / 1;  /* square crop (optional) */
+    object-fit: cover;
+  }
+}
 </style>
