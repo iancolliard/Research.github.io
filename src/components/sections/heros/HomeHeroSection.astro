@@ -1,10 +1,8 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { Container, Button } from '@components/odyssey-theme';
-import settings from '../../../config/settings.js';
-import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
+import { Container } from '@components/odyssey-theme';
+// ... other imports
 ---
-
 <Container>
 	<section class="hero-section__section">
 		<div class="hero-section__text">
@@ -16,34 +14,34 @@ import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
 					Or click ↓ below to learn more about me.
 				</p>
 				<a href="/Research.github.io/About Me/About Me" target="_blank" rel="noopener">
-				<picture>
-					<img
-						src="/Research.github.io/assets/images/profile.webp"
-						alt="Profile"
-						id="Profile"
-    						width="300"
-   						class="oval-image"
-					/>
-				</picture>
+					<!-- Add a wrapper div here -->
+					<div class="image-wrapper">
+						<img
+							src="/Research.github.io/assets/images/profile.webp"
+							alt="Profile"
+							width="300"
+							class="oval-image"
+						/>
+					</div>
 				</a>
-
             <Fragment slot="icon">
               <Icon name="ic:baseline-chevron-right"/>
             </Fragment>
-                    		</div>
+		</div>
 		<div class="hero-section__image">
 				<a href="/Research.github.io/Crystallography/Crystallography" target="_blank" rel="noopener">
-				<picture>
-					<img
-						src="/Research.github.io/assets/images/Cover.webp"
-						alt="Diffractogram"
-						id="Diffractogram"
-					/>
-				</picture>
+					<!-- Add a wrapper div here -->
+					<div class="image-wrapper">
+						<img
+							src="/Research.github.io/assets/images/Cover.webp"
+							alt="Diffractogram"
+						/>
+					</div>
 				</a>
 		</div>
 	</section>
 </Container>
+
 
 <style>
 	.hero-section__section {
@@ -77,17 +75,57 @@ import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
 		object-fit: cover;
 		border-radius: var(--theme-shape-radius);
 	}
-		.oval-image {
- 		border-radius: var(--theme-shape-radius); /* matches cover image */
+	.oval-image {
+ 		border-radius: var(--theme-shape-radius);
  		object-fit: cover;
-		margin-left: auto;           /* push right edge in */
-		margin-right: auto;          /* push left edge in */
+		margin-left: auto;
+		margin-right: auto;
 	}
-
-	}
+	
+	/* Apply mobile-specific changes inside this media query */
 	@media (max-width: 768px) {
 		.hero-section__section {
 			grid-template-columns: 1fr;
+			/* You can optionally add a padding to prevent the images from touching the screen edges */
+			padding: 0 1rem;
+		}
+		
+		/* Target both image containers on mobile */
+		.hero-section__image,
+		.hero-section__text a {
+			display: flex; /* Ensure the image fills the flex container */
+			justify-content: center; /* Center the image within its container */
+		}
+		
+		.oval-image,
+		#Diffractogram {
+			/* Force both images to have the same dimensions on mobile */
+			width: 100%; /* Occupy the full width of the mobile grid column */
+			height: auto; /* Maintain aspect ratio */
+			aspect-ratio: 1 / 1; /* Creates a square container for both images */
+			object-fit: cover; /* This is crucial for filling the container without distortion */
+		}
+		
+		/* The oval image has its own class, so you need to override it explicitly for mobile */
+		.oval-image {
+			width: 80%; /* Adjust size as needed, e.g., 80% width */
+			max-width: 300px; /* Ensure it doesn't grow too large */
+			aspect-ratio: 1 / 1;
+			border-radius: 50%; /* Keep the oval shape */
+			object-fit: cover;
+		}
+
+		/* Adjust the Diffractogram image specifically to match */
+		#Diffractogram {
+			width: 80%; /* Match the profile image width */
+			max-width: 300px;
+			aspect-ratio: 1 / 1; /* Ensure both images have the same shape */
+			object-fit: cover;
+			border-radius: var(--theme-shape-radius); /* Apply the same theme radius */
+		}
+
+		.hero-section__text {
+			max-width: 100%; /* Allow text to use full mobile width */
 		}
 	}
 </style>
