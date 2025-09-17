@@ -1,0 +1,30 @@
+import CifViewer from "../../components/CifViewer.jsx";
+import { useState } from "react";
+
+const exampleCif = `
+data_test
+_symmetry_space_group_name_H-M   'P 1'
+_cell_length_a   5.431
+_cell_length_b   5.431
+_cell_length_c   5.431
+_cell_angle_alpha  90
+_cell_angle_beta   90
+_cell_angle_gamma  90
+_atom_site_label  _atom_site_fract_x  _atom_site_fract_y  _atom_site_fract_z
+Si1  0.00000  0.00000  0.00000
+Si2  0.25000  0.25000  0.25000
+`;
+
+const [cif, setCif] = useState(exampleCif);
+---
+
+<html>
+  <head>
+    <script src="https://3dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+  </head>
+  <body>
+    <h1>CIF Ball-and-Stick Viewer</h1>
+    <textarea rows="10" cols="60" value={cif} onInput={e => setCif(e.target.value)}></textarea>
+    <CifViewer cifData={cif} />
+  </body>
+</html>

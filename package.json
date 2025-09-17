@@ -27,6 +27,11 @@
 		"prettier-plugin-astro": "^0.0.12"
 	},
 	"dependencies": {
-		"@iconify-json/simple-icons": "^1.2.52"
+		"@astrojs/react": "^4.3.1",
+		"@iconify-json/simple-icons": "^1.2.52",
+		"@types/react": "^19.1.13",
+		"@types/react-dom": "^19.1.9",
+		"react": "^19.1.1",
+		"react-dom": "^19.1.1"
 	}
 }
