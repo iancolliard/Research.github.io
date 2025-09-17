@@ -1,15 +1,13 @@
 ---
-import fs from "node:fs";
-import path from "node:path"; // (ok to keep)
+/* Load CSV as a bundled string; works locally & on GitHub Pages */
+import csvText from "../data/cifs.csv?raw";
 
-const csvFile = new URL("../data/cifs.csv", import.meta.url);
-
-// ---- Minimal CSV parser that supports quoted fields ----
+/* ---- Minimal CSV parser that supports quoted fields ---- */
 function parseCSV(text) {
   const rows = [];
   let i = 0, field = "", row = [], inQuotes = false;
   while (i <= text.length) {
-    const c = text[i] ?? "\n"; // force flush on end
+    const c = text[i] ?? "\n";
     const next = text[i + 1];
 
     if (inQuotes) {
@@ -38,12 +36,10 @@ function parseCSV(text) {
   });
 }
 
-const csvText = fs.readFileSync(csvFile, "utf-8");
 const itemsRaw = parseCSV(csvText);
 
-// --- BASE-aware path builder (for GitHub Pages) ---
+/* --- BASE-aware path builder (for GitHub Pages) --- */
 const BASE = import.meta.env.BASE_URL || "/";
-
 function toBasePath(p) {
   if (!p) return "";
   if (p.startsWith("http")) return p;
@@ -51,7 +47,7 @@ function toBasePath(p) {
   return `${BASE}${clean}`;
 }
 
-// Pull first DOI-looking token (e.g. "10.XXXX/YYY")
+/* Pull first DOI-looking token (e.g., 10.XXXX/YYY) if status mixes both */
 function pickDOI(str = "") {
   const m = String(str).match(/10\.[^\s;,)]+/);
   return m ? m[0] : "";
@@ -76,8 +72,12 @@ const items = itemsRaw
     else status = rawStatus || "";
 
     // Defaults (override when CSV gives explicit paths)
-    const cifHref = r.cif_path ? toBasePath(r.cif_path) : toBasePath(`//assets/cifs/${encodeURIComponent(deposition)}.cif`);
-    const pdfHref = r.pdf_path ? toBasePath(r.pdf_path) : toBasePath(`//assets/pdfs/${encodeURIComponent(deposition)}.pdf`);
+    // CIF typically keyed off datablock name
+    const cifHref = r.cif_path ? toBasePath(r.cif_path)
+                               : toBasePath(`assets/cifs/${encodeURIComponent(datablock)}.cif`);
+    // PDF typically keyed off deposition #
+    const pdfHref = r.pdf_path ? toBasePath(r.pdf_path)
+                               : toBasePath(`assets/pdfs/${encodeURIComponent(deposition)}.pdf`);
 
     return { deposition, datablock, date, status, doi, cifHref, pdfHref };
   })
@@ -86,7 +86,7 @@ const items = itemsRaw
 
 <section class="wrapper">
   <div class="controls">
-    <input id="cif-search" type="search" placeholder="Search" />
+    <input id="cif-search" type="search" placeholder="Search deposition, datablock, date, status…" />
   </div>
 
   <div class="table-wrap">
@@ -126,38 +126,46 @@ const items = itemsRaw
 </section>
 
 <style>
-.wrapper { 
-  display: flex; 
-  flex-direction: column; 
-  align-items: stretch;   /* let child fill the width */
-  gap: 1rem; 
-}
+  .wrapper { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: stretch;   /* let child fill the width */
+    gap: 1rem; 
+  }
 
-.table-wrap { 
-  overflow-x: auto; 
-  width: 100%;            /* full width */
-}
+  .controls { display: flex; justify-content: flex-end; }
 
-table {
-  width: 100%;            /* span entire page content area */
-  border-collapse: collapse;
-  table-layout: fixed;
-}
+  #cif-search {
+    width: min(420px, 100%); padding: .6rem .8rem; border: 1px solid var(--accents-2, #ddd);
+    border-radius: .6rem; background: var(--theme-bg, #fff); color: inherit;
+  }
 
-thead th,
-tbody td {
-  width: 20%; 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: center;     /* center cell text */
-}
+  .table-wrap { 
+    overflow-x: auto; 
+    width: 100%;            /* full width */
+  }
+
+  table {
+    width: 100%;            /* span entire page content area */
+    border-collapse: collapse;
+    table-layout: fixed;    /* equal column widths */
+  }
+
+  thead th,
+  tbody td {
+    width: 20%; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;     /* center cell text + headers */
+  }
 
   thead th {
-    text-align: center; font-weight: 600; padding: .75rem .75rem;
+    font-weight: 600; padding: .75rem .75rem;
     border-bottom: 1px solid var(--accents-2, #e5e7eb);
     cursor: pointer; user-select: none;
   }
+
   tbody td { padding: .7rem .75rem; border-bottom: 1px solid var(--accents-1, #f1f5f9); vertical-align: top; }
   tbody tr:hover { background: rgba(0,0,0,.03); }
 
