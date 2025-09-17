@@ -47,51 +47,51 @@ import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
 
 <style>
 	.hero-section__section {
-		margin: var(--section-margin) auto;
-		min-height: clamp(90vh, 100vw, calc(100vh - var(--navbar-height)));
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		align-items: center;
-		gap: 1rem;
-	}
-	.hero-section__text {
-		justify-self: center;
-		max-width: 25rem;
-		text-align: center;
-	}
-	.hero-btns__container {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-	}
-	.hero-btns__container {
-		margin-right: 1rem;
-	}
-	.hero-section__image {
-		display: flex;
-	}
-	.hero-section__image img {
-		width: 100%;
-		height: 100%;
-		max-height: 80vh;
-		object-fit: cover;
-		border-radius: var(--theme-shape-radius);
-	}
-		.oval-image {
-  border-radius: 9999px;       /* force circle */
+  margin: var(--section-margin) auto;
+  min-height: clamp(90vh, 100vw, calc(100vh - var(--navbar-height)));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+.hero-section__text {
+  justify-self: center;
+  max-width: 25rem;
+  text-align: center;
+}
+.hero-btns__container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.hero-btns__container {
+  margin-right: 1rem;
+}
+.hero-section__image {
+  display: flex;
+}
+.hero-section__image img {
+  width: 100%;
+  height: 100%;
+  max-height: 80vh;
   object-fit: cover;
-  display: block;
-  margin-inline: auto;         /* center horizontally */
-  inline-size: clamp(140px, 18vw, 240px); /* scale with viewport */
-  block-size: auto;
+  border-radius: var(--theme-shape-radius);
 }
 
+.oval-image {
+  border-radius: var(--theme-shape-radius); /* keep rounded corners */
+  object-fit: cover;
+  display: block;
+  margin-inline: auto;
+  max-width: 300px;  /* desktop default */
+  width: 100%;       /* scale down if container is narrower */
+  height: auto;      /* maintain aspect ratio */
+}
+
+/* === MOBILE OVERRIDE === */
 @media (max-width: 768px) {
   .oval-image {
-    inline-size: 160px;
-    block-size: 160px;   /* keeps square */
-    border-radius: 50%;  /* perfect circle */
-    object-fit: cover;
+    max-width: 180px; /* smaller on phones */
   }
 }
 </style>
