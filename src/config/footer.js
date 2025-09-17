@@ -14,6 +14,7 @@ export const footerSocials = [
     url: 'https://scholar.google.com/citations?user=zmcgy_8AAAAJ&hl=en',
     icon: "simple-icons:googlescholar",
   },
+
 ]
 
 export const footerLists = [
@@ -67,6 +68,11 @@ export const footerLists = [
 				title: 'Crystal Structures',
 				slug: '/Research.github.io/Crystallography/Crystal Structures',
 			},
+			{
+				title: 'CIF Directory',
+				slug: '/Research.github.io/Crystallography/CIFs',
+			},
+
   
 		],
 	},

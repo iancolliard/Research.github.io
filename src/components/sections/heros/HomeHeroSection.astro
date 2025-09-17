@@ -86,8 +86,27 @@ import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
 
 	}
 	@media (max-width: 768px) {
-		.hero-section__section {
-			grid-template-columns: 1fr;
-		}
-	}
+  /* Make both hero images the same visual size/ratio on mobile */
+  .oval-image,
+  .hero-section__image img {
+    width: 100%;
+    max-width: 360px;     /* tweak to taste (e.g., 320–400px) */
+    aspect-ratio: 4 / 3;  /* use 1 / 1 for perfect squares */
+    object-fit: cover;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: var(--theme-shape-radius);
+  }
+
+  /* Center the right-side image container so it aligns */
+  .hero-section__image {
+    justify-content: center;
+  }
+
+  /* Optional: center all text in the left column */
+  .hero-section__text {
+    text-align: center;
+  }
+}
 </style>
