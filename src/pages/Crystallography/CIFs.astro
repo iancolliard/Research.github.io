@@ -1,8 +1,13 @@
 ---
 import CifTable from "../../components/CIFtable.astro";
 import Layout from '../../layouts/Page.astro';
+import { TextSection } from '@components/odyssey-theme';
+
 const page = { title: "Crystallography" }; // many themes expect a `page` prop
 ---
 <Layout {page}>
+<TextSection>
+<h3>Feel free to browse the directory. Current Count: 171 CIFs</h3>
+</TextSection>
   <CifTable />
 </Layout>
