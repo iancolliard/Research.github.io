@@ -113,9 +113,14 @@ const items = itemsRaw
     {row.doi ? (
       <a href={`https://doi.org/${row.doi}`} target="_blank" rel="noopener">Open DOI</a>
     ) : null}
+    <a
+      href={`${import.meta.env.BASE_URL}/Crystallography/viewer?cif=${encodeURIComponent(row.cifHref)}&title=${encodeURIComponent(row.deposition || row.datablock)}`}
+      class="preview"
+    >
+      Preview
+    </a>
   </div>
 </td>
-            </td>
           </tr>
         ))}
       </tbody>
