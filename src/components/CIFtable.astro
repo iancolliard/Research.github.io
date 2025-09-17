@@ -74,10 +74,10 @@ const items = itemsRaw
     // Defaults (override when CSV gives explicit paths)
     // CIF typically keyed off datablock name
     const cifHref = r.cif_path ? toBasePath(r.cif_path)
-                               : toBasePath(`assets/cifs/${encodeURIComponent(datablock)}.cif`);
+                               : toBasePath(`//assets/cifs/${encodeURIComponent(deposition)}.cif`);
     // PDF typically keyed off deposition #
     const pdfHref = r.pdf_path ? toBasePath(r.pdf_path)
-                               : toBasePath(`assets/pdfs/${encodeURIComponent(deposition)}.pdf`);
+                               : toBasePath(`//assets/pdfs/${encodeURIComponent(deposition)}.pdf`);
 
     return { deposition, datablock, date, status, doi, cifHref, pdfHref };
   })
@@ -107,15 +107,14 @@ const items = itemsRaw
             <td>{row.datablock}</td>
             <td>{row.date}</td>
             <td>{row.status}</td>
-            <td class="downloads">
-              <a href={row.cifHref} download>CIF</a>
-              {
-                row.status === "Published" && row.doi ? (
-                  <a href={`https://doi.org/${row.doi}`} target="_blank" rel="noopener">Open DOI</a>
-                ) :
-                row.status === "Submitted" ? null :
-                (row.pdfHref ? <a href={row.pdfHref} download>PDF</a> : null)
-              }
+            <td>
+  <div class="downloads">
+    <a href={row.cifHref} download>CIF</a>
+    {row.doi ? (
+      <a href={`https://doi.org/${row.doi}`} target="_blank" rel="noopener">Open DOI</a>
+    ) : null}
+  </div>
+</td>
             </td>
           </tr>
         ))}
@@ -169,21 +168,28 @@ const items = itemsRaw
   tbody td { padding: .7rem .75rem; border-bottom: 1px solid var(--accents-1, #f1f5f9); vertical-align: top; }
   tbody tr:hover { background: rgba(0,0,0,.03); }
 
-  /* Downloads cell: equal-sized buttons */
-  .downloads {
-    display: flex;
-    gap: 0.5rem;
-  }
-  .downloads a {
-    flex: 1;
-    text-align: center;
-    padding: 0.35rem 0.5rem;
-    border: 1px solid var(--accents-2, #ddd);
-    border-radius: 0.4rem;
-    text-decoration: none;
-    background: var(--theme-bg, #f9f9f9);
-    white-space: nowrap;
-  }
+  /* Downloads: flex container inside the cell fills full width */
+.downloads {
+  display: flex;
+  width: 100%;              /* stretch to full cell width */
+  gap: 0.5rem;
+  justify-content: stretch; /* ensures children use available space */
+}
+
+.downloads a {
+  flex: 1;                  /* equal widths for CIF + DOI/PDF */
+  text-align: center;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--accents-2, #ddd);
+  border-radius: 0.4rem;
+  text-decoration: none;
+  background: var(--theme-bg, #f9f9f9);
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .downloads { flex-direction: column; }
+}
 
   .count { opacity: .7; font-size: .9rem; margin-top: .5rem; }
 
