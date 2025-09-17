@@ -1,0 +1,145 @@
+---
+/** If your site uses a layout, keep this import; otherwise remove Layout and its wrapper below. */
+import Layout from '../../layouts/Page.astro';
+
+const BASE = import.meta.env.BASE_URL || "/";
+
+// Parse query params (Astro v4+)
+const url = new URL(Astro.request.url);
+const cifParam = url.searchParams.get("cif");   // preferred: full (BASE-aware) path or absolute URL
+const title    = url.searchParams.get("title") ?? "Structure";
+
+function toBasePath(p) {
+  if (!p) return "";
+  if (p.startsWith("http")) return p;
+  const clean = p.replace(/^\.?\//, "");
+  return `${BASE}${clean}`;
+}
+
+const cifUrl = cifParam ? toBasePath(cifParam) : ""; // no fallback filename since this page isn't dynamic
+const page = { title: `Viewer · ${title}` };
+---
+
+<Layout {page}>
+  <head>
+    <meta name="robots" content="noindex" />
+  </head>
+
+  <section class="wrap">
+    <header class="bar">
+      <div class="ttl">
+        <h1 class="h">Structure Viewer</h1>
+        <p class="sub">{title}</p>
+      </div>
+      <div class="actions">
+        {cifUrl && <a class="btn" href={cifUrl} download>Download CIF</a>}
+        <a class="btn" href={`${BASE}Crystallography/`} aria-label="Back to Crystallography">Back</a>
+      </div>
+    </header>
+
+    {cifUrl ? (
+      <div id="viewer" class="viewer" aria-label="3D structure viewer"></div>
+    ) : (
+      <p class="error">
+        Missing CIF. Open this page with
+        {" "}
+        <code>?cif=/assets/cifs/NAME.cif&amp;title=My+Sample</code>.
+      </p>
+    )}
+  </section>
+
+  {cifUrl ? (
+    <script is:inline>
+      (function() {
+        const cifUrl = {JSON.stringify(cifUrl)};
+
+        function init3Dmol() {
+          const el = document.getElementById('viewer');
+          if (!el) return;
+          const viewer = $3Dmol.createViewer(el, { backgroundColor: 'white' });
+
+          fetch(cifUrl).then(r => {
+            if (!r.ok) throw new Error('Failed to fetch CIF');
+            return r.text();
+          }).then(text => {
+            viewer.addModel(text, 'cif');
+            viewer.setStyle({}, { stick: { radius: 0.15 }, sphere: { scale: 0.23 } });
+            try { viewer.addUnitCell(); } catch(e) {}
+            viewer.zoomTo();
+            viewer.render();
+
+            // UI toggles (optional): unit cell + screenshot
+            const cellBtn = document.getElementById('toggle-cell');
+            const pngBtn  = document.getElementById('save-png');
+            let cellOn = true;
+            cellBtn?.addEventListener('click', () => {
+              if (cellOn) { viewer.clear(); viewer.addModel(text, 'cif'); viewer.setStyle({}, { stick:{radius:0.15}, sphere:{scale:0.23} }); }
+              else { viewer.addUnitCell(); }
+              cellOn = !cellOn;
+              viewer.zoomTo(); viewer.render();
+            });
+            pngBtn?.addEventListener('click', () => {
+              const uri = viewer.pngURI();
+              const a = document.createElement('a');
+              a.href = uri; a.download = 'structure.png';
+              document.body.appendChild(a); a.click(); a.remove();
+            });
+
+          }).catch(err => {
+            el.innerHTML = '<p class="error">Could not load CIF: ' + err.message + '</p>';
+          });
+
+          window.addEventListener('resize', () => viewer.resize());
+        }
+
+        // Lazy-load 3Dmol from CDN, then init
+        const s = document.createElement('script');
+        s.src = 'https://unpkg.com/3dmol/build/3Dmol-min.js';
+        s.onload = init3Dmol;
+        s.onerror = () => {
+          const el = document.getElementById('viewer');
+          if (el) el.innerHTML = '<p class="error">Could not load 3Dmol.js.</p>';
+        };
+        document.head.appendChild(s);
+      })();
+    </script>
+  ) : null}
+
+  <style>
+    .wrap { display: grid; gap: 1rem; }
+
+    .bar {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .h { margin: 0; font-size: clamp(1.1rem, 2.2vw, 1.6rem); }
+    .sub { margin: 0; opacity: .7; }
+    .actions { display: flex; gap: .5rem; }
+    .btn {
+      padding: .45rem .7rem; border: 1px solid var(--accents-2, #ddd);
+      border-radius: .5rem; text-decoration: none;
+    }
+
+    /* Full-bleed viewer that can break out of layout padding if you want */
+    .viewer {
+      width: min(1200px, 100%);
+      height: min(75vh, 80rem);
+      margin: 0 auto;
+      border: 1px solid var(--accents-2, #e5e7eb);
+      border-radius: .75rem;
+    }
+    /* If you want true edge-to-edge, swap the block above with this:
+    .viewer { width: 100vw; height: min(80vh, 80rem); margin-left: calc(-50vw + 50%); border: none; }
+    */
+
+    .toolbar { display:flex; gap:.5rem; align-items:center; }
+    .error { color: #b00020; }
+  </style>
+
+  {/* Tiny toolbar (optional): add two buttons below header if you want them visible
+  <div class="toolbar">
+    <button id="toggle-cell" class="btn" type="button">Toggle Unit Cell</button>
+    <button id="save-png" class="btn" type="button">Save PNG</button>
+  </div>
+  */}
+</Layout>
