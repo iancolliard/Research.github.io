@@ -47,51 +47,47 @@ import {ThemeSwitcher} from '../../theme-switcher/theme-switcher';
 
 <style>
 	.hero-section__section {
-  margin: var(--section-margin) auto;
-  min-height: clamp(90vh, 100vw, calc(100vh - var(--navbar-height)));
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 1rem;
-}
-.hero-section__text {
-  justify-self: center;
-  max-width: 25rem;
-  text-align: center;
-}
-.hero-btns__container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.hero-btns__container {
-  margin-right: 1rem;
-}
-.hero-section__image {
-  display: flex;
-}
-.hero-section__image img {
-  width: 100%;
-  height: 100%;
-  max-height: 80vh;
-  object-fit: cover;
-  border-radius: var(--theme-shape-radius);
-}
+		margin: var(--section-margin) auto;
+		min-height: clamp(90vh, 100vw, calc(100vh - var(--navbar-height)));
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		gap: 1rem;
+	}
+	.hero-section__text {
+		justify-self: center;
+		max-width: 25rem;
+		text-align: center;
+	}
+	.hero-btns__container {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+	.hero-btns__container {
+		margin-right: 1rem;
+	}
+	.hero-section__image {
+		display: flex;
+	}
+	.hero-section__image img {
+		width: 100%;
+		height: 100%;
+		max-height: 80vh;
+		object-fit: cover;
+		border-radius: var(--theme-shape-radius);
+	}
+		.oval-image {
+ 		border-radius: var(--theme-shape-radius); /* matches cover image */
+ 		object-fit: cover;
+		margin-left: auto;           /* push right edge in */
+		margin-right: auto;          /* push left edge in */
+	}
 
-.oval-image {
-  border-radius: var(--theme-shape-radius); /* keep rounded corners */
-  object-fit: cover;
-  display: block;
-  margin-inline: auto;
-  max-width: 300px;  /* desktop default */
-  width: 100%;       /* scale down if container is narrower */
-  height: auto;      /* maintain aspect ratio */
-}
-
-/* === MOBILE OVERRIDE === */
-@media (max-width: 768px) {
-  .oval-image {
-    max-width: 180px; /* smaller on phones */
-  }
-}
+	}
+	@media (max-width: 768px) {
+		.hero-section__section {
+			grid-template-columns: 1fr;
+		}
+	}
 </style>
