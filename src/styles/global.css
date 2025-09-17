@@ -9,7 +9,29 @@ body {
 	background-color: var(--theme-bg);
 	position: relative;
 }
+:root {
+  /* fallback header height, will get updated by JS */
+  --header-h: 64px;
+}
 
+#odysseyNavHeader {
+  position: sticky;   /* safer than fixed */
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.98);
+  -webkit-backdrop-filter: saturate(150%) blur(8px);
+  backdrop-filter: saturate(150%) blur(8px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+/* Push content down so it doesn’t sit under header */
+main, #page-content, .page-content {
+  padding-top: var(--header-h);
+}
+
+/* Anchor links (like crystal structures page) */
+html { scroll-padding-top: calc(var(--header-h) + 8px); }
+:is(h1,h2,h3,h4,h5,h6)[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 pre {
   padding: 1em;
   border-radius: 0.5em;
@@ -38,7 +60,7 @@ pre .language-id {
 
 /* Make nav menu scrollable if too tall */
 .nav-menu {
-  max-height: calc(100dvh - 60px); /* adjust 60px to your header height */
+  max-height: calc(100dvh - var(--header-h));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
