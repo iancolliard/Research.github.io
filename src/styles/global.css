@@ -77,19 +77,28 @@ pre .language-id {
     z-index: 1201;                         /* above the menu overlay */
   }
 }
-/* Center the logo only on mobile (hide menu button) */
+* Center ONLY the logo on mobile, regardless of header layout */
 @media (max-width: 600px) {
+  /* Make the header a positioning context */
+  #odysseyNavHeader { position: sticky; } /* already sticky, just ensuring context */
+
+  /* Ensure the logo container spans the header so absolute centering has a reference */
   .header-logo-menu__container {
-    justify-content: center;
-    flex: 1; /* allow full width so centering works */
+    position: relative;
+    width: 100%;
   }
 
+  /* Center the logo itself */
   .header-logo__link {
-    margin: 0 auto; /* force centering */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;              /* override any margins */
   }
 
+  /* You said "just the logo" on mobile, so hide the hamburger */
   #menuButton {
-    display: none !important; /* hide the hamburger button */
+    display: none !important;
   }
 }
 /* Tighter spacing so more links fit */
