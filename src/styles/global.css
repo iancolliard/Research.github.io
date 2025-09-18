@@ -103,7 +103,7 @@ pre .language-id {
 }
 @media (prefers-color-scheme: dark) {
   .header-logo__link img {
-    content: url("/Research.github.io/assets/images/logo-dark.png");
+    content: url("/Research.github.io/assets/images/logo2d.png");
   }
 }
 /* Tighter spacing so more links fit */
