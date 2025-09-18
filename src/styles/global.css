@@ -68,6 +68,14 @@ pre .language-id {
   .header-nav__container { z-index: 1100 !important; }
   #menuButton { position: relative; z-index: 1200; } /* keep close button above */
 }
+/* Reposition the close (✕) button inside the overlay */
+@media (max-width: 768px) {
+  header[mobile-menu-open] #menuButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1200; /* keep above overlay */
+  }
 /* Tighter spacing so more links fit */
 .nav-menu a {
   display: block;
