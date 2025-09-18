@@ -101,7 +101,11 @@ pre .language-id {
     display: none !important;
   }
 }
-
+@media (prefers-color-scheme: dark) {
+  .header-logo__link img {
+    content: url("/Research.github.io/assets/images/logo-dark.png");
+  }
+}
 /* Tighter spacing so more links fit */
 .nav-menu a {
   display: block;
