@@ -77,28 +77,41 @@ pre .language-id {
     z-index: 1201;                         /* above the menu overlay */
   }
 }
-* Center ONLY the logo on mobile, regardless of header layout */
+/* FORCE the logo to be centered on small screens */
 @media (max-width: 600px) {
-  /* Make the header a positioning context */
-  #odysseyNavHeader { position: sticky; } /* already sticky, just ensuring context */
+  /* Make the whole header a single-cell grid so we can center content */
+  #odysseyNavHeader {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    justify-items: center !important;
+    align-items: center !important;
+  }
 
-  /* Ensure the logo container spans the header so absolute centering has a reference */
+  /* Keep only the logo visible in that grid cell */
   .header-logo-menu__container {
-    position: relative;
-    width: 100%;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
 
-  /* Center the logo itself */
+  /* Center the logo link itself */
   .header-logo__link {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;              /* override any margins */
+    margin: 0 auto !important;
+    display: inline-flex !important;
   }
 
-  /* You said "just the logo" on mobile, so hide the hamburger */
-  #menuButton {
+  /* Hide other header bits so they don't push layout */
+  #menuButton,
+  .header-action-item__container {
     display: none !important;
+  }
+
+  /* Optional: slightly smaller logo when centered on mobile */
+  .header-logo__link img {
+    max-height: 56px !important; /* tweak if you want */
+    height: auto !important;
+    width: auto !important;
   }
 }
 /* Tighter spacing so more links fit */
