@@ -101,12 +101,6 @@ pre .language-id {
     display: none !important;
   }
 }
-/* Auto-invert the logo in dark mode */
-@media (prefers-color-scheme: dark) {
-  .header-logo__link img {
-    filter: invert(1) hue-rotate(180deg) contrast(1.05) saturate(0.9);
-  }
-}
 
 /* Tighter spacing so more links fit */
 .nav-menu a {
