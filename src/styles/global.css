@@ -11,7 +11,7 @@ body {
 }
 :root {
   /* fallback header height, will get updated by JS */
-  --header-h: 64px;
+  --header-h: 116px;
 }
 
 #odysseyNavHeader {
