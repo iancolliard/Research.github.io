@@ -68,13 +68,13 @@ pre .language-id {
   .header-nav__container { z-index: 1100 !important; }
   #menuButton { position: relative; z-index: 1200; } /* keep close button above */
 }
-/* Reposition the close (✕) button inside the overlay */
-@media (max-width: 768px) {
+/* Put the ✕ button inside the opened overlay area */
+@media (max-width: 600px) { /* match your Header.astro breakpoint */
   header[mobile-menu-open] #menuButton {
-    position: absolute;
-    top: 1rem;
+    position: fixed;                       /* anchor to viewport, not header */
+    top: calc(var(--header-h) + 8px);      /* just below the sticky header */
     right: 1rem;
-    z-index: 1200; /* keep above overlay */
+    z-index: 1201;                         /* above the menu overlay */
   }
 }
 /* Tighter spacing so more links fit */
