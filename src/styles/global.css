@@ -76,6 +76,7 @@ pre .language-id {
     right: 1rem;
     z-index: 1200; /* keep above overlay */
   }
+}
 /* Tighter spacing so more links fit */
 .nav-menu a {
   display: block;
