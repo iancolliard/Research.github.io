@@ -1,22 +1,24 @@
 ---
+// Footer.astro
 import { Icon } from 'astro-icon/components';
-import Container  from '../core/Container.astro';
+import Container from '../core/Container.astro';
 import Plug from './Plug.astro';
 import { footerInfo } from '../../config/footer.js';
 
-const { footerSocials, footerLists, copyrightName, background, color, showPlug: showPlug = true } =
-  Astro.props;
+const {
+  footerSocials,
+  footerLists,
+  copyrightName,
+  background,
+  color,
+  showPlug: showPlug = true,
+} = Astro.props;
 ---
 
-<footer
-  style={background && `--footer-bg:${background}; --footer-color:${color}`}
->
+<footer style={background && `--footer-bg:${background}; --footer-color:${color}`}>
   <Container>
     <div class="footer-grid__container">
       <div class="footer-brand__container">
-        <div>
-          <slot name="logo" />
-        </div>
         <ul class="footer-socials__list">
           {
             footerSocials.map((social) => (
@@ -34,7 +36,21 @@ const { footerSocials, footerLists, copyrightName, background, color, showPlug: 
             ))
           }
         </ul>
+
+        <!-- Copyright moved directly under socials -->
+      <p class="footer-meta">
+        <Icon name="mdi:map-marker" width={16} height={16} />
+        Livermore, CA, USA {footerInfo.location}
+      </p>
+        <p class="footer-meta footer-copyright">
+          Copyright &copy; {new Date().getFullYear()} {copyrightName}
+        </p>
+
+      <p class="footer-meta">
+        Last updated: Sept 17th 2025 {footerInfo.lastUpdated}
+      </p>
       </div>
+
       {
         footerLists.map((list) => (
           <div>
@@ -50,20 +66,10 @@ const { footerSocials, footerLists, copyrightName, background, color, showPlug: 
         ))
       }
     </div>
+
     <div class="footer-copyright__container">
-  {showPlug && <Plug/>}
-
-  <p class="footer-meta"> 
-  <Icon name="mdi:map-marker" width={16} height={16} />Livermore, CA, USA {footerInfo.location}
-</p>
-
-<p class="footer-meta">Last updated: Sept 17th 2025 {footerInfo.lastUpdated}</p>
-
-
-  <p>Copyright &copy; {new Date().getFullYear()} {copyrightName}</p>
-</div>
-
-
+      {showPlug && <Plug/>}
+    </div>
   </Container>
 </footer>
 
@@ -77,45 +83,65 @@ const { footerSocials, footerLists, copyrightName, background, color, showPlug: 
     border-top-left-radius: var(--theme-shape-radius);
     border-top-right-radius: var(--theme-shape-radius);
   }
+
   .footer-grid__container {
     padding: 10vh 0 1rem 0;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
   }
+
+  .footer-brand__container {
+    display: flex;
+    flex-direction: column;
+  }
+
   .footer-socials__list {
-    margin: 1rem 0;
+    margin: 1rem 0 0.5rem 0;
     padding: 0;
     display: flex;
     list-style: none;
   }
+
   .footer-socials__item {
     margin-right: 0.5rem;
   }
+
   .footer-link__list {
     margin: 0;
     padding: 0;
     list-style: none;
   }
+
   .footer-link__list li {
     margin-bottom: 0.5rem;
   }
+
   .footer-link__list li a {
     text-decoration: none;
   }
+
   .footer-link__list li a:hover {
     opacity: 0.84;
   }
+
+  .footer-meta {
+    font-size: var(--font-size-sm);
+    margin: 0.25rem 0;
+  }
+
+  /* extra breathing room under socials for the copyright line */
+  .footer-brand__container .footer-copyright {
+    margin-top: 0.5rem;
+  }
+
   .footer-copyright__container {
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
   }
-  .footer-copyright__container p {
-    font-size: var(--font-size-sm);
-  }
+
   @media (max-width: 768px) {
     .footer-grid__container :first-child {
-      grid-column: 1/-1;
+      grid-column: 1 / -1;
     }
     .footer-grid__container {
       padding: 5vh 0;
@@ -123,6 +149,7 @@ const { footerSocials, footerLists, copyrightName, background, color, showPlug: 
       gap: 1rem;
     }
   }
+
   @media (max-width: 600px) {
     .footer-grid__container {
       padding: 5vh 0;
@@ -132,8 +159,8 @@ const { footerSocials, footerLists, copyrightName, background, color, showPlug: 
     .footer-copyright__container {
       flex-direction: column;
     }
-.footer-meta {
-  font-size: var(--font-size-md); /* or try 1rem, 1.1rem */
-}
+    .footer-meta {
+      font-size: var(--font-size-md); /* tweak if you want smaller */
+    }
   }
 </style>
