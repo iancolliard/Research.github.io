@@ -64,7 +64,11 @@ pre .language-id {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
-
+@media (max-width: 768px) {
+  header[mobile-menu-open] .header-logo__link {
+    display: none; /* hide logo while menu overlay is active */
+  }
+}
 /* Tighter spacing so more links fit */
 .nav-menu a {
   display: block;
