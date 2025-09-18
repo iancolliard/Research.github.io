@@ -37,9 +37,8 @@
 		sans-serif;
 }
 
-
-[data-theme='dark'] {
-	color-scheme: dark;
+[data-theme='default'] {
+	color-scheme: light;
 	/* Theme Colors */
 	--theme-primary: hsl(0, 0%, 100%);
 	--theme-primary-hover: hsl(0, 0%, 90%);
@@ -57,5 +56,22 @@
 	--theme-shape-radius: 0;
 
 	--form-field-input-color: var(--theme-on-bg);
+
+	/* Theme Shape */
+	/* Set this to 0 if you want all of the rounded cards, images, etc to be straight edges */
+	--theme-shape-radius: clamp(1rem, 2rem, 3rem);
+	--theme-button-border-radius: 3rem;
+
+	/* Theme Transition */
+	--theme-transition: 0.2s ease-in-out;
+
+	/* Theme Layout */
+	--section-margin: 3rem;
+	--theme-grid-gap: 1rem;
+	--container-max-width: 1440px;
+	--container-max-width-narrow: 960px;
+	--container-padding: 0 1rem;
+
+	--theme-blog-post-header-width: 1200px;
 }
 
