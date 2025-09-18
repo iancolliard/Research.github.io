@@ -77,6 +77,21 @@ pre .language-id {
     z-index: 1201;                         /* above the menu overlay */
   }
 }
+/* Center the logo only on mobile (hide menu button) */
+@media (max-width: 600px) {
+  .header-logo-menu__container {
+    justify-content: center;
+    flex: 1; /* allow full width so centering works */
+  }
+
+  .header-logo__link {
+    margin: 0 auto; /* force centering */
+  }
+
+  #menuButton {
+    display: none !important; /* hide the hamburger button */
+  }
+}
 /* Tighter spacing so more links fit */
 .nav-menu a {
   display: block;
