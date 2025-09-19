@@ -46,14 +46,23 @@ const image = new URL(Astro.props.image || './social.png', Astro.site);
 {settings.enableThemeSwitcher && <ThemeProvider />}
 
 <!-- Google Analytics -->
-
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2SXMLY9GNT"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  var host = window.location.hostname;
+  if (host !== 'localhost') {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', 'G-2SXMLY9GNT');
+    gtag('config', 'G-2SXMLY9GNT, {
+      send_page_view: true // ensures automatic page_view
+    });
+
+    // Explicit manual page_view
+    gtag('event', 'page_view', {
+      page_location: location.href,
+      page_path: location.pathname,
+      page_title: document.title
+    });
+  }
 </script>
-
