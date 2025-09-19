@@ -12,7 +12,7 @@ export const nav = [
 		slug: '/Research.github.io/About Me/CV',
 	},
 	{
-		title: 'List of Publications',
+		title: 'Publications',
 		slug: '/Research.github.io/Research Experience/List of Publications',
 	},
 	{
