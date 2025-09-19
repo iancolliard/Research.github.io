@@ -114,6 +114,8 @@ You should see that the Odyssey logo changes across the theme once this is updat
 
 If you would like more control or don’t like this method of using a <Logo> component you will find most of the components also include a <slot> for the logo which will let you completely replace it.
 
+
+
 Favicon
 
 To replace the favicon you simply need to create your own favicon.png file and replace the one found under the public/ folder.
