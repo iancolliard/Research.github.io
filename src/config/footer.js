@@ -68,11 +68,11 @@ export const footerLists = [
 		title: 'Crystallography',
 		items: [
 			{
-				title: 'Crystallography',
+				title: 'Research with Crystals',
 				slug: '/Research.github.io/Crystallography/Crystallography',
 			},
 			{
-				title: 'Crystal Structures',
+				title: 'Crystal Structures Metrics',
 				slug: '/Research.github.io/Crystallography/Crystal Structures',
 			},
 			{

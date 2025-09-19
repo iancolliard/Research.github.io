@@ -28,11 +28,11 @@ export const nav = [
 		slug: '/Research.github.io/Research Experience/Gallery',
 	},
 	{
-		title: 'Crystallography',
+		title: 'Research with Crystals',
 		slug: '/Research.github.io/Crystallography/Crystallography',
 	},
 	{
-		title: 'Crystal Structures',
+		title: 'Crystal Structures Metrics',
 		slug: '/Research.github.io/Crystallography/Crystal Structures',
 	},
 	{
