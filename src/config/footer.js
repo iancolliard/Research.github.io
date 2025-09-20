@@ -29,17 +29,17 @@ export const footerLists = [
 		title: 'Pages',
 		items: [
 			{
+				title: 'Home',
+				slug: '/Research.github.io/',
+			},
+			{
 				title: 'About Me',
 				slug: '/Research.github.io/About Me/About Me',
 			},
-			{
+      		        {
 				title: 'C.V.',
 				slug: '/Research.github.io/About Me/CV',
-			},
-      // {
-			// 	title: 'Landing Page 3',
-			// 	slug: '/landing-pages/landing-3',
-			// },
+		        },
 		],
 	},
 	{
