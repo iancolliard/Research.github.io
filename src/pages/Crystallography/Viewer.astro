@@ -1,106 +1,125 @@
 ---
-/** If your site uses a layout, keep this import; otherwise remove Layout and its wrapper below. */
-import Layout from '../../layouts/Page.astro';
-
-const BASE = import.meta.env.BASE_URL || "/";
-const page = { title: "Viewer" };
+import { SEO } from '../../components/SEO.astro'; // if you have one; otherwise remove this line+component below
+const base = import.meta.env.BASE_URL; // "/Research.github.io/" on prod, "/" locally
 ---
 
-<Layout {page}>
-  <head><meta name="robots" content="noindex" /></head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Crystal Viewer</title>
+    <!-- Optional: remove if you don't have SEO. -->
+    <!-- <SEO title="Crystal Viewer" description="JSmol CIF viewer" /> -->
 
-  <section class="wrap">
-    <header class="bar">
-      <div class="ttl">
-        <h1 class="h">Structure Viewer</h1>
-        <p class="sub" id="viewer-title">Structure</p>
-      </div>
-      <div class="actions">
-        <a id="download-cif" class="btn" href="#" download hidden>Download CIF</a>
-        <a class="btn" href={`${BASE}Crystallography/`} aria-label="Back to Crystallography">Back</a>
-      </div>
-    </header>
+    <!-- IMPORTANT: load from /public and mark as inline so Vite does not bundle it -->
+    <script src={`${base}jsmol/JSmol.min.js`} is:inline></script>
 
-    <div id="viewer" class="viewer" aria-label="3D structure viewer"></div>
-    <p id="error" class="error" hidden></p>
-  </section>
-
-<script is:inline>
-  (function () {
-    // "/" locally; "/Research.github.io/" on GitHub Pages
-    const BASE = {JSON.stringify(import.meta.env.BASE_URL || "/")};
-
-    const $title  = document.getElementById('viewer-title');
-    const $viewer = document.getElementById('viewer');
-    const $error  = document.getElementById('error');
-    const $dl     = document.getElementById('download-cif');
-
-    // Helper to prefix your site base correctly
-    const withBase = (p) => BASE + String(p).replace(/^\/+/, "");
-
-    // Read ?cif= and ?title=
-    const url = new URL(location.href);
-    const rawCif   = url.searchParams.get("cif");
-    const titleArg = url.searchParams.get("title") || "Structure";
-    $title.textContent = titleArg;
-
-    // Build a safe CIF URL
-    const cifUrl = (() => {
-      if (!rawCif) return "";
-      if (rawCif.startsWith("http")) return rawCif;   // absolute URL
-      if (rawCif.startsWith(BASE)) return rawCif;     // already base-prefixed
-      return withBase(rawCif);                        // e.g. "/assets/cifs/name.cif"
-    })();
-
-    if (!cifUrl) {
-      $error.hidden = false;
-      $error.textContent = 'Missing CIF. Open with ?cif=/assets/cifs/NAME.cif&title=My+Sample';
-      return;
-    }
-
-    // Show download button
-    $dl.hidden = false;
-    $dl.href = cifUrl;
-
-    // Dynamically load JSmol from /public/jsmol (handles BASE automatically)
-    const jsmolSrc = withBase("jsmol/JSmol.min.js");
-    const s = document.createElement("script");
-    s.src = jsmolSrc;
-    s.onload = initJSmol;
-    s.onerror = () => {
-      $error.hidden = false;
-      $error.textContent = 'Could not load JSmol at ' + jsmolSrc;
-    };
-    document.head.appendChild(s);
-
-    function initJSmol() {
-      if (!window.Jmol) {
-        $error.hidden = false;
-        $error.textContent = 'JSmol loaded, but window.Jmol is undefined.';
-        return;
+    <style>
+      /* minimal styling */
+      #viewer-wrap {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1rem;
       }
+      #applet {
+        width: 600px;
+        height: 600px;
+        margin: 0 auto;
+        border: 1px solid var(--theme-border, #ddd);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      #controls { display:flex; gap:.5rem; justify-content:center; margin-top:1rem; flex-wrap:wrap; }
+      button { padding:.5rem .8rem; border:1px solid #ccc; border-radius:8px; cursor:pointer; background:transparent; }
+      .error { color: #c62828; text-align:center; font-weight:600; }
+      h1, h2, p { text-align:center; }
+    </style>
+  </head>
+  <body>
+    <main id="viewer-wrap">
+      <h1 id="title">Crystal Viewer</h1>
+      <div id="applet"></div>
+      <div id="controls" hidden>
+        <button data-script="spin on">Spin</button>
+        <button data-script="spin off">Stop</button>
+        <button data-script="zoom 120">Zoom 120%</button>
+        <button data-script="zoom 100">Zoom 100%</button>
+        <button data-script="spacefill on; wireframe off;">Spacefill</button>
+        <button data-script="spacefill off; wireframe 0.15;">Wireframe</button>
+        <button data-script="axes on">Axes</button>
+        <button data-script="axes off">Axes off</button>
+        <button data-script="set antialiasDisplay true">Antialias</button>
+      </div>
+      <p id="hint">Open this page with <code>?cif=/assets/cifs/NAME.cif&title=My+Sample</code></p>
+      <p id="err" class="error" hidden></p>
+    </main>
 
-      const Info = {
-        width:  $viewer.clientWidth  || 600,
-        height: $viewer.clientHeight || 600,
-        use: "HTML5",
-        j2sPath:  withBase("jsmol/j2s"),            // MUST exist
-        serverURL: withBase("jsmol/php/jsmol.php"), // keep, even if unused
-        script: `load ${cifUrl}; set frank OFF; set zoomlarge true; zoom 120;`
-      };
+    <!-- Inline init script (plain JS) -->
+    <script is:inline>
+      (function () {
+        // base path from Astro
+        const BASE = `${import.meta.env.BASE_URL}`;
 
-      // Create applet object, then mount its HTML
-      const applet = Jmol.getApplet("jsmolApplet0", Info);
-      $viewer.innerHTML = Jmol.getAppletHtml(applet);
+        // read query params
+        const params = new URLSearchParams(location.search);
+        const cif = params.get('cif');   // e.g. /assets/cifs/2055317.cif
+        const title = params.get('title') || 'Crystal Viewer';
 
-      // Responsive resizing
-      window.addEventListener("resize", () => {
-        const w = $viewer.clientWidth  || 600;
-        const h = $viewer.clientHeight || 600;
-        if (window.Jmol && Jmol.resizeApplet) Jmol.resizeApplet(applet, [w, h]);
-      });
-    }
-  })();
-</script>
+        // set title
+        document.getElementById('title').textContent = title;
 
-</Layout>
+        if (!cif) {
+          // no CIF provided → show usage hint only
+          return;
+        }
+
+        // build absolute CIF url relative to site base
+        const cifUrl = cif.startsWith('/')
+          ? `${BASE.replace(/\/$/, '')}${cif}`
+          : `${BASE}${cif}`;
+
+        // JSmol Info object
+        const Info = {
+          width: 600,
+          height: 600,
+          use: "HTML5",
+          j2sPath: BASE + "jsmol/j2s",   // <-- MUST match your public folder
+          script: [
+            // load CIF, apply a simple nice view
+            `load "${cifUrl}";`,
+            "set antialiasDisplay true;",
+            "frank off;",
+            "reset; zoom 110;",
+            "select *; color cpk;",
+            "spacefill 23%; wireframe 0.15;",
+          ].join(' '),
+          debug: false,
+        };
+
+        try {
+          // create applet and inject into #applet
+          const applet = Jmol.getApplet("jsmolApplet", Info);
+          const html = Jmol.getAppletHtml(applet);
+          const mount = document.getElementById("applet");
+          mount.innerHTML = html;
+
+          // hook up buttons
+          const controls = document.getElementById('controls');
+          controls.hidden = false;
+          controls.addEventListener('click', (e) => {
+            const btn = e.target.closest('button[data-script]');
+            if (!btn) return;
+            Jmol.script(applet, btn.getAttribute('data-script'));
+          });
+
+          // hide hint once loaded
+          document.getElementById('hint').hidden = true;
+
+        } catch (err) {
+          const el = document.getElementById('err');
+          el.textContent = "Failed to initialize JSmol: " + (err && err.message ? err.message : err);
+          el.hidden = false;
+        }
+      })();
+    </script>
+  </body>
+</html>
