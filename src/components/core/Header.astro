@@ -57,11 +57,24 @@ const { navData, rightMenu } = Astro.props;
   <div class="header-nav__container">
     <slot name="nav">
       {navData && <nav>
-        <ul>
-          {navData.map(navItem => (
-            (<li><a href={navItem.slug} >{navItem.title}</a></li>)
-          ))}
-        </ul>
+<ul>
+  {navData.map(navItem => (
+    <li><a href={navItem.slug}>{navItem.title}</a></li>
+  ))}
+
+  <!-- Custom More dropdown -->
+  <li class="nav-item more">
+    <details>
+      <summary>More</summary>
+      <ul class="submenu">
+        <li><a href="/News/">News & Updates</a></li>
+        <li><a href="/Collaborations/">Collaborations</a></li>
+        <li><a href="/Resources/">Tools & Resources</a></li>
+        <li><a href="/Media/">Media & Press</a></li>
+      </ul>
+    </details>
+  </li>
+</ul>
       </nav>}
     </slot>
   </div>
@@ -166,5 +179,39 @@ const { navData, rightMenu } = Astro.props;
        font-size: var(--font-size-lg);
        margin-bottom: 1rem;
      }
+.nav-item.more details { position: relative; }
+.nav-item.more summary {
+  cursor: pointer;
+  list-style: none;
+  margin-right: 1rem;
+  color: inherit;
+  opacity: 0.72;
+}
+.nav-item.more summary::-webkit-details-marker { display: none; }
+
+.nav-item.more .submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  padding: 0.5rem 0;
+  border: 1px solid rgba(0,0,0,.1);
+  background: var(--theme-bg, #fff);
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  display: none;
+  z-index: 1000;
+}
+.nav-item.more[open] .submenu,
+.nav-item.more details[open] .submenu { display: block; }
+
+.nav-item.more .submenu li a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+  color: inherit;
+}
+.nav-item.more .submenu li a:hover {
+  background: rgba(0,0,0,.05);
+}
   }
 </style>
