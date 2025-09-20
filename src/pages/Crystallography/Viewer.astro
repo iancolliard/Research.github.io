@@ -27,23 +27,30 @@ const page = { title: "Viewer" };
 
 <script is:inline>
   (function () {
-    // Injected at build: "/Research.github.io/" on GitHub Pages, "/" locally
+    // "/" locally; "/Research.github.io/" on GitHub Pages
     const BASE = {JSON.stringify(import.meta.env.BASE_URL || "/")};
 
-    const $title = document.getElementById('viewer-title');
+    const $title  = document.getElementById('viewer-title');
     const $viewer = document.getElementById('viewer');
     const $error  = document.getElementById('error');
     const $dl     = document.getElementById('download-cif');
 
-    // Build a BASE-prefixed path (no leading slash required)
+    // Helper to prefix your site base correctly
     const withBase = (p) => BASE + String(p).replace(/^\/+/, "");
 
+    // Read ?cif= and ?title=
     const url = new URL(location.href);
-    const cifParam   = url.searchParams.get("cif");
-    const titleParam = url.searchParams.get("title") || "Structure";
-    $title.textContent = titleParam;
+    const rawCif   = url.searchParams.get("cif");
+    const titleArg = url.searchParams.get("title") || "Structure";
+    $title.textContent = titleArg;
 
-    const cifUrl = cifParam ? (cifParam.startsWith("http") ? cifParam : withBase(cifParam)) : "";
+    // Build a safe CIF URL
+    const cifUrl = (() => {
+      if (!rawCif) return "";
+      if (rawCif.startsWith("http")) return rawCif;   // absolute URL
+      if (rawCif.startsWith(BASE)) return rawCif;     // already base-prefixed
+      return withBase(rawCif);                        // e.g. "/assets/cifs/name.cif"
+    })();
 
     if (!cifUrl) {
       $error.hidden = false;
@@ -55,7 +62,7 @@ const page = { title: "Viewer" };
     $dl.hidden = false;
     $dl.href = cifUrl;
 
-    // 1) Dynamically load JSmol from /public using BASE
+    // Dynamically load JSmol from /public/jsmol (handles BASE automatically)
     const jsmolSrc = withBase("jsmol/JSmol.min.js");
     const s = document.createElement("script");
     s.src = jsmolSrc;
@@ -66,7 +73,6 @@ const page = { title: "Viewer" };
     };
     document.head.appendChild(s);
 
-    // 2) Initialize JSmol when script is ready
     function initJSmol() {
       if (!window.Jmol) {
         $error.hidden = false;
@@ -78,39 +84,23 @@ const page = { title: "Viewer" };
         width:  $viewer.clientWidth  || 600,
         height: $viewer.clientHeight || 600,
         use: "HTML5",
-        j2sPath:  withBase("jsmol/j2s"),
-        serverURL: withBase("jsmol/php/jsmol.php"),
+        j2sPath:  withBase("jsmol/j2s"),            // MUST exist
+        serverURL: withBase("jsmol/php/jsmol.php"), // keep, even if unused
         script: `load ${cifUrl}; set frank OFF; set zoomlarge true; zoom 120;`
       };
 
-      $viewer.innerHTML = Jmol.getAppletHtml("jsmolApplet0", Info);
+      // Create applet object, then mount its HTML
+      const applet = Jmol.getApplet("jsmolApplet0", Info);
+      $viewer.innerHTML = Jmol.getAppletHtml(applet);
 
-      // Handle resizing
+      // Responsive resizing
       window.addEventListener("resize", () => {
         const w = $viewer.clientWidth  || 600;
         const h = $viewer.clientHeight || 600;
-        if (window.Jmol && Jmol.resizeApplet) Jmol.resizeApplet("jsmolApplet0", [w, h]);
+        if (window.Jmol && Jmol.resizeApplet) Jmol.resizeApplet(applet, [w, h]);
       });
     }
   })();
 </script>
 
-
-
-  <style>
-    .wrap { display: grid; gap: 1rem; }
-    .bar { display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; }
-    .h { margin:0; font-size: clamp(1.1rem, 2.2vw, 1.6rem); }
-    .sub { margin:0; opacity:.7; }
-    .actions { display:flex; gap:.5rem; }
-    .btn { padding:.45rem .7rem; border:1px solid var(--accents-2, #ddd); border-radius:.5rem; text-decoration:none; }
-    .viewer {
-      width: min(1200px, 100%);
-      height: min(75vh, 80rem);
-      margin: 0 auto;
-      border: 1px solid var(--accents-2, #e5e7eb);
-      border-radius: .75rem;
-    }
-    .error { color:#b00020; }
-  </style>
 </Layout>

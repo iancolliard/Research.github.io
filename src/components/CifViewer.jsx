@@ -1,36 +1,32 @@
-import { useState, useEffect, useRef } from "react";
+// src/components/JsmolViewer.jsx
+import React, { useEffect, useRef } from 'react';
 
-export default function CifViewer({ cifs }) {
-  const [selected, setSelected] = useState(cifs[0]);
-  const viewerRef = useRef(null);
+const JsmolViewer = ({ modelUrl }) => {
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    if (viewerRef.current && selected && window.$3Dmol) {
-      fetch(`Research.github.io/assets/cifs/${selected}`)
-        .then(res => res.text())
-        .then(cifData => {
-          viewerRef.current.innerHTML = "";
-          const viewer = window.$3Dmol.createViewer(viewerRef.current, { backgroundColor: "white" });
-          viewer.addModel(cifData, "cif");
-          viewer.setStyle({}, {stick: {}, sphere: {scale:0.3}});
-          viewer.zoomTo();
-          viewer.render();
-        });
+    if (window.Jmol && containerRef.current) {
+      const info = {
+        width: 800,
+        height: 600,
+        debug: false,
+        addSelectionOptions: false,
+        j2sPath: '/j2s', // Path to the JSmol j2s directory
+        console: 'none',
+      };
+      // Initialize the applet on mount
+      window.Jmol.getApplet('jmolApplet', info);
     }
-  }, [selected]);
+  }, []);
 
-  return (
-    <div>
-      <ul>
-        {cifs.map(file => (
-          <li key={file}>
-            <button type="button" onClick={() => setSelected(file)}>
-              {file}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <div ref={viewerRef} style={{ width: "500px", height: "400px" }} />
-    </div>
-  );
-}
+  useEffect(() => {
+    // Load the new model when the prop changes
+    if (window.Jmol && window.Jmol.jmolApplet && modelUrl) {
+      window.Jmol.script(window.Jmol.jmolApplet, `load "${modelUrl}"`);
+    }
+  }, [modelUrl]);
+
+  return <div ref={containerRef} id="jmolApplet" />;
+};
+
+export default JsmolViewer;
