@@ -1,6 +1,5 @@
 ---
 import { SEO } from '../../components/SEO.astro'; // if you have one; otherwise remove this line+component below
-
 const base = import.meta.env.BASE_URL; // "/" locally, "/Research.github.io/" on GH Pages
 ---
 
@@ -10,7 +9,7 @@ const base = import.meta.env.BASE_URL; // "/" locally, "/Research.github.io/" on
     <title>Crystal Viewer</title>
 
     <!-- Load JSmol from /public exactly; keep is:inline so Vite doesn’t bundle it -->
-    <script src={`${base}jsmol/JSmol.min.js`} is:inline></script>
+    <script src={`${base}assets/jsmol/JSmol.min.js`} is:inline></script>
 
     <style>
       #viewer-wrap { max-width: 900px; margin: 2rem auto; padding: 1rem; }
@@ -52,85 +51,76 @@ const base = import.meta.env.BASE_URL; // "/" locally, "/Research.github.io/" on
       </details>
     </main>
 
-    <script is:inline>
-      (async function () {
-        const BASE = `${import.meta.env.BASE_URL}`; // "/" dev, "/Research.github.io/" prod
+<script is:inline>
+  (function () {
+    const BASE = {JSON.stringify(import.meta.env.BASE_URL || "/")};
 
-        // Fill the example link with the proper base at runtime
-        const ex = document.getElementById('ex');
-        ex.href = location.pathname + '?cif=/assets/cifs/2055317.cif&title=2055317';
+    const $title  = document.getElementById("viewer-title");
+    const $viewer = document.getElementById("viewer");
+    const $error  = document.getElementById("error");
+    const $dl     = document.getElementById("download-cif");
 
-        const qs = new URLSearchParams(location.search);
-        const cifParam = qs.get('cif');   // e.g. /assets/cifs/2055317.cif
-        const title    = qs.get('title') || 'Crystal Viewer';
+    const withBase = (p) => BASE + String(p).replace(/^\/+/, "");
 
-        const elTitle = document.getElementById('title');
-        const elErr   = document.getElementById('err');
-        const elHint  = document.getElementById('hint');
-        const elDbg   = document.getElementById('dbg');
-        const elDbgText = document.getElementById('dbgText');
+    const url = new URL(location.href);
+    const rawCif   = url.searchParams.get("cif");
+    const titleArg = url.searchParams.get("title") || "Structure";
+    $title.textContent = titleArg;
 
-        elTitle.textContent = title;
+    const cifUrl = (() => {
+      if (!rawCif) return "";
+      if (rawCif.startsWith("http")) return rawCif;
+      if (rawCif.startsWith(BASE)) return rawCif;
+      return withBase(rawCif);
+    })();
 
-        function showErr(msg, extra) {
-          elErr.textContent = msg;
-          elErr.hidden = false;
-          elDbg.hidden = false;
-          if (extra) { elDbgText.textContent = JSON.stringify(extra, null, 2); }
-          console.error('[JSmol Viewer]', msg, extra || '');
-        }
+    if (!cifUrl) {
+      $error.hidden = false;
+      $error.textContent = "Missing CIF. Open with ?cif=/assets/cifs/NAME.cif&title=My+Sample";
+      return;
+    }
 
-        // No CIF param? just show the hint.
-        if (!cifParam) return;
+    // download link
+    $dl.hidden = false;
+    $dl.href = cifUrl;
 
-        // Build CIF URL respecting the GitHub Pages base
-        const cifUrl = cifParam.startsWith('/')
-          ? (BASE.replace(/\/$/, '') + cifParam)
-          : (BASE + cifParam);
+    // load JSmol (from /public) with correct base
+    const jsmolSrc = withBase("jsmol/JSmol.min.js");
+    const s = document.createElement("script");
+    s.src = jsmolSrc;
+    s.onload = initJSmol;
+    s.onerror = () => showErr("Could not load JSmol at " + jsmolSrc);
+    document.head.appendChild(s);
 
-        // Quick existence checks (so failures are obvious)
-        const j2sPath = BASE + 'jsmol/j2s';
-        try {
-          const probe = j2sPath + '/core/core.z.js';
-          const r = await fetch(probe, { cache: 'no-store' });
-          if (!r.ok) throw new Error('j2s core not found at ' + probe);
-        } catch (e) {
-          showErr('JSmol j2s files not found.', { expected: j2sPath + '/core/core.z.js', BASE });
-          return;
-        }
-        try {
-          const r = await fetch(cifUrl, { cache: 'no-store' });
-          if (!r.ok) throw new Error('CIF not found at ' + cifUrl);
-        } catch (e) {
-          showErr('CIF not found.', { cifUrl, hint: 'Put .cif under /public/assets/cifs and use ?cif=/assets/cifs/NAME.cif' });
-          return;
-        }
+    function showErr(msg) {
+      $error.hidden = false;
+      $error.textContent = msg;
+      console.error("[JSmol viewer]", msg);
+    }
 
-        try {
-          const Info = {
-            width: 600, height: 600, use: "HTML5", j2sPath,
-            script: [
-              `load "${cifUrl}";`,
-              "set antialiasDisplay true;", "frank off;", "reset; zoom 110;",
-              "select *; color cpk;", "spacefill 23%; wireframe 0.15;"
-            ].join(' ')
-          };
-          const applet = Jmol.getApplet("jsmolApplet", Info);
-          document.getElementById("applet").innerHTML = Jmol.getAppletHtml(applet);
+    function initJSmol() {
+      if (!window.Jmol) return showErr("JSmol loaded, but window.Jmol is undefined.");
 
-          // controls
-          const ctrls = document.getElementById('controls');
-          ctrls.hidden = false;
-          ctrls.addEventListener('click', e => {
-            const b = e.target.closest('button[data-script]'); if (!b) return;
-            Jmol.script(applet, b.getAttribute('data-script'));
-          });
+      const Info = {
+        width:  $viewer.clientWidth  || 600,
+        height: $viewer.clientHeight || 600,
+        use: "HTML5",
+        j2sPath:  withBase("jsmol/j2s"),
+        serverURL: withBase("jsmol/php/jsmol.php"),
+        script: `load "${cifUrl}"; set frank OFF; set zoomlarge true; zoom 120;`
+      };
 
-          elHint.hidden = true;
-        } catch (e) {
-          showErr('Failed to initialize JSmol.', { message: e && e.message, BASE, cifUrl, j2sPath });
-        }
-      })();
-    </script>
+      const applet = Jmol.getApplet("jsmolApplet0", Info);
+      $viewer.innerHTML = Jmol.getAppletHtml(applet);
+
+      window.addEventListener("resize", () => {
+        const w = $viewer.clientWidth  || 600;
+        const h = $viewer.clientHeight || 600;
+        if (Jmol.resizeApplet) Jmol.resizeApplet(applet, [w, h]);
+      });
+    }
+  })();
+</script>
+
   </body>
 </html>
