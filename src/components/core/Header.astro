@@ -135,22 +135,22 @@ const { navData, rightMenu } = Astro.props;
   nav {
   display: flex;
   }
-  nav ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-  }
-  nav ul li a {
-    text-decoration: none;
-    margin-right: 1rem;
-    color: inherit;
-    opacity: 0.72;
-    transition: opacity linear 150ms;
-  }
-  nav ul li a:hover {
-    opacity: 1;
-  }
+ nav > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+nav > ul li a {
+  text-decoration: none;
+  margin-right: 1rem;
+  color: inherit;
+  opacity: 0.72;
+  transition: opacity linear 150ms;
+}
+nav > ul li a:hover {
+  opacity: 1;
+}
   @media(max-width: 600px) {
     #menuButton {
       display: block;  
@@ -179,6 +179,8 @@ const { navData, rightMenu } = Astro.props;
        font-size: var(--font-size-lg);
        margin-bottom: 1rem;
      }
+/* --- More dropdown (desktop) --- */
+.nav-item.more { position: relative; }
 .nav-item.more details { position: relative; }
 .nav-item.more summary {
   cursor: pointer;
@@ -186,6 +188,8 @@ const { navData, rightMenu } = Astro.props;
   margin-right: 1rem;
   color: inherit;
   opacity: 0.72;
+  display: inline-flex;
+  align-items: center;
 }
 .nav-item.more summary::-webkit-details-marker { display: none; }
 
@@ -194,24 +198,45 @@ const { navData, rightMenu } = Astro.props;
   top: 100%;
   left: 0;
   min-width: 200px;
+  margin: 0;
   padding: 0.5rem 0;
+  list-style: none;
   border: 1px solid rgba(0,0,0,.1);
   background: var(--theme-bg, #fff);
   box-shadow: 0 8px 24px rgba(0,0,0,.12);
   display: none;
   z-index: 1000;
 }
-.nav-item.more[open] .submenu,
 .nav-item.more details[open] .submenu { display: block; }
-
+.nav-item.more .submenu li { display: block; }
 .nav-item.more .submenu li a {
   display: block;
   padding: 0.5rem 0.75rem;
   white-space: nowrap;
   color: inherit;
 }
-.nav-item.more .submenu li a:hover {
-  background: rgba(0,0,0,.05);
+.nav-item.more .submenu li a:hover { background: rgba(0,0,0,.05); }
+/* --- More dropdown (mobile) --- */
+.nav-item.more { width: 100%; }
+.nav-item.more summary {
+  margin-right: 0;
+  font-size: inherit;
+  padding: 0.25rem 0; 
+}
+.nav-item.more .submenu {
+  position: static;   /* stack under More */
+  width: 100%;
+  margin: 0.25rem 0 0 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  display: none;
+}
+.nav-item.more details[open] .submenu { display: block; }
+.nav-item.more .submenu li a {
+  padding: 0.5rem 0;
+}
+
 }
   }
 </style>
