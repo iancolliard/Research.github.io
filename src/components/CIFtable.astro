@@ -108,19 +108,28 @@ const items = itemsRaw
             <td>{row.date}</td>
             <td>{row.status}</td>
             <td>
-  <div class="downloads">
-    <a href={row.cifHref} download>CIF</a>
-    {row.doi ? (
-      <a href={`https://doi.org/${row.doi}`} target="_blank" rel="noopener">Open DOI</a>
-    ) : null}
-    <a
-      href={`${import.meta.env.BASE_URL}/Crystallography/viewer/?cif=${encodeURIComponent(row.cifHref)}&title=${encodeURIComponent(row.deposition || row.datablock)}`}
-      class="preview"
-    >
-      Preview
-    </a>
-  </div>
+  {row.status.toLowerCase() === "submitted" ? (
+    <span class="embargo-badge" title="CIF under review; not publicly available yet.">
+      Embargoed
+    </span>
+  ) : (
+    <div class="downloads">
+      <a href={row.cifHref} download>CIF</a>
+      {row.doi ? (
+        <a href={`https://doi.org/${row.doi}`} target="_blank" rel="noopener">
+          Open DOI
+        </a>
+      ) : null}
+      <a
+        href={`${import.meta.env.BASE_URL}/Crystallography/viewer/?cif=${encodeURIComponent(row.cifHref)}&title=${encodeURIComponent(row.deposition || row.datablock)}`}
+        class="preview"
+      >
+        Preview
+      </a>
+    </div>
+  )}
 </td>
+
           </tr>
         ))}
       </tbody>
@@ -176,7 +185,7 @@ const items = itemsRaw
   /* Downloads: flex container inside the cell fills full width */
 .downloads {
   display: flex;
-  width: 100%;              /* stretch to full cell width */
+  width: max-width;              /* stretch to full cell width */
   gap: 0.5rem;
   justify-content: stretch; /* ensures children use available space */
 }
@@ -191,7 +200,18 @@ const items = itemsRaw
   background: var(--theme-bg, #f9f9f9);
   white-space: nowrap;
 }
-
+.embargo-badge {
+  display: block;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 0.4rem;
+  background: var(--theme-bg, #f9f9f9);
+  color: inherit;
+  border: 1px solid var(--accents-2, #ddd);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
 @media (max-width: 520px) {
   .downloads { flex-direction: column; }
 }
