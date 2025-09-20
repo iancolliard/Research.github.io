@@ -57,24 +57,11 @@ const { navData, rightMenu } = Astro.props;
   <div class="header-nav__container">
     <slot name="nav">
       {navData && <nav>
-<ul>
-  {navData.map(navItem => (
-    <li><a href={navItem.slug}>{navItem.title}</a></li>
-  ))}
-
-  <!-- Custom More dropdown -->
-  <li class="nav-item more">
-    <details>
-      <summary>More</summary>
-      <ul class="submenu">
-        <li><a href="/News/">News & Updates</a></li>
-        <li><a href="/Collaborations/">Collaborations</a></li>
-        <li><a href="/Resources/">Tools & Resources</a></li>
-        <li><a href="/Media/">Media & Press</a></li>
-      </ul>
-    </details>
-  </li>
-</ul>
+        <ul>
+          {navData.map(navItem => (
+            (<li><a href={navItem.slug} >{navItem.title}</a></li>)
+          ))}
+        </ul>
       </nav>}
     </slot>
   </div>
@@ -135,99 +122,49 @@ const { navData, rightMenu } = Astro.props;
   nav {
   display: flex;
   }
- nav > ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-}
-nav > ul li a {
-  text-decoration: none;
-  margin-right: 1rem;
-  color: inherit;
-  opacity: 0.72;
-  transition: opacity linear 150ms;
-}
-nav > ul li a:hover {
-  opacity: 1;
-}
-@media(max-width: 600px) {
-  #menuButton {
-    display: block;  
-    z-index: 100;
-  }
-
-  .header-nav__container {
-    width: 100%;
-    height: 100%;
-    background-color: var(--theme-bg);
-    display: none;
-    flex-direction: column;
-    align-items: center;          /* center horizontally */
-    justify-content: flex-start;  /* keep items starting at top */
-    position: fixed;
-    inset: 0;
-    z-index: 99;
-
-    overflow-y: auto;             /* scrollable */
-    -webkit-overflow-scrolling: touch;
-    padding: 80px 16px 24px;      /* spacing from top so it clears header */
-  }
-
-  header[mobile-menu-open] .header-nav__container {
+  nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     display: flex;
   }
-
-  header[mobile-menu-open] nav > ul {
-    width: 100%;
-    flex-direction: column;
-    align-items: center;          /* center the list */
+  nav ul li a {
+    text-decoration: none;
+    margin-right: 1rem;
+    color: inherit;
+    opacity: 0.72;
+    transition: opacity linear 150ms;
   }
-
-  header[mobile-menu-open] nav > ul li {
-    width: 100%;
-    text-align: center;
-    font-size: var(--font-size-lg);
-    margin-bottom: 1rem;
+  nav ul li a:hover {
+    opacity: 1;
   }
-
-  header[mobile-menu-open] nav > ul li a {
-    display: block;
-    width: 100%;
-    padding: 0.75rem 0;
-  }
-
-  /* More dropdown (mobile) */
-  .nav-item.more { width: 100%; }
-  .nav-item.more summary {
-    margin-right: 0;
-    font-size: inherit;
-    padding: 0.25rem 0;
-  }
-  .nav-item.more .submenu {
-    position: static;
-    width: 100%;
-    margin: 0.25rem 0 0 0;
-    padding: 0;
-    border: 0;
-    box-shadow: none;
-    display: none;
-    text-align: center;           /* center submenu links too */
-  }
-  .nav-item.more details[open] .submenu { display: block; }
-
-  .nav-item.more .submenu li a {
-    display: block;
-    padding: 0.5rem 0;
-  }
-
-  /* optional: if submenu gets long, let it scroll inside */
-  .nav-item.more details[open] .submenu {
-    max-height: 50vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
+  @media(max-width: 600px) {
+    #menuButton {
+      display: block;  
+      z-index: 100;
+    }
+    .header-nav__container {
+      width: 100%;
+      height: 100%;
+      background-color: var(--theme-bg);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+    }
+    header[mobile-menu-open] .header-nav__container {
+      display: flex;
+    }
+    header[mobile-menu-open] nav ul {
+      align-items: center;
+      flex-direction: column;
+    }
+     header[mobile-menu-open] nav ul li {
+       font-size: var(--font-size-lg);
+       margin-bottom: 1rem;
+     }
   }
 </style>
