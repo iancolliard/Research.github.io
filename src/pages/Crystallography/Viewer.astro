@@ -1,37 +1,26 @@
 ---
 import { SEO } from '../../components/SEO.astro'; // if you have one; otherwise remove this line+component below
-const base = import.meta.env.BASE_URL; // "/Research.github.io/" on prod, "/" locally
+
+const base = import.meta.env.BASE_URL; // "/" locally, "/Research.github.io/" on GH Pages
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Crystal Viewer</title>
-    <!-- Optional: remove if you don't have SEO. -->
-    <!-- <SEO title="Crystal Viewer" description="JSmol CIF viewer" /> -->
 
-    <!-- IMPORTANT: load from /public and mark as inline so Vite does not bundle it -->
+    <!-- Load JSmol from /public exactly; keep is:inline so Vite doesn’t bundle it -->
     <script src={`${base}jsmol/JSmol.min.js`} is:inline></script>
 
     <style>
-      /* minimal styling */
-      #viewer-wrap {
-        max-width: 900px;
-        margin: 2rem auto;
-        padding: 1rem;
-      }
-      #applet {
-        width: 600px;
-        height: 600px;
-        margin: 0 auto;
-        border: 1px solid var(--theme-border, #ddd);
-        border-radius: 8px;
-        overflow: hidden;
-      }
+      #viewer-wrap { max-width: 900px; margin: 2rem auto; padding: 1rem; }
+      #applet { width: 600px; height: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; }
       #controls { display:flex; gap:.5rem; justify-content:center; margin-top:1rem; flex-wrap:wrap; }
       button { padding:.5rem .8rem; border:1px solid #ccc; border-radius:8px; cursor:pointer; background:transparent; }
-      .error { color: #c62828; text-align:center; font-weight:600; }
-      h1, h2, p { text-align:center; }
+      .error { color:#c62828; text-align:center; font-weight:600; }
+      .mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size:.9rem; background:rgba(127,127,127,.08); padding:.5rem .75rem; border-radius:.5rem; }
+      h1, p { text-align:center; }
+      details { margin-top:1rem; }
     </style>
   </head>
   <body>
@@ -49,75 +38,97 @@ const base = import.meta.env.BASE_URL; // "/Research.github.io/" on prod, "/" lo
         <button data-script="axes off">Axes off</button>
         <button data-script="set antialiasDisplay true">Antialias</button>
       </div>
-      <p id="hint">Open this page with <code>Research.github.io/assets/cifs/2055317.cif</code></p>
+
+      <!-- Correct usage hint (clickable) -->
+      <p id="hint" class="mono">
+        Open with
+        <a id="ex" href="#">?cif=/assets/cifs/2055317.cif&title=2055317</a>
+      </p>
       <p id="err" class="error" hidden></p>
+
+      <details id="dbg" hidden>
+        <summary>Debug</summary>
+        <div id="dbgText" class="mono"></div>
+      </details>
     </main>
 
-    <!-- Inline init script (plain JS) -->
     <script is:inline>
-      (function () {
-        // base path from Astro
-        const BASE = `${import.meta.env.BASE_URL}`;
+      (async function () {
+        const BASE = `${import.meta.env.BASE_URL}`; // "/" dev, "/Research.github.io/" prod
 
-        // read query params
-        const params = new URLSearchParams(location.search);
-        const cif = params.get('cif');   // e.g. /assets/cifs/2055317.cif
-        const title = params.get('title') || 'Crystal Viewer';
+        // Fill the example link with the proper base at runtime
+        const ex = document.getElementById('ex');
+        ex.href = location.pathname + '?cif=/assets/cifs/2055317.cif&title=2055317';
 
-        // set title
-        document.getElementById('title').textContent = title;
+        const qs = new URLSearchParams(location.search);
+        const cifParam = qs.get('cif');   // e.g. /assets/cifs/2055317.cif
+        const title    = qs.get('title') || 'Crystal Viewer';
 
-        if (!cif) {
-          // no CIF provided → show usage hint only
+        const elTitle = document.getElementById('title');
+        const elErr   = document.getElementById('err');
+        const elHint  = document.getElementById('hint');
+        const elDbg   = document.getElementById('dbg');
+        const elDbgText = document.getElementById('dbgText');
+
+        elTitle.textContent = title;
+
+        function showErr(msg, extra) {
+          elErr.textContent = msg;
+          elErr.hidden = false;
+          elDbg.hidden = false;
+          if (extra) { elDbgText.textContent = JSON.stringify(extra, null, 2); }
+          console.error('[JSmol Viewer]', msg, extra || '');
+        }
+
+        // No CIF param? just show the hint.
+        if (!cifParam) return;
+
+        // Build CIF URL respecting the GitHub Pages base
+        const cifUrl = cifParam.startsWith('/')
+          ? (BASE.replace(/\/$/, '') + cifParam)
+          : (BASE + cifParam);
+
+        // Quick existence checks (so failures are obvious)
+        const j2sPath = BASE + 'jsmol/j2s';
+        try {
+          const probe = j2sPath + '/core/core.z.js';
+          const r = await fetch(probe, { cache: 'no-store' });
+          if (!r.ok) throw new Error('j2s core not found at ' + probe);
+        } catch (e) {
+          showErr('JSmol j2s files not found.', { expected: j2sPath + '/core/core.z.js', BASE });
+          return;
+        }
+        try {
+          const r = await fetch(cifUrl, { cache: 'no-store' });
+          if (!r.ok) throw new Error('CIF not found at ' + cifUrl);
+        } catch (e) {
+          showErr('CIF not found.', { cifUrl, hint: 'Put .cif under /public/assets/cifs and use ?cif=/assets/cifs/NAME.cif' });
           return;
         }
 
-        // build absolute CIF url relative to site base
-        const cifUrl = cif.startsWith('/')
-          ? `${BASE.replace(/\/$/, '')}${cif}`
-          : `${BASE}${cif}`;
-
-        // JSmol Info object
-        const Info = {
-          width: 600,
-          height: 600,
-          use: "HTML5",
-          j2sPath: BASE + "jsmol/j2s",   // <-- MUST match your public folder
-          script: [
-            // load CIF, apply a simple nice view
-            `load "${cifUrl}";`,
-            "set antialiasDisplay true;",
-            "frank off;",
-            "reset; zoom 110;",
-            "select *; color cpk;",
-            "spacefill 23%; wireframe 0.15;",
-          ].join(' '),
-          debug: false,
-        };
-
         try {
-          // create applet and inject into #applet
+          const Info = {
+            width: 600, height: 600, use: "HTML5", j2sPath,
+            script: [
+              `load "${cifUrl}";`,
+              "set antialiasDisplay true;", "frank off;", "reset; zoom 110;",
+              "select *; color cpk;", "spacefill 23%; wireframe 0.15;"
+            ].join(' ')
+          };
           const applet = Jmol.getApplet("jsmolApplet", Info);
-          const html = Jmol.getAppletHtml(applet);
-          const mount = document.getElementById("applet");
-          mount.innerHTML = html;
+          document.getElementById("applet").innerHTML = Jmol.getAppletHtml(applet);
 
-          // hook up buttons
-          const controls = document.getElementById('controls');
-          controls.hidden = false;
-          controls.addEventListener('click', (e) => {
-            const btn = e.target.closest('button[data-script]');
-            if (!btn) return;
-            Jmol.script(applet, btn.getAttribute('data-script'));
+          // controls
+          const ctrls = document.getElementById('controls');
+          ctrls.hidden = false;
+          ctrls.addEventListener('click', e => {
+            const b = e.target.closest('button[data-script]'); if (!b) return;
+            Jmol.script(applet, b.getAttribute('data-script'));
           });
 
-          // hide hint once loaded
-          document.getElementById('hint').hidden = true;
-
-        } catch (err) {
-          const el = document.getElementById('err');
-          el.textContent = "Failed to initialize JSmol: " + (err && err.message ? err.message : err);
-          el.hidden = false;
+          elHint.hidden = true;
+        } catch (e) {
+          showErr('Failed to initialize JSmol.', { message: e && e.message, BASE, cifUrl, j2sPath });
         }
       })();
     </script>
