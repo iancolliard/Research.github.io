@@ -53,43 +53,37 @@ const base = import.meta.env.BASE_URL; // "/" locally, "/Research.github.io/" on
 
 <script is:inline>
   (function () {
-    // "/" locally; "/Research.github.io/" on GitHub Pages
     const BASE = {JSON.stringify(import.meta.env.BASE_URL || "/")};
+    const withBase = (p) => BASE + String(p).replace(/^\/+/, "");
 
     const $title  = document.getElementById("viewer-title");
     const $viewer = document.getElementById("viewer");
     const $error  = document.getElementById("error");
     const $dl     = document.getElementById("download-cif");
 
-    const withBase = (p) => BASE + String(p).replace(/^\/+/, ""); // prefix site base
-
-    // --- read query params ---
     const url = new URL(location.href);
     const rawCif   = url.searchParams.get("cif");
     const titleArg = url.searchParams.get("title") || "Structure";
     $title.textContent = titleArg;
 
-    // build CIF url (relative like "/assets/cifs/NAME.cif" is preferred)
-    const cifUrl = (() => {
-      if (!rawCif) return "";
-      if (rawCif.startsWith("http")) return rawCif;   // absolute already
-      if (rawCif.startsWith(BASE)) return rawCif;     // already base-prefixed
-      return withBase(rawCif);                        // add site base
-    })();
+    const cifUrl = rawCif
+      ? (rawCif.startsWith("http") || rawCif.startsWith(BASE) ? rawCif : withBase(rawCif))
+      : "";
+
     if (!cifUrl) {
       $error.hidden = false;
-      $error.textContent = 'Missing CIF. Open with ?cif=/assets/cifs/NAME.cif&title=My+Sample';
+      $error.textContent = "Missing CIF. Open with ?cif=/assets/cifs/NAME.cif&title=My+Sample";
       return;
     }
 
-    // show download link
+    // download link
     $dl.hidden = false;
     $dl.href = cifUrl;
 
-    // force absolute CIF URL for JSmol (robust on GitHub Pages)
+    // absolute CIF URL for JSmol
     const fullCif = new URL(cifUrl, location.origin).href;
 
-    // dynamically load JSmol from /assets/jsmol (with base)
+    // load JSmol from /public/assets/jsmol
     const jsmolSrc = withBase("assets/jsmol/JSmol.min.js");
     const s = document.createElement("script");
     s.src = jsmolSrc;
@@ -110,15 +104,14 @@ const base = import.meta.env.BASE_URL; // "/" locally, "/Research.github.io/" on
         width:  $viewer.clientWidth  || 600,
         height: $viewer.clientHeight || 600,
         use: "HTML5",
-        j2sPath:  withBase("assets/jsmol/j2s"),            // <-- under /assets/jsmol
-        serverURL: withBase("assets/jsmol/php/jsmol.php"), // optional but fine
+        j2sPath:  withBase("assets/jsmol/j2s"),
+        serverURL: withBase("assets/jsmol/php/jsmol.php"),
         script: `load "${fullCif}"; set frank OFF; set zoomlarge true; zoom 120;`
       };
 
       const applet = Jmol.getApplet("jsmolApplet0", Info);
       $viewer.innerHTML = Jmol.getAppletHtml(applet);
 
-      // responsive resize
       window.addEventListener("resize", () => {
         const w = $viewer.clientWidth  || 600;
         const h = $viewer.clientHeight || 600;
@@ -127,6 +120,7 @@ const base = import.meta.env.BASE_URL; // "/" locally, "/Research.github.io/" on
     }
   })();
 </script>
+
 
 
   </body>
