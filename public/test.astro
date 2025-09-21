@@ -1,0 +1,44 @@
+---
+const title = '3Dmol Sanity Test (embedded NaCl CIF)';
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{title}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+  <style>
+    body{margin:16px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial}
+    #viewer{width:min(92vw,900px);height:min(82vh,820px);border:1px solid #ddd;border-radius:8px}
+  </style>
+</head>
+<body>
+  <h1 style="margin:0 0 8px">{title}</h1>
+  <div id="viewer"></div>
+  <script>
+    // Tiny NaCl CIF (works offline)
+    const nacl = `
+data_NaCl
+_cell_length_a    5.6402
+_cell_length_b    5.6402
+_cell_length_c    5.6402
+_cell_angle_alpha 90
+_cell_angle_beta  90
+_cell_angle_gamma 90
+_symmetry_space_group_name_H-M   'F m -3 m'
+loop_
+  _atom_site_label
+  _atom_site_type_symbol
+  _atom_site_fract_x
+  _atom_site_fract_y
+  _atom_site_fract_z
+  Na  Na  0.00000  0.00000  0.00000
+  Cl  Cl  0.50000  0.50000  0.50000
+`;
+    const v = $3Dmol.createViewer(document.getElementById('viewer'), { backgroundColor: 'white' });
+    v.addModel(nacl, 'cif'); v.addUnitCell(); v.setStyle({}, {stick:{}}); v.zoomTo(); v.render();
+  </script>
+</body>
+</html>
