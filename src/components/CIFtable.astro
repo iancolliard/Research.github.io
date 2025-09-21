@@ -120,12 +120,12 @@ const items = itemsRaw
           Open DOI
         </a>
       ) : null}
-      <a
-        href={`${import.meta.env.BASE_URL}/Crystallography/viewer/?cif=${encodeURIComponent(row.cifHref)}&title=${encodeURIComponent(row.deposition || row.datablock)}`}
-        class="preview"
-      >
-        Preview
-      </a>
+<a
+  href={`${import.meta.env.BASE_URL}/Crystallography/viewer?cif=${encodeURIComponent(row.cifHref)}&title=${encodeURIComponent(row.deposition || row.datablock || 'CIF')}`}
+>
+  Preview
+</a>
+
     </div>
   )}
 </td>

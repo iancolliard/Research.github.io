@@ -1,127 +1,115 @@
 ---
-import { SEO } from '../../components/SEO.astro'; // if you have one; otherwise remove this line+component below
-const base = import.meta.env.BASE_URL; // "/" locally, "/Research.github.io/" on GH Pages
+const BASE = import.meta.env.BASE_URL; // "/Research.github.io/" on GH Pages
+const url  = new URL(Astro.request.url);
+const title = url.searchParams.get('title') || 'CIF Viewer';
 ---
 
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Crystal Viewer</title>
+<head>
+  <meta charset="utf-8" />
+  <title>{title}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://chemapps.stolaf.edu/jmol/jsmol/JSmol.min.js"></script>
+  <style>
+    body{margin:16px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial}
+    #viewer{width:min(92vw,820px);height:min(82vh,820px);border:1px solid #ddd}
+    #log{margin:10px 0;padding:10px;border:1px solid #eee;border-radius:8px;background:#fafafa;max-width:820px}
+    #log code{background:#f2f2f2;padding:0 4px;border-radius:4px}
+    .bad{color:#b00}.ok{color:#056}
+  </style>
+</head>
+<body>
+  <h1 style="margin:0 0 8px">{title}</h1>
+  <div id="log">Starting…</div>
+  <div id="viewer"></div>
 
-    <!-- Load JSmol from /public exactly; keep is:inline so Vite doesn’t bundle it -->
-    <script src={`${base}assets/jsmol/JSmol.min.js`} is:inline></script>
-
-    <style>
-      #viewer-wrap { max-width: 900px; margin: 2rem auto; padding: 1rem; }
-      #applet { width: 600px; height: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; }
-      #controls { display:flex; gap:.5rem; justify-content:center; margin-top:1rem; flex-wrap:wrap; }
-      button { padding:.5rem .8rem; border:1px solid #ccc; border-radius:8px; cursor:pointer; background:transparent; }
-      .error { color:#c62828; text-align:center; font-weight:600; }
-      .mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size:.9rem; background:rgba(127,127,127,.08); padding:.5rem .75rem; border-radius:.5rem; }
-      h1, p { text-align:center; }
-      details { margin-top:1rem; }
-    </style>
-  </head>
-  <body>
-    <main id="viewer-wrap">
-      <h1 id="title">Crystal Viewer</h1>
-      <div id="applet"></div>
-      <div id="controls" hidden>
-        <button data-script="spin on">Spin</button>
-        <button data-script="spin off">Stop</button>
-        <button data-script="zoom 120">Zoom 120%</button>
-        <button data-script="zoom 100">Zoom 100%</button>
-        <button data-script="spacefill on; wireframe off;">Spacefill</button>
-        <button data-script="spacefill off; wireframe 0.15;">Wireframe</button>
-        <button data-script="axes on">Axes</button>
-        <button data-script="axes off">Axes off</button>
-        <button data-script="set antialiasDisplay true">Antialias</button>
-      </div>
-
-      <!-- Correct usage hint (clickable) -->
-      <p id="hint" class="mono">
-        Open with
-        <a id="ex" href="#">?cif=/assets/cifs/2055317.cif&title=2055317</a>
-      </p>
-      <p id="err" class="error" hidden></p>
-
-      <details id="dbg" hidden>
-        <summary>Debug</summary>
-        <div id="dbgText" class="mono"></div>
-      </details>
-    </main>
-
-<script is:inline>
-  (function () {
-    const BASE = {JSON.stringify(import.meta.env.BASE_URL || "/")};
-    const withBase = (p) => BASE + String(p).replace(/^\/+/, "");
-
-    const $title  = document.getElementById("viewer-title");
-    const $viewer = document.getElementById("viewer");
-    const $error  = document.getElementById("error");
-    const $dl     = document.getElementById("download-cif");
-
-    const url = new URL(location.href);
-    const rawCif   = url.searchParams.get("cif");
-    const titleArg = url.searchParams.get("title") || "Structure";
-    $title.textContent = titleArg;
-
-    const cifUrl = rawCif
-      ? (rawCif.startsWith("http") || rawCif.startsWith(BASE) ? rawCif : withBase(rawCif))
-      : "";
-
-    if (!cifUrl) {
-      $error.hidden = false;
-      $error.textContent = "Missing CIF. Open with ?cif=/assets/cifs/NAME.cif&title=My+Sample";
-      return;
-    }
-
-    // download link
-    $dl.hidden = false;
-    $dl.href = cifUrl;
-
-    // absolute CIF URL for JSmol
-    const fullCif = new URL(cifUrl, location.origin).href;
-
-    // load JSmol from /public/assets/jsmol
-    const jsmolSrc = withBase("assets/jsmol/JSmol.min.js");
-    const s = document.createElement("script");
-    s.src = jsmolSrc;
-    s.onload = initJSmol;
-    s.onerror = () => showErr("Could not load JSmol at " + jsmolSrc);
-    document.head.appendChild(s);
-
-    function showErr(msg) {
-      $error.hidden = false;
-      $error.textContent = msg;
-      console.error("[JSmol viewer]", msg);
-    }
-
-    function initJSmol() {
-      if (!window.Jmol) return showErr("JSmol loaded, but window.Jmol is undefined.");
-
-      const Info = {
-        width:  $viewer.clientWidth  || 600,
-        height: $viewer.clientHeight || 600,
-        use: "HTML5",
-        j2sPath:  withBase("assets/jsmol/j2s"),
-        serverURL: withBase("assets/jsmol/php/jsmol.php"),
-        script: `load "${fullCif}"; set frank OFF; set zoomlarge true; zoom 120;`
+  <script>
+    (async function () {
+      const log = (msg, cls='')=>{
+        const el = document.getElementById('log');
+        el.innerHTML += '<div class="'+cls+'">'+msg+'</div>';
       };
+      const params = new URLSearchParams(location.search);
+      const cifParam = params.get('cif');
+      if (!cifParam){
+        log('No <code>?cif=</code> provided. Example: <code>?cif='+{BASE}+'assets/cifs/2055317.cif&amp;title=2055317</code>', 'bad');
+        return;
+      }
 
-      const applet = Jmol.getApplet("jsmolApplet0", Info);
-      $viewer.innerHTML = Jmol.getAppletHtml(applet);
+      // Resolve absolute URL (important on GH Pages)
+      const cifURL = new URL(cifParam, location.href).href;
+      log('Resolved CIF URL: <code>'+cifURL+'</code>');
 
-      window.addEventListener("resize", () => {
-        const w = $viewer.clientWidth  || 600;
-        const h = $viewer.clientHeight || 600;
-        if (Jmol.resizeApplet) Jmol.resizeApplet(applet, [w, h]);
-      });
-    }
-  })();
-</script>
+      // 1) Init JSmol
+      var Info = {
+        use: "HTML5",
+        j2sPath: "https://chemapps.stolaf.edu/jmol/jsmol/j2s",
+        width: "100%",
+        height: "100%",
+        debug: false
+      };
+      var app = Jmol.getApplet("app", Info);
+      document.getElementById("viewer").innerHTML = Jmol.getAppletHtml(app);
 
+      // Show JSmol console in-page so we can see script errors
+      Jmol.script(app, 'console on');
 
+      // 2) Try direct URL load first
+      log('Attempting direct load via <code>load "'+cifURL+'"</code>…');
+      Jmol.script(app, 'load "'+cifURL+'"; background white; wireframe 0.15; spacefill off; set frank off;');
 
-  </body>
+      // Give JSmol a moment; then check if anything is loaded
+      const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
+      await sleep(1200);
+      var atomCount = Jmol.evaluate(app, 'atomCount');
+
+      if (parseInt(atomCount,10) > 0) {
+        log('Direct load OK. Atom count: <code>'+atomCount+'</code>', 'ok');
+        Jmol.script(app, 'zoom 120; spin on;');
+        return;
+      } else {
+        log('Direct load shows 0 atoms; falling back to inline load…');
+      }
+
+      // 3) Fallback: fetch text and use LOAD DATA
+      try {
+        const res = await fetch(cifURL, { cache: "no-store" });
+        if (!res.ok) throw new Error('HTTP '+res.status+' '+res.statusText);
+        const buf = await res.arrayBuffer();
+        log('Downloaded bytes: <code>'+buf.byteLength+'</code>');
+
+        // Try to decode as text (most .cif are text/plain on GH Pages)
+        const text = new TextDecoder('utf-8', {fatal:false}).decode(new Uint8Array(buf));
+
+        // Compose a SAFE LOAD DATA script (escape backslashes and quotes)
+        const safe = text.replace(/\\/g,'\\\\').replace(/"/g,'\\"');
+        const name = cifURL.split('/').pop() || 'model.cif';
+
+        const script =
+          'load DATA "model"\\n' + safe + '\\nEND "'+name+'"; ' +
+          'background white; wireframe 0.15; spacefill off; set frank off; set zoomLarge true;';
+        log('Issuing <code>load DATA</code> …');
+        Jmol.script(app, script);
+
+        await sleep(1200);
+        atomCount = Jmol.evaluate(app, 'atomCount');
+        if (parseInt(atomCount,10) > 0) {
+          log('Inline load OK. Atom count: <code>'+atomCount+'</code>', 'ok');
+          Jmol.script(app, 'zoom 120; spin on;');
+        } else {
+          log('Inline load still 0 atoms. Please check the CIF content/path.', 'bad');
+        }
+      } catch (e) {
+        log('Fetch failed: <code>'+String(e)+'</code>', 'bad');
+      }
+
+      // Extra: print any last JSmol error line
+      try {
+        var lastMsg = Jmol.evaluate(app, 'message');
+        if (lastMsg) log('JSmol message: <code>'+String(lastMsg)+'</code>');
+      } catch (_) {}
+    })();
+  </script>
+</body>
 </html>
