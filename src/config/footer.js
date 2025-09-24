@@ -47,7 +47,7 @@ export const footerLists = [
 		items: [
 			{
 				title: 'List of Publications',
-				slug: '/Research.github.io/Research Experience/about',
+				slug: '/Research.github.io/Research Experience/List of Publications',
 			},
 			{
 				title: 'Journal Covers',
