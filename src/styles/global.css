@@ -18,7 +18,7 @@ body {
   position: sticky;   /* safer than fixed */
   top: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.98);
+background: linear-gradient(90deg, #0b0b0b, #1c1c1c);
   -webkit-backdrop-filter: saturate(150%) blur(8px);
   backdrop-filter: saturate(150%) blur(8px);
   border-bottom: 1px solid rgba(0,0,0,0.08);
