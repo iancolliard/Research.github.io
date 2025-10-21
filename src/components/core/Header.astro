@@ -61,7 +61,7 @@ const { navData, rightMenu } = Astro.props;
     align-items: center;
   }
 #odysseyNavHeader {
-  position: fixed;
+  position: sticky;
   top: 0; left: 0; right: 0;
   padding: 7px;
   z-index: 1000;
@@ -119,37 +119,43 @@ background: #191919;  /* dark gray */
   nav ul li a:hover {
     opacity: 1;
   }
-  @media(max-width: 600px) {
-    #menuButton {
-      display: block;  
-      z-index: 100;
-    }
-    .header-nav__container {
-      width: 100%;
-      height: 100%;
-      background-color: var(--theme-bg);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: absolute;        /* instead of fixed */
-      top: 100%;                 /* right below the header */
-      left: 0;
-      z-index: 99;
-      padding: 1rem 0;
-      max-height: 70vh;          /* optional: limit height */
-      overflow-y: auto;          /* allow scrolling */
+@media(max-width: 600px) {
+  #menuButton {
+    display: block;
+    z-index: 100;
   }
-    header[mobile-menu-open] .header-nav__container {
-      display: flex;
-    }
-    header[mobile-menu-open] nav ul {
-      align-items: center;
-      flex-direction: column;
-    }
-     header[mobile-menu-open] nav ul li {
-       font-size: var(--font-size-lg);
-       margin-bottom: 1rem;
-     }
+
+  .header-nav__container {
+    width: 100%;
+    background-color: var(--theme-bg);
+    display: none;               /* hidden by default */
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: absolute;          /* sits just below header */
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    padding: 1rem 0;
+    max-height: 0;               /* collapsed */
+    overflow: hidden;            /* hide while collapsed */
+    transition: max-height 200ms ease;
   }
+
+  header[mobile-menu-open] .header-nav__container {
+    display: flex;
+    max-height: 70vh;            /* expands and becomes scrollable */
+    overflow-y: auto;
+  }
+
+  header[mobile-menu-open] nav ul {
+    align-items: center;
+    flex-direction: column;
+  }
+  header[mobile-menu-open] nav ul li {
+    font-size: var(--font-size-lg);
+    margin-bottom: 1rem;
+  }
+}
 </style>
