@@ -1,15 +1,11 @@
 export const nav = [
 	{
-		//title: 'Home',
-		//slug: '/Research.github.io',
-	},
-	{
-		title: 'About Me',
-		slug: '/Research.github.io/About Me/About Me',
-	},
-	{
 		title: 'C.V.',
 		slug: '/Research.github.io/About Me/CV',
+	},
+	{
+		title: 'LLNL',
+		slug: '/Research.github.io/About Me/LLNL',
 	},
 	{
 		title: 'Publications',
@@ -30,10 +26,6 @@ export const nav = [
 	{
 		title: 'Single Crystal XRD',
 		slug: '/Research.github.io/Crystallography/Crystallography',
-	},
-	{
-		title: 'Structure Metrics',
-		slug: '/Research.github.io/Crystallography/Crystal Structures',
 	},
 	{
 		title: 'CIF Directory',

@@ -25,14 +25,58 @@ const pdf = (name: string) => `${base}/assets/pdfs/${name}`;
   </TextSection>
 
   <TextSection>
-    <div class="prose mx-auto">
+    <div class="pub-year">
+
+      <!-- 2026 -->
+      <h2>2026</h2>
+      <ol start="30" reversed class="space-y-6">
+        <li>
+          <div class="font-medium">
+		<a href="https://doi.org/10.1039/D5CC07083J" target="_blank" rel="noopener">
+            Actinide complexes with Wells–Dawson polyoxometalates (part 2): californium
+		</a>
+          </div>
+          <div class="opacity-80">2025-11-07</div>
+          <div>
+            <a href={pdf('paper30.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+
+        <li>
+          <div class="font-medium">
+		<a href="https://doi.org/10.1039/D5CC06999H" target="_blank" rel="noopener">
+            Actinide complexes with Wells–Dawson polyoxometalates (part 1): americium and curium
+		</a>
+          </div>
+          <div class="opacity-80">2025-09-05</div>
+          <div>
+            <a href={pdf('paper29.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+	</ol>
 
       <!-- 2025 -->
       <h2>2025</h2>
-      <ol start="27" reversed class="space-y-6">
+      <ol start="28" reversed class="space-y-6">
+
         <li>
           <div class="font-medium">
+		<a href="https://doi.org/10.1021/acs.inorgchem.5c03627" target="_blank" rel="noopener">
+            Structural and Spectroscopic Characterization of Plutonium and Other Tetravalent Metals Complexed to a Keggin Ion
+		</a>
+          </div>
+          <div class="opacity-80">2025-11-07</div>
+          <div>
+            <a href={pdf('paper28.pdf')} target="_blank" rel="noopener" class="text-sm hover:underline">[Download PDF]</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="font-medium">
+		<a href="https://doi.org/10.1021/acs.inorgchem.5c02949" target="_blank" rel="noopener">
             Breaking the Neptunyl Barrier: Direct Access to Neptunium(IV) in Aqueous Solution via Polyoxometalate-Mediated Reduction and Stabilization
+		</a>
           </div>
           <div class="opacity-80">2025-09-05</div>
           <div>
@@ -78,7 +122,7 @@ const pdf = (name: string) => `${base}/assets/pdfs/${name}`;
       </ol>
 
       <!-- 2024 -->
-      <h2 class="mt-10">2024</h2>
+      <h2>2024</h2>
       <ol start="23" reversed class="space-y-6">
         <li>
           <div class="font-medium">
@@ -388,3 +432,22 @@ const pdf = (name: string) => `${base}/assets/pdfs/${name}`;
     </div>
   </TextSection>
 </Layout>
+
+<style>
+  /* Make each year block a clean vertical stack */
+  .pub-year {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  /* Force the list to align the same across years */
+  .pub-year > ol {
+    margin-left: 0 !important;
+    padding-left: 1.25rem !important; /* standard list indent */
+  }
+
+  .pub-year > h2 {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+</style>

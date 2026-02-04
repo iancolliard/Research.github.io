@@ -33,8 +33,8 @@ export const footerLists = [
 				slug: '/Research.github.io/',
 			},
 			{
-				title: 'About Me',
-				slug: '/Research.github.io/About Me/About Me',
+				title: 'LLNL',
+				slug: '/Research.github.io/About Me/LLNL',
 			},
       		        {
 				title: 'C.V.',
@@ -70,10 +70,6 @@ export const footerLists = [
 			{
 				title: 'Single Crystal XRD',
 				slug: '/Research.github.io/Crystallography/Crystallography',
-			},
-			{
-				title: 'Structure Metrics',
-				slug: '/Research.github.io/Crystallography/Crystal Structures',
 			},
 			{
 				title: 'CIF Directory',
