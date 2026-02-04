@@ -4,12 +4,12 @@ export const nav = [
 		slug: '/Research.github.io/About Me/CV',
 	},
 	{
-		title: 'LLNL',
-		slug: '/Research.github.io/About Me/LLNL',
-	},
-	{
 		title: 'Publications',
 		slug: '/Research.github.io/Research Experience/List of Publications',
+	},
+	{
+		title: 'LLNL',
+		slug: '/Research.github.io/About Me/LLNL',
 	},
 	{
 		title: 'Journal Covers',
