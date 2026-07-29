@@ -127,7 +127,7 @@ const items = itemsRaw
                     </a>
                   ) : null}
                   <a
-                    href={`${toBasePath("Crystallography/Viewer/")}?cif=${encodeURIComponent(row.cifHref)}&deposition=${encodeURIComponent(row.deposition)}&datablock=${encodeURIComponent(row.datablock)}&title=${encodeURIComponent(row.deposition || row.datablock || 'CIF')}`}
+                    href={`${toBasePath("Crystallography/viewer/")}?cif=${encodeURIComponent(row.cifHref)}&deposition=${encodeURIComponent(row.deposition)}&datablock=${encodeURIComponent(row.datablock)}&title=${encodeURIComponent(row.deposition || row.datablock || 'CIF')}`}
                   >
                     Preview
                   </a>
