@@ -175,11 +175,175 @@
   }
 }
 
+
+.mobile-only { display:none; }
+
+@media (max-width:760px) {
+  .mobile-only { display:block; }
+
+  #toolbar {
+    min-height:54px;
+    height:54px;
+    flex-wrap:nowrap;
+    padding:8px 10px;
+    overflow:visible;
+  }
+
+  #toolbar > select,
+  #toolbar > .control,
+  #toolbar > #wyckoffButton,
+  #toolbar > #customButton,
+  #toolbar > #themeMode,
+  #toolbar > .version {
+    display:none !important;
+  }
+
+  #toolbar .brand {
+    width:auto;
+    flex:1;
+    font-size:14px;
+  }
+
+  #mobileMenuButton {
+    display:block !important;
+    margin-left:auto;
+    max-width:none;
+  }
+
+  #viewerWrap {
+    height:calc(100dvh - 54px);
+    min-height:0;
+  }
+
+  /* Hide overlays by default on mobile. */
+  #infoPanel,
+  #elementLegend,
+  #projectionPanel {
+    display:none;
+  }
+
+  #infoPanel.mobile-open,
+  #elementLegend.mobile-open,
+  #projectionPanel.mobile-open {
+    display:block;
+  }
+
+  #infoPanel {
+    left:8px;
+    right:8px;
+    top:8px;
+    width:auto;
+    max-height:55vh;
+    overflow:auto;
+    z-index:18000;
+  }
+
+  #elementLegend {
+    right:8px;
+    left:auto;
+    bottom:8px;
+    max-width:55vw;
+    max-height:42vh;
+    z-index:18000;
+  }
+
+  #projectionPanel {
+    left:8px;
+    bottom:8px;
+    width:160px;
+    height:160px;
+    z-index:18000;
+  }
+
+  #mobileMenuDrawer {
+    position:fixed;
+    inset:54px 0 0 auto;
+    width:min(88vw,360px);
+    background:var(--panel);
+    color:var(--text);
+    border-left:1px solid var(--border);
+    box-shadow:-8px 0 24px rgba(0,0,0,.18);
+    z-index:25000;
+    transform:translateX(105%);
+    transition:transform .2s ease;
+    overflow:auto;
+  }
+
+  #mobileMenuDrawer.open {
+    transform:translateX(0);
+  }
+
+  .mobile-menu-head {
+    position:sticky;
+    top:0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:12px;
+    background:var(--panel);
+    border-bottom:1px solid var(--border);
+    z-index:2;
+  }
+
+  .mobile-menu-head b { flex:1; }
+
+  .mobile-menu-body {
+    padding:12px;
+  }
+
+  .mobile-section {
+    margin-bottom:14px;
+  }
+
+  .mobile-section label {
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:5px;
+  }
+
+  .mobile-section select,
+  .mobile-section button {
+    width:100%;
+    max-width:none;
+  }
+
+  .mobile-stack {
+    display:grid;
+    gap:7px;
+  }
+
+  /* Generic popovers become bottom sheets. */
+  .popover {
+    position:fixed !important;
+    left:8px !important;
+    right:8px !important;
+    top:auto !important;
+    bottom:8px !important;
+    width:auto !important;
+    max-width:none !important;
+    max-height:62vh !important;
+    z-index:26000 !important;
+  }
+
+  #customDrawer {
+    top:54px;
+    width:min(92vw,360px);
+    height:calc(100dvh - 54px);
+    z-index:27000;
+  }
+
+  #modalBack {
+    z-index:28000;
+  }
+}
+
 </style>
 </head>
 <body>
 <div id="toolbar">
   <div class="brand">CIF Viewer</div>
+  <button id="mobileMenuButton" class="mobile-only">Menu ☰</button>
   <select id="viewMode"><option value="ballstick">Ball &amp; stick</option><option value="wireframe">Wireframe</option><option value="polyhedral">Polyhedral</option></select>
   <select id="projectionMode"><option value="none">No projection</option><option value="a">Projection along a</option><option value="b">Projection along b</option><option value="c" selected>Projection along c</option></select>
   <div class="control"><button data-menu="atomsMenu">Atoms ▾</button><div class="popover" id="atomsMenu"><div class="actions"><button id="atomsAll">Show all</button><button id="atomsNone">Hide all</button></div><div id="atomChecks"></div></div></div>
@@ -193,11 +357,63 @@
 </div>
 <div id="viewerWrap">
   <div id="plot" class="plot"></div>
-  <div id="infoPanel">Loading crystallographic information…</div>
-  <div id="projectionPanel"><canvas id="projectionCanvas"></canvas></div>
-  <div id="elementLegend"><div class="legend-title">Elements</div><div id="legendRows"></div></div>
+  <div id="infoPanel" class="mobile-collapsible">Loading crystallographic information…</div>
+  <div id="projectionPanel" class="mobile-collapsible"><canvas id="projectionCanvas"></canvas></div>
+  <div id="elementLegend" class="mobile-collapsible"><div class="legend-title">Elements</div><div id="legendRows"></div></div>
   <div id="error"></div>
 </div>
+
+<div id="mobileMenuDrawer" class="mobile-only">
+  <div class="mobile-menu-head">
+    <b>Viewer controls</b>
+    <button id="mobileMenuClose">Close</button>
+  </div>
+  <div class="mobile-menu-body">
+    <div class="mobile-section">
+      <label for="mobileViewMode">View</label>
+      <select id="mobileViewMode">
+        <option value="ballstick">Ball &amp; stick</option>
+        <option value="wireframe">Wireframe</option>
+        <option value="polyhedral">Polyhedral</option>
+      </select>
+    </div>
+
+    <div class="mobile-section">
+      <label for="mobileProjectionMode">Projection</label>
+      <select id="mobileProjectionMode">
+        <option value="none">No projection</option>
+        <option value="a">Projection along a</option>
+        <option value="b">Projection along b</option>
+        <option value="c">Projection along c</option>
+      </select>
+    </div>
+
+    <div class="mobile-section mobile-stack">
+      <button id="mobileAtoms">Atoms</button>
+      <button id="mobileBonds">Bonds</button>
+      <button id="mobileLengths">Bond lengths</button>
+      <button id="mobileRanges">Bond ranges</button>
+    </div>
+
+    <div class="mobile-section mobile-stack">
+      <button id="mobileCrystalInfo">Crystallographic info</button>
+      <button id="mobileLegend">Element legend</button>
+      <button id="mobileProjectionPanel">Show projection panel</button>
+      <button id="mobileWyckoff">Wyckoff sites</button>
+      <button id="mobileCustomize">Customize</button>
+    </div>
+
+    <div class="mobile-section">
+      <label for="mobileThemeMode">Theme</label>
+      <select id="mobileThemeMode">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="system">System</option>
+      </select>
+    </div>
+  </div>
+</div>
+
 <div id="customDrawer"><div class="drawer-head"><b>Customize atoms</b><button id="customClose">Close</button></div><div class="drawer-body"><button id="customReset">Reset defaults</button><div id="customRows"></div></div></div>
 <div id="modalBack"><div class="modal"><div class="modal-head"><b id="modalTitle">Wyckoff / atom-site information</b><button id="wyckoffWindow">Open window</button><button id="modalClose">Close</button></div><div class="modal-body" id="wyckoffContent"></div></div></div>
 
@@ -328,6 +544,107 @@ const BASE = (() => {
   $('wyckoffButton').onclick=()=>$('modalBack').classList.add('open');$('modalClose').onclick=()=>$('modalBack').classList.remove('open');$('modalBack').onclick=e=>{if(e.target===$('modalBack'))$('modalBack').classList.remove('open')};$('wyckoffWindow').onclick=()=>{const w=open('','_blank','width=900,height=700');if(w){w.document.write('<html><head><title>Wyckoff sites</title><style>body{font-family:system-ui;padding:20px}table{width:100%;border-collapse:collapse}th,td{padding:7px;border-bottom:1px solid #ddd;text-align:left}</style></head><body><h2>'+esc(titleParam)+'</h2>'+$('wyckoffContent').innerHTML+'</body></html>');w.document.close()}};
   const saved=localStorage.getItem('cifViewerTheme')||'system';$('themeMode').value=saved;$('themeMode').onchange=e=>applyTheme(e.target.value);matchMedia('(prefers-color-scheme:dark)').addEventListener?.('change',()=>{if($('themeMode').value==='system')applyTheme('system')});
   applyTheme(saved);drawProjection('c');
+
+  // ---------------- Mobile compact controls ----------------
+  const mobileMenu = document.getElementById('mobileMenuDrawer');
+  const mobileMenuButton = document.getElementById('mobileMenuButton');
+  const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+  function closeMobileMenu() {
+    mobileMenu?.classList.remove('open');
+  }
+
+  mobileMenuButton?.addEventListener('click', function() {
+    mobileMenu?.classList.add('open');
+  });
+
+  mobileMenuClose?.addEventListener('click', closeMobileMenu);
+
+  const mobileViewMode = document.getElementById('mobileViewMode');
+  const mobileProjectionMode = document.getElementById('mobileProjectionMode');
+  const mobileThemeMode = document.getElementById('mobileThemeMode');
+
+  if (mobileViewMode && document.getElementById('viewMode')) {
+    mobileViewMode.value = document.getElementById('viewMode').value;
+    mobileViewMode.addEventListener('change', function() {
+      const desktop = document.getElementById('viewMode');
+      desktop.value = mobileViewMode.value;
+      desktop.dispatchEvent(new Event('change', {bubbles:true}));
+    });
+  }
+
+  if (mobileProjectionMode && document.getElementById('projectionMode')) {
+    mobileProjectionMode.value = document.getElementById('projectionMode').value;
+    mobileProjectionMode.addEventListener('change', function() {
+      const desktop = document.getElementById('projectionMode');
+      desktop.value = mobileProjectionMode.value;
+      desktop.dispatchEvent(new Event('change', {bubbles:true}));
+    });
+  }
+
+  if (mobileThemeMode && document.getElementById('themeMode')) {
+    mobileThemeMode.value = document.getElementById('themeMode').value;
+    mobileThemeMode.addEventListener('change', function() {
+      const desktop = document.getElementById('themeMode');
+      desktop.value = mobileThemeMode.value;
+      desktop.dispatchEvent(new Event('change', {bubbles:true}));
+    });
+  }
+
+  function openDesktopMenuFromMobile(menuId) {
+    closeMobileMenu();
+    const menu = document.getElementById(menuId);
+    if (!menu) return;
+    document.querySelectorAll('.popover.open').forEach(p => p.classList.remove('open'));
+    menu.classList.add('open');
+  }
+
+  document.getElementById('mobileAtoms')?.addEventListener('click', () => openDesktopMenuFromMobile('atomsMenu'));
+  document.getElementById('mobileBonds')?.addEventListener('click', () => openDesktopMenuFromMobile('bondsMenu'));
+  document.getElementById('mobileLengths')?.addEventListener('click', () => openDesktopMenuFromMobile('lengthMenu'));
+  document.getElementById('mobileRanges')?.addEventListener('click', () => openDesktopMenuFromMobile('rangeMenu'));
+
+  document.getElementById('mobileWyckoff')?.addEventListener('click', function() {
+    closeMobileMenu();
+    document.getElementById('wyckoffButton')?.click();
+  });
+
+  document.getElementById('mobileCustomize')?.addEventListener('click', function() {
+    closeMobileMenu();
+    document.getElementById('customButton')?.click();
+  });
+
+  function toggleMobileOverlay(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    ['infoPanel','elementLegend','projectionPanel'].forEach(otherId => {
+      if (otherId !== id) document.getElementById(otherId)?.classList.remove('mobile-open');
+    });
+
+    el.classList.toggle('mobile-open');
+    closeMobileMenu();
+  }
+
+  document.getElementById('mobileCrystalInfo')?.addEventListener('click', () => toggleMobileOverlay('infoPanel'));
+  document.getElementById('mobileLegend')?.addEventListener('click', () => toggleMobileOverlay('elementLegend'));
+  document.getElementById('mobileProjectionPanel')?.addEventListener('click', () => toggleMobileOverlay('projectionPanel'));
+
+  // Projection button only shows/hides the panel; selected axis still comes from projection selector.
+  document.getElementById('mobileProjectionMode')?.addEventListener('change', function() {
+    const panel = document.getElementById('projectionPanel');
+    if (mobileProjectionMode.value === 'none') {
+      panel?.classList.remove('mobile-open');
+    }
+  });
+
+  // Tap outside open overlays to close them.
+  document.getElementById('plot')?.addEventListener('click', function() {
+    document.getElementById('infoPanel')?.classList.remove('mobile-open');
+    document.getElementById('elementLegend')?.classList.remove('mobile-open');
+    document.getElementById('projectionPanel')?.classList.remove('mobile-open');
+  });
+
 })();
 </script>
 </body>
