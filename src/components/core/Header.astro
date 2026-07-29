@@ -14,38 +14,54 @@ const { navData, rightMenu } = Astro.props;
   menuButton.addEventListener('click', toggleMenu)
 
   function toggleMenu() {
-  menuButtonIconHam.toggleAttribute('hidden');
-  menuButtonIconClose.toggleAttribute('hidden');
-  navHeader.toggleAttribute('mobile-menu-open');
-}
+    const isOpening = !navHeader.hasAttribute('mobile-menu-open');
+
+    menuButtonIconHam.toggleAttribute('hidden');
+    menuButtonIconClose.toggleAttribute('hidden');
+    navHeader.toggleAttribute('mobile-menu-open');
+
+    if (isOpening) {
+      menuButton.title = "Close Main Menu";
+      scrollPosition = window.scrollY;
+
+      // Keep the page behind the menu from scrolling.
+      bodyElement.style.overflow = 'hidden';
+    } else {
+      menuButton.title = "Open Main Menu";
+      bodyElement.style.removeProperty('overflow');
+    }
+  }
 </script>  
 
 <header id="odysseyNavHeader" class={`${rightMenu ? "header--right" : ``.trim()}`}>
   <div class="header-logo-menu__container">
-  <button id="menuButton" title="Open Main Menu">
-    <span id="menuButtonIconHam">
-      <Icon name="ic:baseline-menu" width="24px" height="24px" />
-    </span>
-    <span id="menuButtonIconClose" hidden>
-      <Icon name="ic:baseline-close" width="24px" height="24px" />
-    </span>
-  </button>
-  <a class="header-logo__link" href="/">
-    <slot name="logo">
-    </slot>
-  </a>
+    <button id="menuButton" title="Open Main Menu">
+      <span id="menuButtonIconHam">
+        <Icon name="ic:baseline-menu" width="24px" height="24px" />
+      </span>
+      <span id="menuButtonIconClose" hidden>
+        <Icon name="ic:baseline-close" width="24px" height="24px" />
+      </span>
+    </button>
+
+    <a class="header-logo__link" href="/">
+      <slot name="logo">
+      </slot>
+    </a>
   </div>
+
   <div class="header-nav__container">
     <slot name="nav">
       {navData && <nav>
         <ul>
           {navData.map(navItem => (
-            (<li><a href={navItem.slug} >{navItem.title}</a></li>)
+            (<li><a href={navItem.slug}>{navItem.title}</a></li>)
           ))}
         </ul>
       </nav>}
     </slot>
   </div>
+
   <div class="header-action-item__container">
     <slot name="action-item">
     </slot>
@@ -60,33 +76,41 @@ const { navData, rightMenu } = Astro.props;
     justify-content: space-between;
     align-items: center;
   }
-#odysseyNavHeader {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  padding: 7px;
-  z-index: 1000;
-background: #191919;  /* dark gray */
-  -webkit-backdrop-filter: saturate(150%) blur(8px);
-  backdrop-filter: saturate(150%) blur(8px);
-  border-bottom: 3px solid rgba(0,0,0,0.5);
-}
+
+  #odysseyNavHeader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 7px;
+    z-index: 1000;
+    background: #191919;
+    -webkit-backdrop-filter: saturate(150%) blur(8px);
+    backdrop-filter: saturate(150%) blur(8px);
+    border-bottom: 3px solid rgba(0,0,0,0.5);
+  }
+
   header.header--right {
     display: grid;
     grid-template-columns: 1fr auto auto;
   }
+
   .header-logo__link {
     width: fit-content;
     color: inherit;
     text-decoration: none;
   }
+
   .header-logo-menu__container {
     display: flex;
     align-items: center;
     z-index: 100;
   }
+
   .header-action-item__container {
     z-index: 100;
   }
+
   #menuButton {
     outline: none;
     border: none;
@@ -96,19 +120,23 @@ background: #191919;  /* dark gray */
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
+
   #menuButton > span {
     color: var(--theme-on-bg);
     vertical-align: middle;
   }
+
   nav {
-  display: flex;
+    display: flex;
   }
+
   nav ul {
     margin: 0;
     padding: 0;
     list-style: none;
     display: flex;
   }
+
   nav ul li a {
     text-decoration: none;
     margin-right: 1rem;
@@ -116,40 +144,87 @@ background: #191919;  /* dark gray */
     opacity: 0.72;
     transition: opacity linear 150ms;
   }
+
   nav ul li a:hover {
     opacity: 1;
   }
+
   @media(max-width: 600px) {
     #menuButton {
-      display: block;  
-      z-index: 100;
+      display: block;
+      position: relative;
+      z-index: 1002;
     }
+
+    /*
+      Full mobile navigation panel.
+
+      The previous version used:
+        position: absolute;
+        top: 100%;
+        height: 100%;
+
+      Because it was absolutely positioned relative to the header,
+      "height: 100%" only gave it roughly another header-height of space.
+
+      Fixed positioning makes the menu use the phone viewport instead.
+    */
     .header-nav__container {
+      position: fixed;
+      top: 49px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
       width: 100%;
-      height: 100%;
+      height: auto;
+      max-height: none;
+
       background-color: var(--theme-bg);
       display: none;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      position: absolute;        /* instead of fixed */
-      top: 100%;                 /* right below the header */
-      left: 0;
-      z-index: 99;
-      padding: 1rem 0;
-      max-height: 70vh;          /* optional: limit height */
-      overflow-y: auto;          /* allow scrolling */
-  }
+      justify-content: flex-start;
+
+      padding: 2rem 1.25rem calc(2rem + env(safe-area-inset-bottom));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+
+      z-index: 1001;
+    }
+
     header[mobile-menu-open] .header-nav__container {
       display: flex;
     }
-    header[mobile-menu-open] nav ul {
-      align-items: center;
-      flex-direction: column;
+
+    header[mobile-menu-open] nav {
+      width: 100%;
     }
-     header[mobile-menu-open] nav ul li {
-       font-size: var(--font-size-lg);
-       margin-bottom: 1rem;
-     }
+
+    header[mobile-menu-open] nav ul {
+      width: 100%;
+      align-items: stretch;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    header[mobile-menu-open] nav ul li {
+      width: 100%;
+      font-size: var(--font-size-lg);
+      margin: 0;
+      border-bottom: 1px solid color-mix(
+        in srgb,
+        var(--theme-on-bg) 12%,
+        transparent
+      );
+    }
+
+    header[mobile-menu-open] nav ul li a {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0.9rem 0.25rem;
+    }
   }
 </style>
