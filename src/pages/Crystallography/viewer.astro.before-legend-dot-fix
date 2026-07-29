@@ -22,7 +22,7 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
     .check-row{display:flex;align-items:center;gap:7px;padding:4px 3px;font-size:13px;white-space:nowrap}
     #viewerWrap{height:calc(100vh - var(--toolbar-h));height:calc(100dvh - var(--toolbar-h));position:relative}.plot{width:100%;height:100%}
     #infoPanel{position:absolute;left:24px;top:20px;width:285px;max-height:50vh;overflow:auto;padding:10px 12px;background:color-mix(in srgb,var(--panel) 96%,transparent);border:1px solid var(--border);border-radius:8px;z-index:20;font-size:11px;line-height:1.45;box-shadow:0 5px 18px rgba(0,0,0,.1)}
-    #elementLegend{position:absolute;right:18px;bottom:18px;min-width:135px;max-height:280px;overflow:auto;padding:8px 10px;background:color-mix(in srgb,var(--panel) 96%,transparent);border:1px solid var(--border);border-radius:8px;z-index:20;font-size:12px}.legend-title{font-weight:700;margin-bottom:5px}.legend-row{display:flex;align-items:center;gap:7px;padding:3px 0}.dot{display:inline-flex;flex:0 0 auto;width:18px;height:18px;align-items:center;justify-content:center;font-size:18px;line-height:1;font-family:Arial,sans-serif;text-shadow:0 0 1px rgba(0,0,0,.35)}
+    #elementLegend{position:absolute;right:18px;bottom:18px;min-width:135px;max-height:280px;overflow:auto;padding:8px 10px;background:color-mix(in srgb,var(--panel) 96%,transparent);border:1px solid var(--border);border-radius:8px;z-index:20;font-size:12px}.legend-title{font-weight:700;margin-bottom:5px}.legend-row{display:flex;align-items:center;gap:7px;padding:3px 0}.dot{display:inline-block;flex:0 0 12px;width:12px;height:12px;min-width:12px;min-height:12px;border-radius:50%;border:1px solid color-mix(in srgb,var(--text) 55%,transparent);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.2)}
     #projectionPanel{position:absolute;left:24px;bottom:20px;width:250px;height:250px;background:var(--panel);border:1px solid var(--border);border-radius:8px;z-index:20;padding:6px}.hidden{display:none!important}
     #projectionCanvas{width:100%;height:100%}
     #mobileInfoToggle{display:none}
@@ -223,24 +223,13 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
   function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
   function checks(container,items,set,onchange){const c=$(container);c.innerHTML='';for(const it of items){const l=document.createElement('label');l.className='check-row';const b=document.createElement('input');b.type='checkbox';b.checked=set.has(it);b.onchange=()=>{b.checked?set.add(it):set.delete(it);onchange()};l.append(b,document.createTextNode(it));c.append(l)}}
   function renderLegend(){
-    const c=$('legendRows');
-    c.innerHTML='';
+    const c=$('legendRows');c.innerHTML='';
     for(const e of elements){
-      const r=document.createElement('div');
-      r.className='legend-row';
-
-      const d=document.createElement('span');
-      d.className='dot';
-      d.textContent='●';
-      d.style.setProperty('color',styles[e].color,'important');
+      const r=document.createElement('div');r.className='legend-row';
+      const d=document.createElement('span');d.className='dot';
+      d.style.setProperty('background-color',styles[e].color,'important');
       d.title=e+' — '+styles[e].color;
-      d.setAttribute('aria-hidden','true');
-
-      const label=document.createElement('span');
-      label.textContent=e;
-
-      r.append(d,label);
-      c.append(r);
+      r.append(d,document.createTextNode(e));c.append(r);
     }
   }
   function renderRanges(){const c=$('rangeRows');c.innerHTML='';for(const p of pairs){const r=ranges[p],s=document.createElement('div');s.className='range-pair';const t=document.createElement('div');t.className='range-title';t.textContent=p;const read=document.createElement('div');read.className='range-read';const mn=document.createElement('span'),mx=document.createElement('span');const refresh=()=>{mn.textContent=r.min.toFixed(2)+' Å';mx.textContent=r.max.toFixed(2)+' Å'};read.append(mn,mx);const a=document.createElement('input'),b=document.createElement('input');for(const q of[a,b]){q.type='range';q.min=r.min0;q.max=r.max0;q.step=.01}s.append(t,read);a.value=r.min;b.value=r.max;a.oninput=()=>{r.min=Math.min(+a.value,r.max);a.value=r.min;refresh();render()};b.oninput=()=>{r.max=Math.max(+b.value,r.min);b.value=r.max;refresh();render()};const la=document.createElement('div');la.className='small';la.textContent='Minimum';const lb=document.createElement('div');lb.className='small';lb.textContent='Maximum';s.append(la,a,lb,b);refresh();c.append(s)}}
