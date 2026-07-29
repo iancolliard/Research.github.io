@@ -39,11 +39,12 @@ function parseCSV(text) {
 const itemsRaw = parseCSV(csvText);
 
 /* --- BASE-aware path builder (for GitHub Pages) --- */
-const BASE = import.meta.env.BASE_URL || "/";
+const BASE_RAW = import.meta.env.BASE_URL || "/";
+const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
 function toBasePath(p) {
   if (!p) return "";
-  if (p.startsWith("http")) return p;
-  const clean = p.replace(/^\.?\//, "");
+  if (/^https?:\/\//i.test(p)) return p;
+  const clean = String(p).replace(/^\.?\/+/, "");
   return `${BASE}${clean}`;
 }
 
@@ -72,8 +73,10 @@ const items = itemsRaw
 
     // Defaults (override when CSV gives explicit paths)
     // CIF typically keyed off datablock name
-    const cifHref = r.cif_path ? toBasePath(r.cif_path)
-                               : toBasePath(`assets/cifs/${encodeURIComponent(deposition)}.cif`);
+    const explicitCif = r.cif || r.cif_path || "";
+    const cifHref = explicitCif
+      ? toBasePath(explicitCif)
+      : toBasePath(`assets/cifs/${encodeURIComponent(deposition)}.cif`);
     // PDF typically keyed off deposition #
     const pdfHref = r.pdf_path ? toBasePath(r.pdf_path)
                                : toBasePath(`assets/pdfs/${encodeURIComponent(deposition)}.pdf`);
@@ -124,7 +127,7 @@ const items = itemsRaw
                     </a>
                   ) : null}
                   <a
-                    href={`${import.meta.env.BASE_URL}Crystallography/Viewer?cif=${encodeURIComponent(row.cifHref)}&title=${encodeURIComponent(row.deposition || row.datablock || 'CIF')}`}
+                    href={`${toBasePath("Crystallography/viewer/")}?cif=${encodeURIComponent(row.cifHref)}&deposition=${encodeURIComponent(row.deposition)}&datablock=${encodeURIComponent(row.datablock)}&title=${encodeURIComponent(row.deposition || row.datablock || 'CIF')}`}
                   >
                     Preview
                   </a>
