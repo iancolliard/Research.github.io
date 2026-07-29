@@ -26,7 +26,6 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
     #projectionPanel{position:absolute;left:24px;bottom:20px;width:250px;height:250px;background:var(--panel);border:1px solid var(--border);border-radius:8px;z-index:20;padding:6px}.hidden{display:none!important}
     #projectionCanvas{width:100%;height:100%}
     #mobileInfoToggle{display:none}
-    #mobileZoomControls{display:none}
     .range-pair{padding:8px 0 10px;border-bottom:1px solid var(--border)}.range-pair:last-child{border-bottom:0}.range-title{font-weight:700;font-size:12px}.range-read{display:flex;justify-content:space-between;font-size:11px;margin:4px 0}.range-pair input[type=range]{width:100%}
     #customDrawer{position:fixed;right:-360px;top:54px;width:340px;height:calc(100vh - 54px);background:var(--panel);border-left:1px solid var(--border);box-shadow:-8px 0 24px rgba(0,0,0,.16);z-index:500;transition:right .2s;overflow:auto}#customDrawer.open{right:0}.drawer-head{position:sticky;top:0;display:flex;align-items:center;padding:12px 14px;background:var(--panel);border-bottom:1px solid var(--border);z-index:2}.drawer-head b{flex:1}.drawer-body{padding:12px 14px}.custom-row{display:grid;grid-template-columns:48px 1fr 72px;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)}.custom-row input[type=color]{width:38px;height:28px;border:0;background:none}.custom-row input[type=range]{width:100%}.small{font-size:11px;color:var(--muted)}
     #modalBack{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1000;align-items:center;justify-content:center}#modalBack.open{display:flex}.modal{width:min(900px,92vw);max-height:82vh;overflow:auto;background:var(--panel);border-radius:10px;box-shadow:0 15px 50px rgba(0,0,0,.3)}.modal-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border)}.modal-head b{flex:1}.modal-body{padding:14px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--border)}th{background:var(--soft);position:sticky;top:0}
@@ -45,33 +44,6 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
       .check-row{min-height:42px;font-size:14px;padding:7px 5px}.check-row input{width:18px;height:18px}
       .range-pair{padding:12px 2px 15px}.range-pair input[type=range]{min-height:34px}
       #mobileInfoToggle{display:block;position:absolute;left:8px;top:8px;z-index:35;height:40px;padding:0 12px;background:color-mix(in srgb,var(--panel) 96%,transparent);box-shadow:0 4px 14px rgba(0,0,0,.12);backdrop-filter:blur(8px)}
-      #plot{touch-action:none}
-      #mobileZoomControls{
-        display:flex;
-        position:absolute;
-        right:8px;
-        top:8px;
-        z-index:36;
-        gap:6px;
-      }
-      #mobileZoomControls button{
-        width:42px;
-        height:42px;
-        min-width:42px;
-        padding:0;
-        font-size:20px;
-        font-weight:700;
-        background:color-mix(in srgb,var(--panel) 96%,transparent);
-        box-shadow:0 4px 14px rgba(0,0,0,.12);
-        backdrop-filter:blur(8px);
-      }
-      #mobileZoomControls #zoomReset{
-        width:auto;
-        min-width:58px;
-        padding:0 10px;
-        font-size:12px;
-        font-weight:600;
-      }
       #infoPanel{display:none;left:8px;right:8px;top:56px;width:auto;max-height:min(48dvh,360px);font-size:12px;z-index:34;backdrop-filter:blur(10px)}
       #infoPanel.mobile-open{display:block}
       #projectionPanel{left:8px;bottom:62px;width:132px;height:132px;padding:4px}
@@ -107,11 +79,6 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
 <div id="viewerWrap">
   <div id="plot" class="plot"></div>
   <button id="mobileInfoToggle" type="button" aria-expanded="false" aria-controls="infoPanel">Crystal info</button>
-  <div id="mobileZoomControls" aria-label="3D zoom controls">
-    <button id="zoomIn" type="button" aria-label="Zoom in">+</button>
-    <button id="zoomOut" type="button" aria-label="Zoom out">−</button>
-    <button id="zoomReset" type="button" aria-label="Reset 3D view">Reset</button>
-  </div>
   <div id="infoPanel">Loading crystallographic information…</div>
   <div id="projectionPanel"><canvas id="projectionCanvas"></canvas></div>
   <div id="elementLegend"><div class="legend-title">Elements</div><div id="legendRows"></div></div>
@@ -299,31 +266,6 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
   }
   function renderWyckoff(){let h='<table><thead><tr><th>Site</th><th>Element</th><th>Multiplicity</th><th>Wyckoff</th><th>Occupancy</th></tr></thead><tbody>';for(const s of sites)h+=`<tr><td>${esc(s.label)}</td><td>${esc(s.elem)}</td><td>${s.mult??'—'}</td><td>${esc(s.wy||'—')}</td><td>${s.occ.toFixed(3)}</td></tr>`;h+='</tbody></table><p class="small">Wyckoff letters are shown when present in the CIF.</p>';$('wyckoffContent').innerHTML=h;}
   function drawProjection(axisName){const panel=$('projectionPanel');if(axisName==='none'){panel.classList.add('hidden');return}panel.classList.remove('hidden');const cv=$('projectionCanvas'),ctx=cv.getContext('2d'),D=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=w*D;cv.height=h*D;ctx.scale(D,D);const dark=document.body.classList.contains('dark');ctx.fillStyle=dark?'#1f2228':'#fff';ctx.fillRect(0,0,w,h);ctx.strokeStyle=dark?'#aaa':'#555';ctx.strokeRect(22,22,w-44,h-44);ctx.strokeStyle=dark?'#444':'#ddd';ctx.beginPath();ctx.moveTo(w/2,22);ctx.lineTo(w/2,h-22);ctx.moveTo(22,h/2);ctx.lineTo(w-22,h/2);ctx.stroke();const seed=[.137,.271,.419],pts=ops.map(o=>applyOp(o,seed));for(const p of pts){let u,v,dep;if(axisName==='c'){[u,v,dep]=p}else if(axisName==='b'){u=p[0];v=p[2];dep=p[1]}else{u=p[1];v=p[2];dep=p[0]}const shade=Math.round(45+170*dep);ctx.fillStyle=`rgb(${shade},${shade},${shade})`;ctx.beginPath();ctx.arc(22+u*(w-44),22+(1-v)*(h-44),4.5,0,Math.PI*2);ctx.fill();ctx.strokeStyle=dark?'#ddd':'#111';ctx.stroke()}ctx.fillStyle=dark?'#eee':'#222';ctx.font='11px system-ui';ctx.textAlign='center';ctx.fillText('projection along '+axisName,w/2,14)}
-  const defaultCameraEye={x:1.25,y:1.25,z:1.25};
-  let currentCameraEye={...defaultCameraEye};
-
-  function setCameraEye(eye){
-    currentCameraEye={x:eye.x,y:eye.y,z:eye.z};
-    Plotly.relayout('plot',{
-      'scene.camera.eye.x':currentCameraEye.x,
-      'scene.camera.eye.y':currentCameraEye.y,
-      'scene.camera.eye.z':currentCameraEye.z
-    });
-  }
-
-  function zoomCamera(factor){
-    const eye=currentCameraEye||defaultCameraEye;
-    setCameraEye({
-      x:eye.x*factor,
-      y:eye.y*factor,
-      z:eye.z*factor
-    });
-  }
-
-  function resetCamera(){
-    setCameraEye({...defaultCameraEye});
-  }
-
   function applyTheme(v){let dark=v==='dark'||(v==='system'&&matchMedia('(prefers-color-scheme:dark)').matches);document.body.classList.toggle('dark',dark);localStorage.setItem('cifViewerTheme',v);render();drawProjection($('projectionMode').value)}
 
   checks('atomChecks',elements,visibleAtoms,render);checks('bondChecks',pairs,visibleBonds,render);checks('lengthChecks',pairs,visibleLengths,render);renderRanges();renderLegend();renderCustom();renderWyckoff();renderInfo();
@@ -360,17 +302,6 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
   document.addEventListener('click',closeMenus);
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenus()});
   $('mobileInfoToggle').onclick=e=>{e.stopPropagation();const open=$('infoPanel').classList.toggle('mobile-open');$('mobileInfoToggle').setAttribute('aria-expanded',String(open));$('mobileInfoToggle').textContent=open?'Close info':'Crystal info';};
-  $('zoomIn').onclick=e=>{e.stopPropagation();zoomCamera(.82)};
-  $('zoomOut').onclick=e=>{e.stopPropagation();zoomCamera(1.22)};
-  $('zoomReset').onclick=e=>{e.stopPropagation();resetCamera()};
-
-  const plotEl=$('plot');
-  plotEl.on?.('plotly_relayout',ev=>{
-    const cam=ev?.['scene.camera'];
-    if(cam?.eye && [cam.eye.x,cam.eye.y,cam.eye.z].every(Number.isFinite)){
-      currentCameraEye={x:cam.eye.x,y:cam.eye.y,z:cam.eye.z};
-    }
-  });
   $('customButton').onclick=()=>$('customDrawer').classList.add('open');$('customClose').onclick=()=>$('customDrawer').classList.remove('open');$('customReset').onclick=()=>{for(const e of elements){styles[e]={color:COLORS[e]||'#969696',scale:1}}renderLegend();renderCustom();render()};
   $('wyckoffButton').onclick=()=>$('modalBack').classList.add('open');$('modalClose').onclick=()=>$('modalBack').classList.remove('open');$('modalBack').onclick=e=>{if(e.target===$('modalBack'))$('modalBack').classList.remove('open')};$('wyckoffWindow').onclick=()=>{const w=open('','_blank','width=900,height=700');if(w){w.document.write('<html><head><title>Wyckoff sites</title><style>body{font-family:system-ui;padding:20px}table{width:100%;border-collapse:collapse}th,td{padding:7px;border-bottom:1px solid #ddd;text-align:left}</style></head><body><h2>'+esc(titleParam)+'</h2>'+$('wyckoffContent').innerHTML+'</body></html>');w.document.close()}};
   const saved=localStorage.getItem('cifViewerTheme')||'system';$('themeMode').value=saved;$('themeMode').onchange=e=>applyTheme(e.target.value);matchMedia('(prefers-color-scheme:dark)').addEventListener?.('change',()=>{if($('themeMode').value==='system')applyTheme('system')});
