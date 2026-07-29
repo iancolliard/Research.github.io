@@ -11,51 +11,25 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
   <title>CIF Viewer</title>
   <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
   <style>
-    :root{--bg:#fff;--panel:#fff;--text:#222;--border:#c8c8c8;--soft:#f5f5f5;--muted:#666;--toolbar-h:54px}
+    :root{--bg:#fff;--panel:#fff;--text:#222;--border:#c8c8c8;--soft:#f5f5f5;--muted:#666}
     *{box-sizing:border-box} html,body{margin:0;height:100%;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
     body.dark{--bg:#17191d;--panel:#1f2228;--text:#e8e8e8;--border:#4a4f58;--soft:#2c3037;--muted:#b8bec8}
-    #toolbar{height:var(--toolbar-h);display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--border);background:var(--panel);position:relative;z-index:5000;overflow:visible;flex-wrap:nowrap}
+    #toolbar{height:54px;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--border);background:var(--panel);position:relative;z-index:5000;overflow:visible;flex-wrap:nowrap}
     .brand{font-weight:700;white-space:nowrap}.version{margin-left:auto;color:var(--muted);font-size:12px;white-space:nowrap}
     select,button{height:32px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:6px;padding:0 10px;cursor:pointer}
     .control{position:relative;overflow:visible;z-index:5001}.popover{display:none;position:absolute;top:38px;left:0;min-width:220px;max-height:420px;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.18);padding:8px;z-index:10000}.popover.open{display:block}
     .actions{display:flex;gap:6px;padding-bottom:7px;margin-bottom:6px;border-bottom:1px solid var(--border)}.actions button{height:27px;font-size:11px;background:var(--soft)}
     .check-row{display:flex;align-items:center;gap:7px;padding:4px 3px;font-size:13px;white-space:nowrap}
-    #viewerWrap{height:calc(100vh - var(--toolbar-h));height:calc(100dvh - var(--toolbar-h));position:relative}.plot{width:100%;height:100%}
+    #viewerWrap{height:calc(100vh - 54px);position:relative}.plot{width:100%;height:100%}
     #infoPanel{position:absolute;left:24px;top:20px;width:285px;max-height:50vh;overflow:auto;padding:10px 12px;background:color-mix(in srgb,var(--panel) 96%,transparent);border:1px solid var(--border);border-radius:8px;z-index:20;font-size:11px;line-height:1.45;box-shadow:0 5px 18px rgba(0,0,0,.1)}
     #elementLegend{position:absolute;right:18px;bottom:18px;min-width:135px;max-height:280px;overflow:auto;padding:8px 10px;background:color-mix(in srgb,var(--panel) 96%,transparent);border:1px solid var(--border);border-radius:8px;z-index:20;font-size:12px}.legend-title{font-weight:700;margin-bottom:5px}.legend-row{display:flex;align-items:center;gap:7px;padding:3px 0}.dot{width:12px;height:12px;border-radius:50%;border:1px solid #555}
     #projectionPanel{position:absolute;left:24px;bottom:20px;width:250px;height:250px;background:var(--panel);border:1px solid var(--border);border-radius:8px;z-index:20;padding:6px}.hidden{display:none!important}
     #projectionCanvas{width:100%;height:100%}
-    #mobileInfoToggle{display:none}
     .range-pair{padding:8px 0 10px;border-bottom:1px solid var(--border)}.range-pair:last-child{border-bottom:0}.range-title{font-weight:700;font-size:12px}.range-read{display:flex;justify-content:space-between;font-size:11px;margin:4px 0}.range-pair input[type=range]{width:100%}
     #customDrawer{position:fixed;right:-360px;top:54px;width:340px;height:calc(100vh - 54px);background:var(--panel);border-left:1px solid var(--border);box-shadow:-8px 0 24px rgba(0,0,0,.16);z-index:500;transition:right .2s;overflow:auto}#customDrawer.open{right:0}.drawer-head{position:sticky;top:0;display:flex;align-items:center;padding:12px 14px;background:var(--panel);border-bottom:1px solid var(--border);z-index:2}.drawer-head b{flex:1}.drawer-body{padding:12px 14px}.custom-row{display:grid;grid-template-columns:48px 1fr 72px;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)}.custom-row input[type=color]{width:38px;height:28px;border:0;background:none}.custom-row input[type=range]{width:100%}.small{font-size:11px;color:var(--muted)}
     #modalBack{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1000;align-items:center;justify-content:center}#modalBack.open{display:flex}.modal{width:min(900px,92vw);max-height:82vh;overflow:auto;background:var(--panel);border-radius:10px;box-shadow:0 15px 50px rgba(0,0,0,.3)}.modal-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border)}.modal-head b{flex:1}.modal-body{padding:14px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--border)}th{background:var(--soft);position:sticky;top:0}
     #error{white-space:pre-wrap;display:none;position:absolute;inset:20px auto auto 50%;transform:translateX(-50%);z-index:100;background:#7f1d1d;color:#fff;padding:10px 14px;border-radius:7px;max-width:80vw}
-    @media(max-width:800px){
-      :root{--toolbar-h:58px}
-      html,body{height:100dvh;overflow:hidden;overscroll-behavior:none}
-      #toolbar{padding:0 8px;gap:6px;overflow-x:auto;overflow-y:visible;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-      #toolbar::-webkit-scrollbar{display:none}
-      #toolbar>*{flex:0 0 auto}
-      .brand{font-size:14px}.version{display:none}
-      #toolbar select,#toolbar button{height:42px;min-height:42px;font-size:13px;padding:0 12px}
-      .popover{position:fixed;left:8px!important;right:8px!important;top:auto!important;bottom:calc(8px + env(safe-area-inset-bottom));width:auto;min-width:0!important;max-height:min(64dvh,560px);padding:12px;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,.34);z-index:10000}
-      .actions{position:sticky;top:-12px;background:var(--panel);padding:12px 0 9px;z-index:2}
-      .actions button{height:38px;font-size:12px}
-      .check-row{min-height:42px;font-size:14px;padding:7px 5px}.check-row input{width:18px;height:18px}
-      .range-pair{padding:12px 2px 15px}.range-pair input[type=range]{min-height:34px}
-      #mobileInfoToggle{display:block;position:absolute;left:8px;top:8px;z-index:35;height:40px;padding:0 12px;background:color-mix(in srgb,var(--panel) 96%,transparent);box-shadow:0 4px 14px rgba(0,0,0,.12);backdrop-filter:blur(8px)}
-      #infoPanel{display:none;left:8px;right:8px;top:56px;width:auto;max-height:min(48dvh,360px);font-size:12px;z-index:34;backdrop-filter:blur(10px)}
-      #infoPanel.mobile-open{display:block}
-      #projectionPanel{left:8px;bottom:62px;width:132px;height:132px;padding:4px}
-      #elementLegend{left:8px;right:8px;bottom:8px;min-width:0;max-height:none;height:46px;padding:6px 9px;display:flex;align-items:center;gap:10px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;backdrop-filter:blur(8px)}
-      #elementLegend::-webkit-scrollbar{display:none}
-      #elementLegend .legend-title{margin:0;position:sticky;left:0;background:var(--panel);padding-right:4px;z-index:2}
-      #legendRows{display:flex;align-items:center;gap:11px}.legend-row{flex:0 0 auto;padding:0}
-      #customDrawer{left:0;right:0;top:auto;bottom:0;width:100%;height:min(76dvh,680px);border-left:0;border-top:1px solid var(--border);border-radius:18px 18px 0 0;padding-bottom:env(safe-area-inset-bottom);transform:translateY(105%);transition:transform .22s ease;box-shadow:0 -12px 36px rgba(0,0,0,.24);z-index:9000}
-      #customDrawer.open{right:0;transform:translateY(0)}.drawer-head{min-height:56px}.custom-row{grid-template-columns:48px minmax(120px,1fr) 76px;min-height:54px}
-      #modalBack{padding:8px}.modal{width:100%;max-height:calc(100dvh - 16px);border-radius:16px}.modal-head{position:sticky;top:0;background:var(--panel);z-index:4}.modal-head #wyckoffWindow{display:none}.modal-body{padding:8px;overflow-x:auto}table{min-width:620px;font-size:12px}th,td{padding:7px}
-      #error{top:12px;max-width:calc(100vw - 24px);width:calc(100vw - 24px)}
-    }
+    @media(max-width:800px){#infoPanel{width:240px;max-height:38vh}.version{display:none}}
   
     #viewerWrap{isolation:isolate}
     #toolbar .popover{pointer-events:auto}
@@ -78,7 +52,6 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
 </div>
 <div id="viewerWrap">
   <div id="plot" class="plot"></div>
-  <button id="mobileInfoToggle" type="button" aria-expanded="false" aria-controls="infoPanel">Crystal info</button>
   <div id="infoPanel">Loading crystallographic information…</div>
   <div id="projectionPanel"><canvas id="projectionCanvas"></canvas></div>
   <div id="elementLegend"><div class="legend-title">Elements</div><div id="legendRows"></div></div>
@@ -187,11 +160,7 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
     if(mode==='polyhedral'){const activeCenters=new Set(active.flatMap(b=>[b.i,b.j]));for(const p of polys){if(!visibleAtoms.has(p.symbol)||!activeCenters.has(p.center))continue;T.push({type:'mesh3d',x:p.verts.map(v=>v[0]),y:p.verts.map(v=>v[1]),z:p.verts.map(v=>v[2]),i:p.faces.map(f=>f[0]),j:p.faces.map(f=>f[1]),k:p.faces.map(f=>f[2]),color:styles[p.symbol].color,opacity:.34,flatshading:true,hovertext:p.label,hoverinfo:'text',showscale:false,showlegend:false})}}
     for(const e of elements){if(!visibleAtoms.has(e))continue;const aa=atoms.filter(a=>a.elem===e),sz=(mode==='wireframe'?.35:mode==='polyhedral'?.42:1)*styles[e].scale*(12+6*(RADII[e]||.75));T.push({type:'scatter3d',mode:'markers',x:aa.map(a=>a.xyz[0]),y:aa.map(a=>a.xyz[1]),z:aa.map(a=>a.xyz[2]),marker:{size:sz,color:styles[e].color,line:{width:1,color:'#333'}},text:aa.map(a=>`<b>${a.label}</b><br>${e}<br>${a.xyz.map(v=>v.toFixed(4)).join(', ')} Å`),hovertemplate:'%{text}<extra></extra>',showlegend:false});const ii=imgs.filter(a=>a.elem===e);if(ii.length)T.push({type:'scatter3d',mode:'markers',x:ii.map(a=>a.xyz[0]),y:ii.map(a=>a.xyz[1]),z:ii.map(a=>a.xyz[2]),marker:{size:sz,color:styles[e].color,opacity:.7,line:{width:1.2,color:'#333'}},text:ii.map(a=>`<b>${a.label}</b> (periodic image)`),hovertemplate:'%{text}<extra></extra>',showlegend:false})}
     return T;}
-  function isMobile(){return matchMedia('(max-width:800px)').matches}
-  function render(){
-    const dark=document.body.classList.contains('dark'),mobile=isMobile();
-    Plotly.react('plot',traces(),{title:{text:titleParam+' — '+({ballstick:'Ball & stick',wireframe:'Wireframe',polyhedral:'Polyhedral'}[mode]),x:.5,font:{color:dark?'#eee':'#222',size:mobile?14:17}},paper_bgcolor:dark?'#17191d':'#fff',plot_bgcolor:dark?'#17191d':'#fff',font:{color:dark?'#eee':'#222'},scene:{bgcolor:dark?'#17191d':'#fff',aspectmode:'data',xaxis:axis('x (Å)',dark),yaxis:axis('y (Å)',dark),zaxis:axis('z (Å)',dark)},margin:mobile?{l:4,r:4,b:48,t:48}:{l:330,r:10,b:10,t:60}}, {responsive:true,displaylogo:false,displayModeBar:!mobile,scrollZoom:true});
-  }
+  function render(){const dark=document.body.classList.contains('dark');Plotly.react('plot',traces(),{title:{text:titleParam+' — '+({ballstick:'Ball & stick',wireframe:'Wireframe',polyhedral:'Polyhedral'}[mode]),x:.5,font:{color:dark?'#eee':'#222'}},paper_bgcolor:dark?'#17191d':'#fff',plot_bgcolor:dark?'#17191d':'#fff',font:{color:dark?'#eee':'#222'},scene:{bgcolor:dark?'#17191d':'#fff',aspectmode:'data',xaxis:axis('x (Å)',dark),yaxis:axis('y (Å)',dark),zaxis:axis('z (Å)',dark)},margin:{l:330,r:10,b:10,t:60}}, {responsive:true,displaylogo:false});}
   function axis(title,dark){return{title,showbackground:true,backgroundcolor:dark?'#17191d':'#fff',gridcolor:dark?'#3b4049':'#e5e5e5',zerolinecolor:dark?'#3b4049':'#ddd',color:dark?'#eee':'#222'}}
 
   function renderInfo(){const sg=tag(parsed,'_space_group_name_H-M_alt','_symmetry_space_group_name_H-M','_space_group_name_H-M');const sgNo=tag(parsed,'_space_group_IT_number','_symmetry_Int_Tables_number');const formula=tag(parsed,'_chemical_formula_sum','_chemical_formula_moiety');$('infoPanel').innerHTML=`<b>Crystal information</b><br>Formula: ${esc(formula||'—')}<br>Space group: ${esc(sg||'—')}${sgNo?` (No. ${esc(sgNo)})`:''}<br>Symmetry operations: ${ops.length}<br><br><b>Unit cell</b><br>a = ${cell.a.toFixed(4)} Å<br>b = ${cell.b.toFixed(4)} Å<br>c = ${cell.c.toFixed(4)} Å<br>α = ${cell.alpha.toFixed(3)}°<br>β = ${cell.beta.toFixed(3)}°<br>γ = ${cell.gamma.toFixed(3)}°<br>V = ${cellVolume(cell).toFixed(2)} Å³<br><br><b>Viewer contents</b><br>ASU sites: ${sites.length}<br>Unit-cell atoms: ${atoms.length}<br>Detected bonds: ${bonds.length}<br>Metal–O polyhedra: ${polys.length}<br>Periodic image atoms: ${imgs.length}`;}
@@ -208,11 +177,9 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
   $('viewMode').onchange=e=>{mode=e.target.value;render()};$('projectionMode').onchange=e=>drawProjection(e.target.value);
   $('atomsAll').onclick=()=>{elements.forEach(e=>visibleAtoms.add(e));checks('atomChecks',elements,visibleAtoms,render);render()};$('atomsNone').onclick=()=>{visibleAtoms.clear();checks('atomChecks',elements,visibleAtoms,render);render()};$('bondsAll').onclick=()=>{pairs.forEach(e=>visibleBonds.add(e));checks('bondChecks',pairs,visibleBonds,render);render()};$('bondsNone').onclick=()=>{visibleBonds.clear();checks('bondChecks',pairs,visibleBonds,render);render()};$('lengthsAll').onclick=()=>{pairs.forEach(e=>visibleLengths.add(e));checks('lengthChecks',pairs,visibleLengths,render);render()};$('lengthsNone').onclick=()=>{visibleLengths.clear();checks('lengthChecks',pairs,visibleLengths,render);render()};$('rangesReset').onclick=()=>{for(const r of Object.values(ranges)){r.min=r.min0;r.max=r.max0}renderRanges();render()};
   document.querySelectorAll('[data-menu]').forEach(b=>b.onclick=e=>{e.stopPropagation();const m=$(b.dataset.menu);document.querySelectorAll('.popover').forEach(p=>{if(p!==m)p.classList.remove('open')});m.classList.toggle('open')});document.querySelectorAll('.popover').forEach(p=>p.onclick=e=>e.stopPropagation());document.addEventListener('click',()=>document.querySelectorAll('.popover').forEach(p=>p.classList.remove('open')));
-  $('mobileInfoToggle').onclick=e=>{e.stopPropagation();const open=$('infoPanel').classList.toggle('mobile-open');$('mobileInfoToggle').setAttribute('aria-expanded',String(open));$('mobileInfoToggle').textContent=open?'Close info':'Crystal info';};
   $('customButton').onclick=()=>$('customDrawer').classList.add('open');$('customClose').onclick=()=>$('customDrawer').classList.remove('open');$('customReset').onclick=()=>{for(const e of elements){styles[e]={color:COLORS[e]||'#969696',scale:1}}renderLegend();renderCustom();render()};
   $('wyckoffButton').onclick=()=>$('modalBack').classList.add('open');$('modalClose').onclick=()=>$('modalBack').classList.remove('open');$('modalBack').onclick=e=>{if(e.target===$('modalBack'))$('modalBack').classList.remove('open')};$('wyckoffWindow').onclick=()=>{const w=open('','_blank','width=900,height=700');if(w){w.document.write('<html><head><title>Wyckoff sites</title><style>body{font-family:system-ui;padding:20px}table{width:100%;border-collapse:collapse}th,td{padding:7px;border-bottom:1px solid #ddd;text-align:left}</style></head><body><h2>'+esc(titleParam)+'</h2>'+$('wyckoffContent').innerHTML+'</body></html>');w.document.close()}};
   const saved=localStorage.getItem('cifViewerTheme')||'system';$('themeMode').value=saved;$('themeMode').onchange=e=>applyTheme(e.target.value);matchMedia('(prefers-color-scheme:dark)').addEventListener?.('change',()=>{if($('themeMode').value==='system')applyTheme('system')});
-  let resizeTimer;addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(!isMobile()){$('infoPanel').classList.remove('mobile-open');$('mobileInfoToggle').setAttribute('aria-expanded','false');$('mobileInfoToggle').textContent='Crystal info';}render();drawProjection($('projectionMode').value);},120)});
   applyTheme(saved);drawProjection('c');
 })();
 </script>
