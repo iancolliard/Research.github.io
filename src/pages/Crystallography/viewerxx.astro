@@ -38,7 +38,7 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
 </head>
 <body>
 <div id="toolbar">
-  <div class="brand">CIF Viewer <span style="font-size:11px;opacity:.65">WEB VIEWER v1.1</span></div>
+  <div class="brand">CIF Viewer</div>
   <select id="viewMode"><option value="ballstick">Ball &amp; stick</option><option value="wireframe">Wireframe</option><option value="polyhedral">Polyhedral</option></select>
   <select id="projectionMode"><option value="none">No projection</option><option value="a">Projection along a</option><option value="b">Projection along b</option><option value="c" selected>Projection along c</option></select>
   <div class="control"><button data-menu="atomsMenu">Atoms ▾</button><div class="popover" id="atomsMenu"><div class="actions"><button id="atomsAll">Show all</button><button id="atomsNone">Hide all</button></div><div id="atomChecks"></div></div></div>
