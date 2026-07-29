@@ -14,10 +14,10 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
     :root{--bg:#fff;--panel:#fff;--text:#222;--border:#c8c8c8;--soft:#f5f5f5;--muted:#666}
     *{box-sizing:border-box} html,body{margin:0;height:100%;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
     body.dark{--bg:#17191d;--panel:#1f2228;--text:#e8e8e8;--border:#4a4f58;--soft:#2c3037;--muted:#b8bec8}
-    #toolbar{height:54px;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--border);background:var(--panel);position:relative;z-index:50;overflow-x:auto}
+    #toolbar{height:54px;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--border);background:var(--panel);position:relative;z-index:5000;overflow:visible;flex-wrap:nowrap}
     .brand{font-weight:700;white-space:nowrap}.version{margin-left:auto;color:var(--muted);font-size:12px;white-space:nowrap}
     select,button{height:32px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:6px;padding:0 10px;cursor:pointer}
-    .control{position:relative}.popover{display:none;position:absolute;top:38px;left:0;min-width:220px;max-height:420px;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.18);padding:8px;z-index:200}.popover.open{display:block}
+    .control{position:relative;overflow:visible;z-index:5001}.popover{display:none;position:absolute;top:38px;left:0;min-width:220px;max-height:420px;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.18);padding:8px;z-index:10000}.popover.open{display:block}
     .actions{display:flex;gap:6px;padding-bottom:7px;margin-bottom:6px;border-bottom:1px solid var(--border)}.actions button{height:27px;font-size:11px;background:var(--soft)}
     .check-row{display:flex;align-items:center;gap:7px;padding:4px 3px;font-size:13px;white-space:nowrap}
     #viewerWrap{height:calc(100vh - 54px);position:relative}.plot{width:100%;height:100%}
@@ -30,6 +30,10 @@ const BASE = BASE_RAW.endsWith("/") ? BASE_RAW : `${BASE_RAW}/`;
     #modalBack{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1000;align-items:center;justify-content:center}#modalBack.open{display:flex}.modal{width:min(900px,92vw);max-height:82vh;overflow:auto;background:var(--panel);border-radius:10px;box-shadow:0 15px 50px rgba(0,0,0,.3)}.modal-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border)}.modal-head b{flex:1}.modal-body{padding:14px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--border)}th{background:var(--soft);position:sticky;top:0}
     #error{white-space:pre-wrap;display:none;position:absolute;inset:20px auto auto 50%;transform:translateX(-50%);z-index:100;background:#7f1d1d;color:#fff;padding:10px 14px;border-radius:7px;max-width:80vw}
     @media(max-width:800px){#infoPanel{width:240px;max-height:38vh}.version{display:none}}
+  
+    #viewerWrap{isolation:isolate}
+    #toolbar .popover{pointer-events:auto}
+
   </style>
 </head>
 <body>
