@@ -630,7 +630,203 @@ const BASE = (() => {
   $('atomsAll').onclick=()=>{elements.forEach(e=>visibleAtoms.add(e));checks('atomChecks',elements,visibleAtoms,render);render()};$('atomsNone').onclick=()=>{visibleAtoms.clear();checks('atomChecks',elements,visibleAtoms,render);render()};$('bondsAll').onclick=()=>{pairs.forEach(e=>visibleBonds.add(e));checks('bondChecks',pairs,visibleBonds,render);render()};$('bondsNone').onclick=()=>{visibleBonds.clear();checks('bondChecks',pairs,visibleBonds,render);render()};$('lengthsAll').onclick=()=>{pairs.forEach(e=>visibleLengths.add(e));checks('lengthChecks',pairs,visibleLengths,render);render()};$('lengthsNone').onclick=()=>{visibleLengths.clear();checks('lengthChecks',pairs,visibleLengths,render);render()};$('rangesReset').onclick=()=>{for(const r of Object.values(ranges)){r.min=r.min0;r.max=r.max0}renderRanges();render()};
   document.querySelectorAll('[data-menu]').forEach(b=>b.onclick=e=>{e.stopPropagation();const m=$(b.dataset.menu);document.querySelectorAll('.popover').forEach(p=>{if(p!==m)p.classList.remove('open')});m.classList.toggle('open')});document.querySelectorAll('.popover').forEach(p=>p.onclick=e=>e.stopPropagation());document.addEventListener('click',()=>document.querySelectorAll('.popover').forEach(p=>p.classList.remove('open')));
   $('customButton').onclick=()=>$('customDrawer').classList.add('open');$('customClose').onclick=()=>$('customDrawer').classList.remove('open');$('customReset').onclick=()=>{for(const e of elements){styles[e]={color:COLORS[e]||'#969696',scale:1}}renderLegend();renderCustom();render()};
-  $('wyckoffButton').onclick=()=>$('modalBack').classList.add('open');$('modalClose').onclick=()=>$('modalBack').classList.remove('open');$('modalBack').onclick=e=>{if(e.target===$('modalBack'))$('modalBack').classList.remove('open')};$('wyckoffWindow').onclick=()=>{const w=open('','_blank','width=900,height=700');if(w){w.document.write('<html><head><title>Wyckoff sites</title><style>body{font-family:system-ui;padding:20px}table{width:100%;border-collapse:collapse}th,td{padding:7px;border-bottom:1px solid #ddd;text-align:left}</style></head><body><h2>'+esc(titleParam)+'</h2>'+$('wyckoffContent').innerHTML+'</body></html>');w.document.close()}};
+  $('wyckoffButton').onclick=()=>$('modalBack').classList.add('open');$('modalClose').onclick=()=>$('modalBack').classList.remove('open');$('modalBack').onclick=e=>{if(e.target===$('modalBack'))$('modalBack').classList.remove('open')};$('wyckoffWindow').onclick=()=>{const w=open('','_blank','width=900,height=700');if(w){w.document.write('<html><head><title>Wyckoff sites</title><style>body{font-family:system-ui;padding:20px}table{width:100%;border-collapse:collapse}th,td{padding:7px;border-bottom:1px solid #ddd;text-align:left}
+/* ===== FINAL MOBILE OVERRIDE ===== */
+@media screen and (max-width: 760px) {
+  html, body {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body {
+    position: fixed !important;
+    inset: 0 !important;
+  }
+
+  #toolbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    padding: 8px 10px !important;
+    gap: 8px !important;
+    overflow: visible !important;
+    z-index: 50000 !important;
+  }
+
+  #toolbar .brand {
+    display: block !important;
+    width: auto !important;
+    flex: 1 1 auto !important;
+    font-size: 17px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Hide every desktop toolbar control on phones. */
+  #toolbar > select,
+  #toolbar > .control,
+  #toolbar > #wyckoffButton,
+  #toolbar > #customButton,
+  #toolbar > #themeMode,
+  #toolbar > .version {
+    display: none !important;
+  }
+
+  #mobileMenuButton {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    height: 36px !important;
+    font-size: 13px !important;
+    padding: 0 12px !important;
+  }
+
+  #viewerWrap {
+    position: fixed !important;
+    top: 56px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: calc(100dvh - 56px) !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  #plot,
+  #viewerWrap > #plot,
+  #viewerWrap .js-plotly-plot,
+  #viewerWrap .plot-container,
+  #viewerWrap .svg-container {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* These MUST NOT appear until the mobile menu explicitly opens them. */
+  #infoPanel,
+  #elementLegend,
+  #projectionPanel {
+    display: none !important;
+  }
+
+  #infoPanel.mobile-open,
+  #elementLegend.mobile-open,
+  #projectionPanel.mobile-open {
+    display: block !important;
+  }
+
+  #infoPanel.mobile-open {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    top: 66px !important;
+    width: auto !important;
+    max-height: calc(100dvh - 86px) !important;
+    overflow-y: auto !important;
+    z-index: 52000 !important;
+  }
+
+  #elementLegend.mobile-open {
+    position: fixed !important;
+    right: 10px !important;
+    left: 10px !important;
+    bottom: 10px !important;
+    width: auto !important;
+    max-height: 50dvh !important;
+    overflow-y: auto !important;
+    z-index: 52000 !important;
+  }
+
+  #projectionPanel.mobile-open {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: min(88vw, 360px) !important;
+    height: min(88vw, 360px) !important;
+    bottom: auto !important;
+    z-index: 52000 !important;
+  }
+
+  #mobileMenuDrawer {
+    display: block !important;
+    position: fixed !important;
+    top: 56px !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: min(88vw, 360px) !important;
+    height: auto !important;
+    background: var(--panel) !important;
+    color: var(--text) !important;
+    z-index: 53000 !important;
+    transform: translateX(105%) !important;
+    transition: transform .2s ease !important;
+    overflow-y: auto !important;
+    border-left: 1px solid var(--border) !important;
+    box-shadow: -8px 0 24px rgba(0,0,0,.24) !important;
+  }
+
+  #mobileMenuDrawer.open {
+    transform: translateX(0) !important;
+  }
+
+  #mobileMenuDrawer select,
+  #mobileMenuDrawer button {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .popover.open {
+    position: fixed !important;
+    display: block !important;
+    left: 10px !important;
+    right: 10px !important;
+    top: auto !important;
+    bottom: 10px !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: 62dvh !important;
+    overflow-y: auto !important;
+    z-index: 54000 !important;
+  }
+
+  #customDrawer {
+    top: 56px !important;
+    height: calc(100dvh - 56px) !important;
+    width: min(92vw, 360px) !important;
+    z-index: 55000 !important;
+  }
+
+  #modalBack {
+    z-index: 56000 !important;
+  }
+
+  /* Hide Plotly's title overlap on narrow screens. */
+  #plot .g-gtitle {
+    display: none !important;
+  }
+}
+
+</style></head><body><h2>'+esc(titleParam)+'</h2>'+$('wyckoffContent').innerHTML+'</body></html>');w.document.close()}};
   const saved=localStorage.getItem('cifViewerTheme')||'system';$('themeMode').value=saved;$('themeMode').onchange=e=>applyTheme(e.target.value);matchMedia('(prefers-color-scheme:dark)').addEventListener?.('change',()=>{if($('themeMode').value==='system')applyTheme('system')});
   applyTheme(saved);drawProjection('c');
 
@@ -779,6 +975,97 @@ const BASE = (() => {
     setTimeout(resizeMobilePlot, 120);
     setTimeout(resizeMobilePlot, 500);
   });
+
+
+  function hardMobileInit() {
+    if (window.innerWidth > 760) return;
+
+    const menu = document.getElementById('mobileMenuDrawer');
+    const openBtn = document.getElementById('mobileMenuButton');
+    const closeBtn = document.getElementById('mobileMenuClose');
+
+    openBtn?.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      menu?.classList.add('open');
+    });
+
+    closeBtn?.addEventListener('click', function() {
+      menu?.classList.remove('open');
+    });
+
+    const mapSelect = (mobileId, desktopId) => {
+      const mobile = document.getElementById(mobileId);
+      const desktop = document.getElementById(desktopId);
+      if (!mobile || !desktop) return;
+      mobile.value = desktop.value;
+      mobile.addEventListener('change', () => {
+        desktop.value = mobile.value;
+        desktop.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    };
+
+    mapSelect('mobileViewMode', 'viewMode');
+    mapSelect('mobileProjectionMode', 'projectionMode');
+    mapSelect('mobileThemeMode', 'themeMode');
+
+    const showPopover = (id) => {
+      menu?.classList.remove('open');
+      document.querySelectorAll('.popover.open').forEach(p => p.classList.remove('open'));
+      document.getElementById(id)?.classList.add('open');
+    };
+
+    document.getElementById('mobileAtoms')?.addEventListener('click', () => showPopover('atomsMenu'));
+    document.getElementById('mobileBonds')?.addEventListener('click', () => showPopover('bondsMenu'));
+    document.getElementById('mobileLengths')?.addEventListener('click', () => showPopover('lengthMenu'));
+    document.getElementById('mobileRanges')?.addEventListener('click', () => showPopover('rangeMenu'));
+
+    const toggleOverlay = (id) => {
+      menu?.classList.remove('open');
+      ['infoPanel','elementLegend','projectionPanel'].forEach(other => {
+        if (other !== id) document.getElementById(other)?.classList.remove('mobile-open');
+      });
+      document.getElementById(id)?.classList.toggle('mobile-open');
+    };
+
+    document.getElementById('mobileCrystalInfo')?.addEventListener('click', () => toggleOverlay('infoPanel'));
+    document.getElementById('mobileLegend')?.addEventListener('click', () => toggleOverlay('elementLegend'));
+    document.getElementById('mobileProjectionPanel')?.addEventListener('click', () => toggleOverlay('projectionPanel'));
+
+    document.getElementById('mobileWyckoff')?.addEventListener('click', () => {
+      menu?.classList.remove('open');
+      document.getElementById('wyckoffButton')?.click();
+    });
+
+    document.getElementById('mobileCustomize')?.addEventListener('click', () => {
+      menu?.classList.remove('open');
+      document.getElementById('customButton')?.click();
+    });
+
+    // Force hidden overlays at startup.
+    ['infoPanel','elementLegend','projectionPanel'].forEach(id => {
+      document.getElementById(id)?.classList.remove('mobile-open');
+    });
+
+    const plot = document.getElementById('plot');
+    if (plot && window.Plotly) {
+      setTimeout(() => {
+        try {
+          Plotly.relayout(plot, {
+            autosize: true,
+            'scene.aspectmode': 'data',
+            'margin.l': 0,
+            'margin.r': 0,
+            'margin.t': 0,
+            'margin.b': 0
+          });
+          Plotly.Plots.resize(plot);
+        } catch {}
+      }, 250);
+    }
+  }
+
+  window.addEventListener('load', hardMobileInit, { once: true });
 
 })();
 </script>
