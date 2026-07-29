@@ -73,12 +73,14 @@ const items = itemsRaw
     // Defaults (override when CSV gives explicit paths)
     // CIF typically keyed off datablock name
     const cifHref = r.cif_path ? toBasePath(r.cif_path)
-                               : toBasePath(`//assets/cifs/${encodeURIComponent(deposition)}.cif`);
+                               : toBasePath(`assets/cifs/${encodeURIComponent(deposition)}.cif`);
     // PDF typically keyed off deposition #
     const pdfHref = r.pdf_path ? toBasePath(r.pdf_path)
-                               : toBasePath(`//assets/pdfs/${encodeURIComponent(deposition)}.pdf`);
+                               : toBasePath(`assets/pdfs/${encodeURIComponent(deposition)}.pdf`);
 
-    return { deposition, datablock, status, doi, cifHref, pdfHref };
+    const isSurprise = String(datablock).trim().toLowerCase().startsWith("surprise");
+
+    return { deposition, datablock, status, doi, cifHref, pdfHref, isSurprise };
   })
   .filter((x) => x.deposition || x.datablock);
 ---
@@ -105,7 +107,11 @@ const items = itemsRaw
             <td>{row.datablock}</td>
             <td>{row.status}</td>
             <td>
-              {row.status.toLowerCase() === "submitted" ? (
+              {row.isSurprise ? (
+                <span class="embargo-badge" title="Structure intentionally hidden.">
+                  Surprise
+                </span>
+              ) : row.status.toLowerCase() === "submitted" ? (
                 <span class="embargo-badge" title="CIF under review; not publicly available yet.">
                   Embargoed
                 </span>
@@ -118,7 +124,7 @@ const items = itemsRaw
                     </a>
                   ) : null}
                   <a
-                    href={`${import.meta.env.BASE_URL}/Crystallography/viewer?cif=${encodeURIComponent(row.cifHref)}&title=${encodeURIComponent(row.deposition || row.datablock || 'CIF')}`}
+                    href={`${import.meta.env.BASE_URL}Crystallography/Viewer?cif=${encodeURIComponent(row.cifHref)}&title=${encodeURIComponent(row.deposition || row.datablock || 'CIF')}`}
                   >
                     Preview
                   </a>

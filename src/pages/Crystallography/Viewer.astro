@@ -1,88 +1,138 @@
 ---
-const BASE = import.meta.env.BASE_URL;
-const url  = new URL(Astro.request.url);
-const title = url.searchParams.get('title') || 'CIF Viewer';
+const BASE = import.meta.env.BASE_URL || "/";
 ---
 
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>{title}</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+  <title>CIF Viewer</title>
+  <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
   <style>
-    body{margin:16px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial}
-    #viewer{width:min(92vw,900px);height:min(82vh,820px);border:1px solid #ddd;border-radius:8px}
-    #msg{margin:10px 0;max-width:900px}
-    #msg code{background:#f3f3f3;padding:0 4px;border-radius:4px}
-    .bad{color:#b00}.ok{color:#065}
+    :root{--bg:#fff;--panel:#fff;--text:#222;--border:#c8c8c8;--soft:#f5f5f5;--muted:#666}
+    *{box-sizing:border-box} html,body{margin:0;height:100%;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    body.dark{--bg:#17191d;--panel:#1f2228;--text:#e8e8e8;--border:#4a4f58;--soft:#2c3037;--muted:#b8bec8}
+    #toolbar{height:54px;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--border);background:var(--panel);position:relative;z-index:50;overflow-x:auto}
+    .brand{font-weight:700;white-space:nowrap}.version{margin-left:auto;color:var(--muted);font-size:12px;white-space:nowrap}
+    select,button{height:32px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:6px;padding:0 10px;cursor:pointer}
+    .control{position:relative}.popover{display:none;position:absolute;top:38px;left:0;min-width:220px;max-height:420px;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.18);padding:8px;z-index:200}.popover.open{display:block}
+    .actions{display:flex;gap:6px;padding-bottom:7px;margin-bottom:6px;border-bottom:1px solid var(--border)}.actions button{height:27px;font-size:11px;background:var(--soft)}
+    .check-row{display:flex;align-items:center;gap:7px;padding:4px 3px;font-size:13px;white-space:nowrap}
+    #viewerWrap{height:calc(100vh - 54px);position:relative}.plot{width:100%;height:100%}
+    #infoPanel{position:absolute;left:24px;top:20px;width:285px;max-height:50vh;overflow:auto;padding:10px 12px;background:color-mix(in srgb,var(--panel) 96%,transparent);border:1px solid var(--border);border-radius:8px;z-index:20;font-size:11px;line-height:1.45;box-shadow:0 5px 18px rgba(0,0,0,.1)}
+    #elementLegend{position:absolute;right:18px;bottom:18px;min-width:135px;max-height:280px;overflow:auto;padding:8px 10px;background:color-mix(in srgb,var(--panel) 96%,transparent);border:1px solid var(--border);border-radius:8px;z-index:20;font-size:12px}.legend-title{font-weight:700;margin-bottom:5px}.legend-row{display:flex;align-items:center;gap:7px;padding:3px 0}.dot{width:12px;height:12px;border-radius:50%;border:1px solid #555}
+    #projectionPanel{position:absolute;left:24px;bottom:20px;width:250px;height:250px;background:var(--panel);border:1px solid var(--border);border-radius:8px;z-index:20;padding:6px}.hidden{display:none!important}
+    #projectionCanvas{width:100%;height:100%}
+    .range-pair{padding:8px 0 10px;border-bottom:1px solid var(--border)}.range-pair:last-child{border-bottom:0}.range-title{font-weight:700;font-size:12px}.range-read{display:flex;justify-content:space-between;font-size:11px;margin:4px 0}.range-pair input[type=range]{width:100%}
+    #customDrawer{position:fixed;right:-360px;top:54px;width:340px;height:calc(100vh - 54px);background:var(--panel);border-left:1px solid var(--border);box-shadow:-8px 0 24px rgba(0,0,0,.16);z-index:500;transition:right .2s;overflow:auto}#customDrawer.open{right:0}.drawer-head{position:sticky;top:0;display:flex;align-items:center;padding:12px 14px;background:var(--panel);border-bottom:1px solid var(--border);z-index:2}.drawer-head b{flex:1}.drawer-body{padding:12px 14px}.custom-row{display:grid;grid-template-columns:48px 1fr 72px;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)}.custom-row input[type=color]{width:38px;height:28px;border:0;background:none}.custom-row input[type=range]{width:100%}.small{font-size:11px;color:var(--muted)}
+    #modalBack{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1000;align-items:center;justify-content:center}#modalBack.open{display:flex}.modal{width:min(900px,92vw);max-height:82vh;overflow:auto;background:var(--panel);border-radius:10px;box-shadow:0 15px 50px rgba(0,0,0,.3)}.modal-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border)}.modal-head b{flex:1}.modal-body{padding:14px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--border)}th{background:var(--soft);position:sticky;top:0}
+    #error{display:none;position:absolute;inset:20px auto auto 50%;transform:translateX(-50%);z-index:100;background:#7f1d1d;color:#fff;padding:10px 14px;border-radius:7px;max-width:80vw}
+    @media(max-width:800px){#infoPanel{width:240px;max-height:38vh}.version{display:none}}
   </style>
 </head>
 <body>
-  <h1 style="margin:0 0 8px">{title}</h1>
-  <div id="msg">starting…</div>
-  <div id="viewer"></div>
+<div id="toolbar">
+  <div class="brand">CIF Viewer</div>
+  <select id="viewMode"><option value="ballstick">Ball &amp; stick</option><option value="wireframe">Wireframe</option><option value="polyhedral">Polyhedral</option></select>
+  <select id="projectionMode"><option value="none">No projection</option><option value="a">Projection along a</option><option value="b">Projection along b</option><option value="c" selected>Projection along c</option></select>
+  <div class="control"><button data-menu="atomsMenu">Atoms ▾</button><div class="popover" id="atomsMenu"><div class="actions"><button id="atomsAll">Show all</button><button id="atomsNone">Hide all</button></div><div id="atomChecks"></div></div></div>
+  <div class="control"><button data-menu="bondsMenu">Bonds ▾</button><div class="popover" id="bondsMenu"><div class="actions"><button id="bondsAll">Show all</button><button id="bondsNone">Hide all</button></div><div id="bondChecks"></div></div></div>
+  <div class="control"><button data-menu="lengthMenu">Bond lengths ▾</button><div class="popover" id="lengthMenu"><div class="actions"><button id="lengthsAll">Show all</button><button id="lengthsNone">Hide all</button></div><div id="lengthChecks"></div></div></div>
+  <div class="control"><button data-menu="rangeMenu">Bond ranges ▾</button><div class="popover" id="rangeMenu" style="min-width:280px"><div class="actions"><button id="rangesReset">Reset all</button></div><div id="rangeRows"></div></div></div>
+  <button id="wyckoffButton">Wyckoff sites</button>
+  <button id="customButton">Customize</button>
+  <select id="themeMode"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select>
+  <div class="version">web v1.0</div>
+</div>
+<div id="viewerWrap">
+  <div id="plot" class="plot"></div>
+  <div id="infoPanel">Loading crystallographic information…</div>
+  <div id="projectionPanel"><canvas id="projectionCanvas"></canvas></div>
+  <div id="elementLegend"><div class="legend-title">Elements</div><div id="legendRows"></div></div>
+  <div id="error"></div>
+</div>
+<div id="customDrawer"><div class="drawer-head"><b>Customize atoms</b><button id="customClose">Close</button></div><div class="drawer-body"><button id="customReset">Reset defaults</button><div id="customRows"></div></div></div>
+<div id="modalBack"><div class="modal"><div class="modal-head"><b id="modalTitle">Wyckoff / atom-site information</b><button id="wyckoffWindow">Open window</button><button id="modalClose">Close</button></div><div class="modal-body" id="wyckoffContent"></div></div></div>
 
-  <script>
-    (async function () {
-      const $msg = document.getElementById('msg');
-      const log = (t, cls='') => { $msg.innerHTML += `<div class="${cls}">${t}</div>`; };
-      const showDummy = (v) => {
-        v.addModel('C', 'smiles');
-        v.setStyle({}, {stick:{}});
-        v.zoomTo(); v.render();
-      };
+<script define:vars={{ BASE }}>
+(async function(){
+  const VERSION='web v1.0';
+  const $=id=>document.getElementById(id);
+  const params=new URLSearchParams(location.search);
+  const cifParam=params.get('cif');
+  const titleParam=params.get('title')||'CIF Viewer';
+  document.title=titleParam+' — CIF Viewer';
+  if(!cifParam){showError('Missing ?cif= parameter.');return;}
+  const cifURL=new URL(cifParam,location.href).href;
 
-      const params = new URLSearchParams(location.search);
-      const cifParam = params.get('cif');
-      if (!cifParam) {
-        log(`missing <code>?cif=</code>. try <code>?cif=${BASE}assets/cifs/NAME.cif&amp;title=My+Sample</code>`, 'bad');
-        const v0 = $3Dmol.createViewer('viewer', { backgroundColor: 'white' }); showDummy(v0);
-        return;
-      }
+  const COLORS={H:'#eeeeee',C:'#444444',N:'#3455db',O:'#df3434',F:'#64d964',Cl:'#31bd31',Br:'#963c28',I:'#662b96',P:'#ff851e',S:'#e0c02e',B:'#eeb08f',Si:'#d9aa78',Ge:'#789678',Ga:'#bd8c8c',As:'#bd8050',Sb:'#9e63b5',W:'#3c82aa',Mo:'#5096aa',V:'#787896',Nb:'#64aaaa',Ta:'#508296',Na:'#aa5af0',K:'#8c46dc',Rb:'#7034bf',Cs:'#5a28a0',Mg:'#8bd46d',Ca:'#3cc83c',Sr:'#32b432',Ba:'#28a028',La:'#6ec8be',Ce:'#64c8b4',Pr:'#5abeaa',Nd:'#50b4a5',Sm:'#46aaa0',Eu:'#46a0a0',Gd:'#3c969b',Tb:'#3c9196',Dy:'#378c91',Ho:'#32878c',Er:'#328287',Tm:'#2d7d82',Yb:'#2d787d',Lu:'#287378',Th:'#5078be',U:'#466eb4',Np:'#5064af',Pu:'#5a5aaa',Am:'#6450a5',Cm:'#6e46a0',Bk:'#78419b',Cf:'#823c96'};
+  const RADII={H:.31,B:.85,C:.76,N:.71,O:.66,F:.57,Na:1.66,Mg:1.41,Al:1.21,Si:1.11,P:1.07,S:1.05,Cl:1.02,K:2.03,Ca:1.76,Sc:1.70,Ti:1.60,V:1.53,Cr:1.39,Mn:1.39,Fe:1.32,Co:1.26,Ni:1.24,Cu:1.32,Zn:1.22,Ga:1.22,Ge:1.20,As:1.19,Se:1.20,Br:1.20,Rb:2.20,Sr:1.95,Y:1.90,Zr:1.75,Nb:1.64,Mo:1.54,Tc:1.47,Ru:1.46,Rh:1.42,Pd:1.39,Ag:1.45,Cd:1.44,In:1.42,Sn:1.39,Sb:1.39,Te:1.38,I:1.39,Cs:2.44,Ba:2.15,La:2.07,Ce:2.04,Pr:2.03,Nd:2.01,Sm:1.98,Eu:1.98,Gd:1.96,Tb:1.94,Dy:1.92,Ho:1.92,Er:1.89,Tm:1.90,Yb:1.87,Lu:1.87,Hf:1.75,Ta:1.70,W:1.62,Re:1.51,Os:1.44,Ir:1.41,Pt:1.36,Au:1.36,Hg:1.32,Pb:1.46,Bi:1.48,Th:2.06,U:1.96,Np:1.90,Pu:1.87,Am:1.80,Cm:1.69,Cf:1.68};
+  const METALS=new Set(['Li','Be','Na','Mg','Al','K','Ca','Sc','Ti','V','Cr','Mn','Fe','Co','Ni','Cu','Zn','Ga','Rb','Sr','Y','Zr','Nb','Mo','Tc','Ru','Rh','Pd','Ag','Cd','In','Sn','Cs','Ba','La','Ce','Pr','Nd','Pm','Sm','Eu','Gd','Tb','Dy','Ho','Er','Tm','Yb','Lu','Hf','Ta','W','Re','Os','Ir','Pt','Au','Hg','Tl','Pb','Bi','Fr','Ra','Ac','Th','Pa','U','Np','Pu','Am','Cm','Bk','Cf']);
 
-      const cifURL = new URL(cifParam, location.href).href;
-      log(`cif url: <code>${cifURL}</code>`);
+  function showError(msg){$('error').textContent=msg;$('error').style.display='block';}
+  function stripComment(line){let q=false,out='';for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'||c==="'")q=!q;if(c==='#'&&!q)break;out+=c;}return out;}
+  function tokenize(s){const out=[];let i=0;while(i<s.length){while(/\s/.test(s[i]||''))i++;if(i>=s.length)break;let q=null;if(s[i]==='"'||s[i]==="'"){q=s[i++];let v='';while(i<s.length&&s[i]!==q)v+=s[i++];i++;out.push(v);}else{let v='';while(i<s.length&&!/\s/.test(s[i]))v+=s[i++];out.push(v);}}return out;}
+  function num(v){if(v==null)return NaN;const m=String(v).match(/^[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/);return m?Number(m[0]):NaN;}
+  function parseCIF(text){
+    const lines=text.replace(/\r/g,'').split('\n');const tags={};const loops=[];
+    for(let i=0;i<lines.length;){let line=stripComment(lines[i]).trim();if(!line){i++;continue;}
+      if(line.toLowerCase()==='loop_'){i++;const headers=[];while(i<lines.length){const h=stripComment(lines[i]).trim();if(h.startsWith('_')){headers.push(tokenize(h)[0]);i++;}else break;}const vals=[];while(i<lines.length){const raw=stripComment(lines[i]).trim();if(!raw){i++;continue;}if(raw.toLowerCase()==='loop_'||raw.startsWith('_')||raw.toLowerCase().startsWith('data_'))break;vals.push(...tokenize(raw));i++;}const rows=[];for(let j=0;j+headers.length<=vals.length;j+=headers.length)rows.push(Object.fromEntries(headers.map((h,k)=>[h,vals[j+k]])));loops.push({headers,rows});continue;}
+      if(line.startsWith('_')){const t=tokenize(line);if(t.length>=2)tags[t[0]]=t.slice(1).join(' ');else if(i+1<lines.length){i++;tags[t[0]]=stripComment(lines[i]).trim().replace(/^['"]|['"]$/g,'');}i++;continue;}i++;}
+    return {tags,loops};
+  }
+  function loopWith(parsed,prefix){return parsed.loops.find(l=>l.headers.some(h=>h.toLowerCase().startsWith(prefix)))||null;}
+  function tag(parsed,...names){for(const n of names){if(parsed.tags[n]!=null)return parsed.tags[n];}return '';}
+  function cellFrom(parsed){const a=num(tag(parsed,'_cell_length_a')),b=num(tag(parsed,'_cell_length_b')),c=num(tag(parsed,'_cell_length_c'));const A=num(tag(parsed,'_cell_angle_alpha')),B=num(tag(parsed,'_cell_angle_beta')),G=num(tag(parsed,'_cell_angle_gamma'));if(![a,b,c,A,B,G].every(Number.isFinite))throw new Error('Missing unit-cell parameters.');return {a,b,c,alpha:A,beta:B,gamma:G};}
+  function fracToCart(f,cell){const d=Math.PI/180,ca=Math.cos(cell.alpha*d),cb=Math.cos(cell.beta*d),cg=Math.cos(cell.gamma*d),sg=Math.sin(cell.gamma*d);const ax=cell.a, bx=cell.b*cg, by=cell.b*sg, cx=cell.c*cb, cy=cell.c*(ca-cb*cg)/sg, cz=Math.sqrt(Math.max(0,cell.c*cell.c-cx*cx-cy*cy));return [ax*f[0]+bx*f[1]+cx*f[2],by*f[1]+cy*f[2],cz*f[2]];}
+  function cellVolume(cell){const d=Math.PI/180,ca=Math.cos(cell.alpha*d),cb=Math.cos(cell.beta*d),cg=Math.cos(cell.gamma*d);return cell.a*cell.b*cell.c*Math.sqrt(Math.max(0,1+2*ca*cb*cg-ca*ca-cb*cb-cg*cg));}
+  function normalizeElem(s){const m=String(s||'').match(/[A-Z][a-z]?/);return m?m[0]:'X';}
+  function atomSites(parsed){const l=loopWith(parsed,'_atom_site');if(!l)return[];const H=l.headers;const get=(r,...opts)=>{for(const o of opts){const h=H.find(x=>x.toLowerCase()===o.toLowerCase());if(h)return r[h];}return'';};return l.rows.map((r,i)=>({label:get(r,'_atom_site_label','_atom_site.label')||`A${i+1}`,elem:normalizeElem(get(r,'_atom_site_type_symbol','_atom_site.type_symbol')||get(r,'_atom_site_label')),f:[num(get(r,'_atom_site_fract_x','_atom_site.fract_x')),num(get(r,'_atom_site_fract_y','_atom_site.fract_y')),num(get(r,'_atom_site_fract_z','_atom_site.fract_z'))],occ:num(get(r,'_atom_site_occupancy','_atom_site.occupancy'))||1,wy:get(r,'_atom_site_Wyckoff_symbol','_atom_site.wyckoff_symbol','_atom_site_wyckoff_symbol'),mult:num(get(r,'_atom_site_symmetry_multiplicity','_atom_site.symmetry_multiplicity'))||null})).filter(a=>a.f.every(Number.isFinite));}
+  function symOps(parsed){const l=parsed.loops.find(l=>l.headers.some(h=>['_space_group_symop_operation_xyz','_symmetry_equiv_pos_as_xyz','_space_group_symop.operation_xyz'].includes(h.toLowerCase())));if(!l)return ['x,y,z'];const h=l.headers.find(h=>['_space_group_symop_operation_xyz','_symmetry_equiv_pos_as_xyz','_space_group_symop.operation_xyz'].includes(h.toLowerCase()));return l.rows.map(r=>r[h]).filter(Boolean);}
+  function fracExpr(expr,x,y,z){let s=expr.toLowerCase().replace(/\s/g,'');s=s.replace(/(\d+)\/(\d+)/g,'($1/$2)');if(!/^[xyz0-9+\-*/().]+$/.test(s))throw new Error('Unsupported symmetry expression '+expr);return Function('x','y','z',`return (${s});`)(x,y,z);}
+  function applyOp(op,f){const p=op.split(',');if(p.length!==3)return f;return p.map(e=>{const v=fracExpr(e,...f);return ((v%1)+1)%1;});}
+  function expandSites(sites,ops,cell){const out=[],seen=new Set();for(const s of sites){for(const op of ops){const f=applyOp(op,s.f);const key=s.elem+':'+f.map(v=>v.toFixed(6)).join(',');if(seen.has(key))continue;seen.add(key);out.push({...s,index:out.length,f,xyz:fracToCart(f,cell),sourceLabel:s.label});}}return out;}
+  function minImage(a,b,cell){let df=b.f.map((v,i)=>v-a.f[i]);df=df.map(v=>v-Math.round(v));const d=fracToCart(df,cell);return {df,d,dist:Math.hypot(...d)};}
+  function pairName(a,b){return [a,b].sort().join('-');}
+  function bondsFor(atoms,cell){const out=[];for(let i=0;i<atoms.length;i++){for(let j=i+1;j<atoms.length;j++){const m=minImage(atoms[i],atoms[j],cell);if(m.dist<.35)continue;const cutoff=1.16*((RADII[atoms[i].elem]||.75)+(RADII[atoms[j].elem]||.75));if(m.dist<=cutoff){const p1=atoms[i].xyz,p2=[p1[0]+m.d[0],p1[1]+m.d[1],p1[2]+m.d[2]];out.push({i,j,pair:pairName(atoms[i].elem,atoms[j].elem),distance:m.dist,p1,p2,mid:p1.map((v,k)=>(v+p2[k])/2),label_i:atoms[i].label,label_j:atoms[j].label});}}}return out;}
+  function convexFaces(points,tol=1e-7){const faces=[];for(let i=0;i<points.length-2;i++)for(let j=i+1;j<points.length-1;j++)for(let k=j+1;k<points.length;k++){const A=points[i],B=points[j],C=points[k],ab=B.map((v,n)=>v-A[n]),ac=C.map((v,n)=>v-A[n]),n=[ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]];if(Math.hypot(...n)<tol)continue;let pos=false,neg=false;for(let m=0;m<points.length;m++){if([i,j,k].includes(m))continue;const ap=points[m].map((v,q)=>v-A[q]),d=n[0]*ap[0]+n[1]*ap[1]+n[2]*ap[2];if(d>tol)pos=true;if(d<-tol)neg=true;if(pos&&neg)break;}if(!(pos&&neg))faces.push([i,j,k]);}return faces;}
+  function polyhedraFor(atoms,bonds){const out=[];for(const c of atoms){if(!METALS.has(c.elem))continue;const verts=[];for(const b of bonds){let oi=null,p=null;if(b.i===c.index&&atoms[b.j].elem==='O'){oi=b.j;p=b.p2}else if(b.j===c.index&&atoms[b.i].elem==='O'){oi=b.i;p=b.p1}if(oi!=null)verts.push(p);}if(verts.length>=4){const faces=convexFaces(verts);if(faces.length)out.push({center:c.index,symbol:c.elem,label:c.label,verts,faces});}}return out;}
+  function imageAtoms(atoms,bonds){const out=[],seen=new Set();for(const b of bonds){const actual=atoms[b.j].xyz,d=Math.hypot(b.p2[0]-actual[0],b.p2[1]-actual[1],b.p2[2]-actual[2]);if(d<1e-5)continue;const key=atoms[b.j].elem+':'+b.p2.map(v=>v.toFixed(5)).join(',');if(seen.has(key))continue;seen.add(key);out.push({elem:atoms[b.j].elem,label:atoms[b.j].label,xyz:b.p2});}return out;}
+  function unitCellEdges(cell){const p=(u,v,w)=>fracToCart([u,v,w],cell),corners={};for(const u of[0,1])for(const v of[0,1])for(const w of[0,1])corners[`${u}${v}${w}`]=p(u,v,w);const e=[];for(const u of[0,1])for(const v of[0,1])for(const w of[0,1])for(let a=0;a<3;a++){const q=[u,v,w];if(q[a]===0){q[a]=1;e.push([corners[`${u}${v}${w}`],corners[q.join('')]])}}return e;}
 
-      const v = $3Dmol.createViewer('viewer', { backgroundColor: 'white' });
+  let text;try{const res=await fetch(cifURL,{cache:'no-store'});if(!res.ok)throw new Error(`HTTP ${res.status}`);text=await res.text();if(/^\s*</.test(text))throw new Error('CIF URL returned HTML, not a CIF file.');}catch(e){showError('Could not load CIF: '+e);return;}
+  let parsed,cell,sites,ops,atoms,bonds,polys,imgs;try{parsed=parseCIF(text);cell=cellFrom(parsed);sites=atomSites(parsed);ops=symOps(parsed);atoms=expandSites(sites,ops,cell);bonds=bondsFor(atoms,cell);polys=polyhedraFor(atoms,bonds);imgs=imageAtoms(atoms,bonds);}catch(e){showError('Could not parse CIF: '+e);return;}
 
-      // Try 1: 3Dmol’s downloader
-      try {
-        await new Promise((resolve, reject) => {
-          let settled = false;
-          $3Dmol.download(cifURL, v, { format: 'cif' }, function () {
-            settled = true;
-            v.addUnitCell(); v.setStyle({}, {stick:{}}); v.zoomTo(); v.render();
-            log('loaded via $3Dmol.download', 'ok'); resolve();
-          });
-          setTimeout(()=>{ if(!settled) reject(new Error('download timeout')); }, 2500);
-        });
-        return;
-      } catch (e) {
-        log('download path failed ('+String(e)+') → trying fetch/addModel…');
-      }
+  const elements=[...new Set(atoms.map(a=>a.elem))].sort();const pairs=[...new Set(bonds.map(b=>b.pair))].sort();const visibleAtoms=new Set(elements),visibleBonds=new Set(pairs),visibleLengths=new Set();let mode='ballstick';const styles=Object.fromEntries(elements.map(e=>[e,{color:COLORS[e]||'#969696',scale:1}]));const ranges={};for(const p of pairs){const ds=bonds.filter(b=>b.pair===p).map(b=>b.distance);ranges[p]={min0:Math.min(...ds),max0:Math.max(...ds),min:Math.min(...ds),max:Math.max(...ds)}}
 
-      // Try 2: Fetch + addModel
-      try {
-        const res = await fetch(cifURL, { cache: 'no-store' });
-        log(`HTTP status: <code>${res.status}</code>`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const text = await res.text();
-        log(`bytes: <code>${text.length}</code>`);
-        // quick sniff: if it’s an HTML 404 page, bail
-        if (text.startsWith('<!doctype') || text.startsWith('<html')) throw new Error('Got HTML (likely 404), not CIF');
+  function activeBond(b){const [a,c]=b.pair.split('-');const r=ranges[b.pair];return visibleBonds.has(b.pair)&&visibleAtoms.has(a)&&visibleAtoms.has(c)&&b.distance>=r.min&&b.distance<=r.max;}
+  function traces(){const T=[];const edges=unitCellEdges(cell),x=[],y=[],z=[];for(const [a,b]of edges){x.push(a[0],b[0],null);y.push(a[1],b[1],null);z.push(a[2],b[2],null)}T.push({type:'scatter3d',mode:'lines',x,y,z,line:{width:2,color:document.body.classList.contains('dark')?'rgba(230,230,230,.4)':'rgba(20,20,20,.35)'},hoverinfo:'skip',showlegend:false});
+    const active=bonds.filter(activeBond);if(mode!=='polyhedral'){for(const p of pairs){const bb=active.filter(b=>b.pair===p);if(!bb.length)continue;const bx=[],by=[],bz=[];for(const b of bb){bx.push(b.p1[0],b.p2[0],null);by.push(b.p1[1],b.p2[1],null);bz.push(b.p1[2],b.p2[2],null)}T.push({type:'scatter3d',mode:'lines',x:bx,y:by,z:bz,line:{width:mode==='wireframe'?2:5,color:'rgba(120,120,120,.72)'},hoverinfo:'skip',showlegend:false});if(visibleLengths.has(p))T.push({type:'scatter3d',mode:'text',x:bb.map(b=>b.mid[0]),y:bb.map(b=>b.mid[1]),z:bb.map(b=>b.mid[2]),text:bb.map(b=>b.distance.toFixed(3)+' Å'),textfont:{size:11,color:document.body.classList.contains('dark')?'#fff':'#000'},hoverinfo:'skip',showlegend:false})}}
+    if(mode==='polyhedral'){const activeCenters=new Set(active.flatMap(b=>[b.i,b.j]));for(const p of polys){if(!visibleAtoms.has(p.symbol)||!activeCenters.has(p.center))continue;T.push({type:'mesh3d',x:p.verts.map(v=>v[0]),y:p.verts.map(v=>v[1]),z:p.verts.map(v=>v[2]),i:p.faces.map(f=>f[0]),j:p.faces.map(f=>f[1]),k:p.faces.map(f=>f[2]),color:styles[p.symbol].color,opacity:.34,flatshading:true,hovertext:p.label,hoverinfo:'text',showscale:false,showlegend:false})}}
+    for(const e of elements){if(!visibleAtoms.has(e))continue;const aa=atoms.filter(a=>a.elem===e),sz=(mode==='wireframe'?.35:mode==='polyhedral'?.42:1)*styles[e].scale*(12+6*(RADII[e]||.75));T.push({type:'scatter3d',mode:'markers',x:aa.map(a=>a.xyz[0]),y:aa.map(a=>a.xyz[1]),z:aa.map(a=>a.xyz[2]),marker:{size:sz,color:styles[e].color,line:{width:1,color:'#333'}},text:aa.map(a=>`<b>${a.label}</b><br>${e}<br>${a.xyz.map(v=>v.toFixed(4)).join(', ')} Å`),hovertemplate:'%{text}<extra></extra>',showlegend:false});const ii=imgs.filter(a=>a.elem===e);if(ii.length)T.push({type:'scatter3d',mode:'markers',x:ii.map(a=>a.xyz[0]),y:ii.map(a=>a.xyz[1]),z:ii.map(a=>a.xyz[2]),marker:{size:sz,color:styles[e].color,opacity:.7,line:{width:1.2,color:'#333'}},text:ii.map(a=>`<b>${a.label}</b> (periodic image)`),hovertemplate:'%{text}<extra></extra>',showlegend:false})}
+    return T;}
+  function render(){const dark=document.body.classList.contains('dark');Plotly.react('plot',traces(),{title:{text:titleParam+' — '+({ballstick:'Ball & stick',wireframe:'Wireframe',polyhedral:'Polyhedral'}[mode]),x:.5,font:{color:dark?'#eee':'#222'}},paper_bgcolor:dark?'#17191d':'#fff',plot_bgcolor:dark?'#17191d':'#fff',font:{color:dark?'#eee':'#222'},scene:{bgcolor:dark?'#17191d':'#fff',aspectmode:'data',xaxis:axis('x (Å)',dark),yaxis:axis('y (Å)',dark),zaxis:axis('z (Å)',dark)},margin:{l:330,r:10,b:10,t:60}}, {responsive:true,displaylogo:false});}
+  function axis(title,dark){return{title,showbackground:true,backgroundcolor:dark?'#17191d':'#fff',gridcolor:dark?'#3b4049':'#e5e5e5',zerolinecolor:dark?'#3b4049':'#ddd',color:dark?'#eee':'#222'}}
 
-        const m = v.addModel(text, 'cif');
-        v.addUnitCell(m);
-        v.setStyle({}, {stick:{}});
-        v.zoomTo(); v.render();
-        log('loaded via fetch/addModel', 'ok');
-      } catch (e) {
-        log('failed to load cif: <code>'+String(e)+'</code>', 'bad');
-        showDummy(v);
-      }
-    })();
-  </script>
+  function renderInfo(){const sg=tag(parsed,'_space_group_name_H-M_alt','_symmetry_space_group_name_H-M','_space_group_name_H-M');const sgNo=tag(parsed,'_space_group_IT_number','_symmetry_Int_Tables_number');const formula=tag(parsed,'_chemical_formula_sum','_chemical_formula_moiety');$('infoPanel').innerHTML=`<b>Crystal information</b><br>Formula: ${esc(formula||'—')}<br>Space group: ${esc(sg||'—')}${sgNo?` (No. ${esc(sgNo)})`:''}<br>Symmetry operations: ${ops.length}<br><br><b>Unit cell</b><br>a = ${cell.a.toFixed(4)} Å<br>b = ${cell.b.toFixed(4)} Å<br>c = ${cell.c.toFixed(4)} Å<br>α = ${cell.alpha.toFixed(3)}°<br>β = ${cell.beta.toFixed(3)}°<br>γ = ${cell.gamma.toFixed(3)}°<br>V = ${cellVolume(cell).toFixed(2)} Å³<br><br><b>Viewer contents</b><br>ASU sites: ${sites.length}<br>Unit-cell atoms: ${atoms.length}<br>Detected bonds: ${bonds.length}<br>Metal–O polyhedra: ${polys.length}<br>Periodic image atoms: ${imgs.length}`;}
+  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function checks(container,items,set,onchange){const c=$(container);c.innerHTML='';for(const it of items){const l=document.createElement('label');l.className='check-row';const b=document.createElement('input');b.type='checkbox';b.checked=set.has(it);b.onchange=()=>{b.checked?set.add(it):set.delete(it);onchange()};l.append(b,document.createTextNode(it));c.append(l)}}
+  function renderLegend(){const c=$('legendRows');c.innerHTML='';for(const e of elements){const r=document.createElement('div');r.className='legend-row';const d=document.createElement('span');d.className='dot';d.style.background=styles[e].color;r.append(d,document.createTextNode(e));c.append(r)}}
+  function renderRanges(){const c=$('rangeRows');c.innerHTML='';for(const p of pairs){const r=ranges[p],s=document.createElement('div');s.className='range-pair';const t=document.createElement('div');t.className='range-title';t.textContent=p;const read=document.createElement('div');read.className='range-read';const mn=document.createElement('span'),mx=document.createElement('span');const refresh=()=>{mn.textContent=r.min.toFixed(2)+' Å';mx.textContent=r.max.toFixed(2)+' Å'};read.append(mn,mx);const a=document.createElement('input'),b=document.createElement('input');for(const q of[a,b]){q.type='range';q.min=r.min0;q.max=r.max0;q.step=.01}s.append(t,read);a.value=r.min;b.value=r.max;a.oninput=()=>{r.min=Math.min(+a.value,r.max);a.value=r.min;refresh();render()};b.oninput=()=>{r.max=Math.max(+b.value,r.min);b.value=r.max;refresh();render()};const la=document.createElement('div');la.className='small';la.textContent='Minimum';const lb=document.createElement('div');lb.className='small';lb.textContent='Maximum';s.append(la,a,lb,b);refresh();c.append(s)}}
+  function renderCustom(){const c=$('customRows');c.innerHTML='';for(const e of elements){const r=document.createElement('div');r.className='custom-row',co=document.createElement('input'),sl=document.createElement('input'),tx=document.createElement('div');co.type='color';co.value=styles[e].color;sl.type='range';sl.min=.3;sl.max=2;sl.step=.05;sl.value=styles[e].scale;tx.className='small';const u=()=>tx.textContent=e+' ×'+Number(sl.value).toFixed(2);co.oninput=()=>{styles[e].color=co.value;renderLegend();render()};sl.oninput=()=>{styles[e].scale=+sl.value;u();render()};u();r.append(co,sl,tx);c.append(r)}}
+  function renderWyckoff(){let h='<table><thead><tr><th>Site</th><th>Element</th><th>Multiplicity</th><th>Wyckoff</th><th>Occupancy</th></tr></thead><tbody>';for(const s of sites)h+=`<tr><td>${esc(s.label)}</td><td>${esc(s.elem)}</td><td>${s.mult??'—'}</td><td>${esc(s.wy||'—')}</td><td>${s.occ.toFixed(3)}</td></tr>`;h+='</tbody></table><p class="small">Wyckoff letters are shown when present in the CIF.</p>';$('wyckoffContent').innerHTML=h;}
+  function drawProjection(axisName){const panel=$('projectionPanel');if(axisName==='none'){panel.classList.add('hidden');return}panel.classList.remove('hidden');const cv=$('projectionCanvas'),ctx=cv.getContext('2d'),D=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=w*D;cv.height=h*D;ctx.scale(D,D);const dark=document.body.classList.contains('dark');ctx.fillStyle=dark?'#1f2228':'#fff';ctx.fillRect(0,0,w,h);ctx.strokeStyle=dark?'#aaa':'#555';ctx.strokeRect(22,22,w-44,h-44);ctx.strokeStyle=dark?'#444':'#ddd';ctx.beginPath();ctx.moveTo(w/2,22);ctx.lineTo(w/2,h-22);ctx.moveTo(22,h/2);ctx.lineTo(w-22,h/2);ctx.stroke();const seed=[.137,.271,.419],pts=ops.map(o=>applyOp(o,seed));for(const p of pts){let u,v,dep;if(axisName==='c'){[u,v,dep]=p}else if(axisName==='b'){u=p[0];v=p[2];dep=p[1]}else{u=p[1];v=p[2];dep=p[0]}const shade=Math.round(45+170*dep);ctx.fillStyle=`rgb(${shade},${shade},${shade})`;ctx.beginPath();ctx.arc(22+u*(w-44),22+(1-v)*(h-44),4.5,0,Math.PI*2);ctx.fill();ctx.strokeStyle=dark?'#ddd':'#111';ctx.stroke()}ctx.fillStyle=dark?'#eee':'#222';ctx.font='11px system-ui';ctx.textAlign='center';ctx.fillText('projection along '+axisName,w/2,14)}
+  function applyTheme(v){let dark=v==='dark'||(v==='system'&&matchMedia('(prefers-color-scheme:dark)').matches);document.body.classList.toggle('dark',dark);localStorage.setItem('cifViewerTheme',v);render();drawProjection($('projectionMode').value)}
+
+  checks('atomChecks',elements,visibleAtoms,render);checks('bondChecks',pairs,visibleBonds,render);checks('lengthChecks',pairs,visibleLengths,render);renderRanges();renderLegend();renderCustom();renderWyckoff();renderInfo();
+  $('viewMode').onchange=e=>{mode=e.target.value;render()};$('projectionMode').onchange=e=>drawProjection(e.target.value);
+  $('atomsAll').onclick=()=>{elements.forEach(e=>visibleAtoms.add(e));checks('atomChecks',elements,visibleAtoms,render);render()};$('atomsNone').onclick=()=>{visibleAtoms.clear();checks('atomChecks',elements,visibleAtoms,render);render()};$('bondsAll').onclick=()=>{pairs.forEach(e=>visibleBonds.add(e));checks('bondChecks',pairs,visibleBonds,render);render()};$('bondsNone').onclick=()=>{visibleBonds.clear();checks('bondChecks',pairs,visibleBonds,render);render()};$('lengthsAll').onclick=()=>{pairs.forEach(e=>visibleLengths.add(e));checks('lengthChecks',pairs,visibleLengths,render);render()};$('lengthsNone').onclick=()=>{visibleLengths.clear();checks('lengthChecks',pairs,visibleLengths,render);render()};$('rangesReset').onclick=()=>{for(const r of Object.values(ranges)){r.min=r.min0;r.max=r.max0}renderRanges();render()};
+  document.querySelectorAll('[data-menu]').forEach(b=>b.onclick=e=>{e.stopPropagation();const m=$(b.dataset.menu);document.querySelectorAll('.popover').forEach(p=>{if(p!==m)p.classList.remove('open')});m.classList.toggle('open')});document.querySelectorAll('.popover').forEach(p=>p.onclick=e=>e.stopPropagation());document.addEventListener('click',()=>document.querySelectorAll('.popover').forEach(p=>p.classList.remove('open')));
+  $('customButton').onclick=()=>$('customDrawer').classList.add('open');$('customClose').onclick=()=>$('customDrawer').classList.remove('open');$('customReset').onclick=()=>{for(const e of elements){styles[e]={color:COLORS[e]||'#969696',scale:1}}renderLegend();renderCustom();render()};
+  $('wyckoffButton').onclick=()=>$('modalBack').classList.add('open');$('modalClose').onclick=()=>$('modalBack').classList.remove('open');$('modalBack').onclick=e=>{if(e.target===$('modalBack'))$('modalBack').classList.remove('open')};$('wyckoffWindow').onclick=()=>{const w=open('','_blank','width=900,height=700');if(w){w.document.write('<html><head><title>Wyckoff sites</title><style>body{font-family:system-ui;padding:20px}table{width:100%;border-collapse:collapse}th,td{padding:7px;border-bottom:1px solid #ddd;text-align:left}</style></head><body><h2>'+esc(titleParam)+'</h2>'+$('wyckoffContent').innerHTML+'</body></html>');w.document.close()}};
+  const saved=localStorage.getItem('cifViewerTheme')||'system';$('themeMode').value=saved;$('themeMode').onchange=e=>applyTheme(e.target.value);matchMedia('(prefers-color-scheme:dark)').addEventListener?.('change',()=>{if($('themeMode').value==='system')applyTheme('system')});
+  applyTheme(saved);drawProjection('c');
+})();
+</script>
 </body>
 </html>
