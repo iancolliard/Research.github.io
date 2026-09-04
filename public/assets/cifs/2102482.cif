@@ -1,18 +1,3 @@
-####################################################################### 
-# 
-# This file contains crystal structure data downloaded from the 
-# Cambridge Structural Database (CSD) hosted by the Cambridge 
-# Crystallographic Data Centre (CCDC).
-# 
-# Full information about CCDC data access policies and citation 
-# guidelines are available at http://www.ccdc.cam.ac.uk/access/V1 
-# 
-# Audit and citation data items may have been added by the CCDC. 
-# Please retain this information to preserve the provenance of 
-# this file and to allow appropriate attribution of the data. 
-# 
-#######################################################################
-
 data_Ag-CrMo6
 _audit_block_doi                 10.5517/ccdc.csd.cc28kt0p
 _database_code_depnum_ccdc_archive 'CCDC 2102482'
@@ -30,7 +15,7 @@ United States of America
 ;
 _audit_update_record             
 ;
-2021-08-10 deposited with the CCDC.	2025-09-09 downloaded from the CCDC.
+2021-08-10 deposited with the CCDC.	2026-08-30 downloaded from the CCDC.
 ;
 _audit_creation_date             2021-07-10
 _audit_creation_method           
@@ -39,19 +24,6 @@ Olex2 1.3
 (compiled 2020.11.12 svn.r5f609507 for OlexSys, GUI svn.r6272)
 ;
 _shelx_SHELXL_version_number     2018/3
-_audit_contact_author_address    ?
-_audit_contact_author_email      ?
-_audit_contact_author_phone      ?
-_publ_contact_author_id_orcid    ?
-_publ_section_references         
-;
-Dolomanov, O.V., Bourhis, L.J., Gildea, R.J, Howard, J.A.K. & Puschmann, H.
- (2009), J. Appl. Cryst. 42, 339-341.
-
-Sheldrick, G.M. (2015). Acta Cryst. A71, 3-8.
-
-Sheldrick, G.M. (2015). Acta Cryst. C71, 3-8.
-;
 _chemical_name_common            ?
 _chemical_name_systematic        ?
 _chemical_formula_moiety         
@@ -28272,3 +28244,17 @@ _oxdiff_exptl_absorpt_empirical_full_max 1.723
 _oxdiff_exptl_absorpt_empirical_full_min 0.489
 
 _chemical_properties_physical    Light-sensitive
+####################################################################### 
+# 
+# This file contains crystal structure data downloaded from the 
+# Cambridge Structural Database (CSD) hosted by the Cambridge 
+# Crystallographic Data Centre (CCDC).
+# 
+# Full information about CCDC data access policies and citation 
+# guidelines are available at http://www.ccdc.cam.ac.uk/access/V1 
+# 
+# Audit and citation data items may have been added by the CCDC. 
+# Please retain this information to preserve the provenance of 
+# this file and to allow appropriate attribution of the data. 
+# 
+#######################################################################

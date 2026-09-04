@@ -1,20 +1,3 @@
-####################################################################### 
-# 
-# This file contains crystal structure data downloaded from the 
-# Cambridge Structural Database (CSD) hosted by the Cambridge 
-# Crystallographic Data Centre (CCDC) in cooperation with FIZ Karlsruhe.
-# 
-# Please note that these data are only for research purposes or private use.
-# For detailed information please see under Terms & Conditions.
-# Full information about CCDC and FIZ Karlsruhe data access policies and 
-# citation guidelines are available at http://www.ccdc.cam.ac.uk/access/V1
-# 
-# Audit and citation data items may have been added by FIZ Karlsruhe. 
-# Please retain this information to preserve the provenance of 
-# this file and to allow appropriate attribution of the data. 
-# 
-#######################################################################
-
 data_agnb16
 _audit_block_doi                 10.25505/fiz.icsd.cc2gxdld
 _database_code_depnum_ccdc_archive 'CCDC 2291414'
@@ -33,7 +16,7 @@ United States of America
 ;
 _audit_update_record             
 ;
-2023-08-28 deposited with the CCDC.	2025-09-09 downloaded from the CCDC.
+2023-08-28 deposited with the CCDC.	2026-08-30 downloaded from the CCDC.
 ;
 _audit_creation_date             2023-08-28
 _audit_creation_method           
@@ -42,19 +25,6 @@ Olex2 1.5
 (compiled 2023.08.24 svn.re1ec1418 for OlexSys, GUI svn.r6817)
 ;
 _shelx_SHELXL_version_number     2019/3
-_audit_contact_author_address    ?
-_audit_contact_author_email      ?
-_audit_contact_author_phone      ?
-_publ_contact_author_id_orcid    ?
-_publ_section_references         
-;
-Dolomanov, O.V., Bourhis, L.J., Gildea, R.J, Howard, J.A.K. & Puschmann, H.
- (2009), J. Appl. Cryst. 42, 339-341.
-
-Sheldrick, G.M. (2015). Acta Cryst. A71, 3-8.
-
-Sheldrick, G.M. (2015). Acta Cryst. C71, 3-8.
-;
 _chemical_name_common            ?
 _chemical_name_systematic        ?
 _chemical_formula_moiety         '0.667(Ag3 Nb48 O150), 14(K), 8(O)'
@@ -165087,3 +165057,19 @@ _vrf_PLAT973_agnb16
 PROBLEM: Check Calcd Positive Resid. Density on K1 2.25 eA-3
 RESPONSE: High residual Q-peaks common near heavy atoms
 ;
+####################################################################### 
+# 
+# This file contains crystal structure data downloaded from the 
+# Cambridge Structural Database (CSD) hosted by the Cambridge 
+# Crystallographic Data Centre (CCDC) in cooperation with FIZ Karlsruhe.
+# 
+# Please note that these data are only for research purposes or private use.
+# For detailed information please see under Terms & Conditions.
+# Full information about CCDC and FIZ Karlsruhe data access policies and 
+# citation guidelines are available at http://www.ccdc.cam.ac.uk/access/V1
+# 
+# Audit and citation data items may have been added by FIZ Karlsruhe. 
+# Please retain this information to preserve the provenance of 
+# this file and to allow appropriate attribution of the data. 
+# 
+#######################################################################

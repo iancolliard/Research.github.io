@@ -2,12 +2,14 @@
 # 
 # This file contains crystal structure data downloaded from the 
 # Cambridge Structural Database (CSD) hosted by the Cambridge 
-# Crystallographic Data Centre (CCDC).
+# Crystallographic Data Centre (CCDC) in cooperation with FIZ Karlsruhe.
 # 
-# Full information about CCDC data access policies and citation 
-# guidelines are available at http://www.ccdc.cam.ac.uk/access/V1 
+# Please note that these data are only for research purposes or private use.
+# For detailed information please see under Terms & Conditions.
+# Full information about CCDC and FIZ Karlsruhe data access policies and 
+# citation guidelines are available at http://www.ccdc.cam.ac.uk/access/V1
 # 
-# Audit and citation data items may have been added by the CCDC. 
+# Audit and citation data items may have been added by FIZ Karlsruhe. 
 # Please retain this information to preserve the provenance of 
 # this file and to allow appropriate attribution of the data. 
 # 
@@ -30,7 +32,7 @@ United States of America
 ;
 _audit_update_record             
 ;
-2025-03-03 deposited with the CCDC.	2025-10-24 downloaded from the CCDC.
+2025-03-03 deposited with the CCDC.	2026-09-04 downloaded from the CCDC.
 ;
 _audit_creation_date             2025-03-03
 _audit_creation_method           

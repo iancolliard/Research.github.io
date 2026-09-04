@@ -13,7 +13,7 @@
 # 
 #######################################################################
 
-data_cm-ybw5_p1pct_na
+data_cm-ybw5_10pct_na
 _database_code_depnum_ccdc_archive 'CCDC 2496427'
 loop_
 _audit_author_name
@@ -24,7 +24,7 @@ United States of America
 ;
 _audit_update_record             
 ;
-2025-10-19 deposited with the CCDC.	2025-10-24 downloaded from the CCDC.
+2026-02-05 deposited with the CCDC.	2026-09-02 downloaded from the CCDC.
 ;
 _audit_creation_date             2025-10-18
 _audit_creation_method           
